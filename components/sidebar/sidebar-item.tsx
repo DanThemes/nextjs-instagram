@@ -23,7 +23,7 @@ const SidebarItem = ({ icon: Icon, name, link }: SidebarItemProps) => {
               />
             )}
           </span>
-          <span className="text-[0.75rem]">{name}</span>
+          <span>{name}</span>
         </div>
       </Link>
     </div>
