@@ -12,6 +12,8 @@ import {
 } from "react-icons/go";
 import SidebarItem from "./sidebar-item";
 
+import { signIn, signOut, useSession } from "next-auth/react";
+
 const items = [
   {
     icon: GoHome,
@@ -55,12 +57,22 @@ const items = [
 ];
 
 const Sidebar = () => {
+  const { data: session } = useSession();
+
+  console.log(session);
   return (
     <aside className="flex-[200px] flex-grow-0 border-r border-solid border-r-1 border-[#DBDBDB]">
       <h1 className="p-4">Instagram</h1>
       {items.map((item) => (
         <SidebarItem key={item.name} {...item} />
       ))}
+      <hr />
+      {JSON.stringify(session)}
+      {session ? (
+        <button onClick={() => signOut()}>Sign out</button>
+      ) : (
+        <button onClick={() => signIn("credentials", {})}>Sign in</button>
+      )}
     </aside>
   );
 };
