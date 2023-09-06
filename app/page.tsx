@@ -1,10 +1,13 @@
-import Image from "next/image";
+import Posts from "@/components/posts/posts";
+import Sidebar from "@/components/sidebar/sidebar";
 
 export default function Home() {
   return (
-    <main>
-      <h1>App</h1>
-      <input type="text" placeholder="Test" />
-    </main>
+    <div className="flex h-full">
+      <Sidebar />
+      <main className="flex-1 px-10 py-4">
+        <Posts />
+      </main>
+    </div>
   );
 }
