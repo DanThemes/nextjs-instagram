@@ -79,7 +79,7 @@ const Sidebar = () => {
 
   console.log(session);
   return (
-    <aside className="flex-[200px] flex-grow-0 border-r border-solid border-r-1 border-[#DBDBDB]">
+    <aside className="flex-[175px] max-w-[175px] flex-grow-0 border-r border-solid border-r-1 border-[#DBDBDB]">
       <h1 className="p-4">Instagram</h1>
       {items
         .filter((item) => session || (!item.requiresAuth && !session))
@@ -87,7 +87,7 @@ const Sidebar = () => {
           <SidebarItem key={item.name} {...item} />
         ))}
       <hr />
-      {JSON.stringify(session)}
+      <p>{JSON.stringify(session)}</p>
       {session ? (
         <button onClick={() => signOut()}>Sign out</button>
       ) : (
