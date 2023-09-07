@@ -12,22 +12,15 @@ const handler = NextAuth({
       credentials: {
         username: { type: "text" },
         password: { type: "password" },
-        email: { type: "email" },
       },
       // @ts-ignore
       async authorize(credentials) {
-        if (
-          !credentials ||
-          !credentials.username ||
-          !credentials.password ||
-          !credentials.email
-        ) {
-          console.log(credentials);
+        if (!credentials || !credentials.username || !credentials.password) {
           return null;
         }
 
         await dbConnect();
-        const user = await User.findOne({ username: credentials!.username });
+        const user = await User.findOne({ username: credentials.username });
 
         const passwordMatches = await bcrypt.compare(
           credentials.password,

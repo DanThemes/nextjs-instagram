@@ -71,7 +71,6 @@ const Sidebar = () => {
     const response = await signIn("credentials", {
       redirect: false,
       username: "user1",
-      email: "user1@test.ro",
       password: "123",
     });
     console.log(response);
