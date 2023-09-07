@@ -40,6 +40,20 @@ const handler = NextAuth({
     strategy: "jwt",
     maxAge: 60 * 60 * 24 * 30, // 30 days
   },
+  callbacks: {
+    async jwt(data) {
+      data.token.username = "111";
+      console.log("jwtttt");
+      return data.token;
+    },
+    async session(data) {
+      console.log({ data });
+      return {
+        ...data.session,
+        user: { ...data.session.user, username: data.token.username },
+      };
+    },
+  },
 });
 
 export { handler as GET, handler as POST };
