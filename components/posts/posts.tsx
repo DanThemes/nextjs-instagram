@@ -16,7 +16,12 @@ const Posts = () => {
         <div key={post.id}>
           <div>
             <div className="relative w-full h-[40dvh] border border-[#dbdbdb]">
-              <Image src={post.images[0]} alt={post.content} fill />
+              <Image
+                src={post.images[0]}
+                alt={post.content}
+                fill
+                objectFit="cover"
+              />
             </div>
             <strong>author</strong> {post.content}
           </div>

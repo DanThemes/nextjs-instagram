@@ -59,6 +59,16 @@ const items = [
 const Sidebar = () => {
   const { data: session } = useSession();
 
+  const handleSignIn = async () => {
+    const response = await signIn("credentials", {
+      redirect: false,
+      username: "user1",
+      email: "user1@test.ro",
+      password: "123",
+    });
+    console.log(response);
+  };
+
   console.log(session);
   return (
     <aside className="flex-[200px] flex-grow-0 border-r border-solid border-r-1 border-[#DBDBDB]">
@@ -71,7 +81,7 @@ const Sidebar = () => {
       {session ? (
         <button onClick={() => signOut()}>Sign out</button>
       ) : (
-        <button onClick={() => signIn("credentials", {})}>Sign in</button>
+        <button onClick={handleSignIn}>Sign in</button>
       )}
     </aside>
   );
