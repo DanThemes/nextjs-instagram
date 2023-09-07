@@ -1,8 +1,10 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import React from "react";
 import { IconType } from "react-icons/lib/esm/iconBase";
+import cn from "@/utils/utils";
 
 type SidebarItemProps = {
   icon?: IconType;
@@ -11,6 +13,8 @@ type SidebarItemProps = {
 };
 
 const SidebarItem = ({ icon: Icon, name, link }: SidebarItemProps) => {
+  const pathname = usePathname();
+
   return (
     <div className="group px-2 py-1">
       <Link href={link}>
@@ -23,7 +27,7 @@ const SidebarItem = ({ icon: Icon, name, link }: SidebarItemProps) => {
               />
             )}
           </span>
-          <span>{name}</span>
+          <span className={cn({ "font-bold": pathname === link })}>{name}</span>
         </div>
       </Link>
     </div>

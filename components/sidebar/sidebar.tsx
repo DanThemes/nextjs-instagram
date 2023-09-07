@@ -19,40 +19,48 @@ const items = [
     icon: GoHome,
     name: "Home",
     link: "/",
+    requiresAuth: false,
   },
   {
     icon: GoSearch,
     name: "Search",
     link: "/search",
+    requiresAuth: false,
   },
   {
     icon: GoTelescope,
     name: "Expore",
     link: "/explore",
+    requiresAuth: false,
   },
   {
     icon: GoVideo,
     name: "Reels",
     link: "/reels",
+    requiresAuth: false,
   },
   {
     icon: GoPaperAirplane,
     name: "Messages",
     link: "/messages",
+    requiresAuth: true,
   },
   {
     icon: GoHeart,
     name: "Notifications",
     link: "/notifications",
+    requiresAuth: true,
   },
   {
     icon: GoPlusCircle,
     name: "Create",
     link: "/create",
+    requiresAuth: true,
   },
   {
     name: "Profile",
     link: "/profile",
+    requiresAuth: true,
   },
 ];
 
@@ -73,9 +81,11 @@ const Sidebar = () => {
   return (
     <aside className="flex-[200px] flex-grow-0 border-r border-solid border-r-1 border-[#DBDBDB]">
       <h1 className="p-4">Instagram</h1>
-      {items.map((item) => (
-        <SidebarItem key={item.name} {...item} />
-      ))}
+      {items
+        .filter((item) => session || (!item.requiresAuth && !session))
+        .map((item) => (
+          <SidebarItem key={item.name} {...item} />
+        ))}
       <hr />
       {JSON.stringify(session)}
       {session ? (
