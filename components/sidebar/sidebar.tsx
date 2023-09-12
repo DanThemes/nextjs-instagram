@@ -59,7 +59,7 @@ const items = [
   },
   {
     name: "Profile",
-    link: "/profile",
+    link: "",
     requiresAuth: true,
   },
 ];
@@ -82,9 +82,12 @@ const Sidebar = () => {
       <h1 className="p-4">Instagram</h1>
       {items
         .filter((item) => session || (!item.requiresAuth && !session))
-        .map((item) => (
-          <SidebarItem key={item.name} {...item} />
-        ))}
+        .map((item) => {
+          if (session && item.name === "Profile") {
+            item.link = session?.user.username;
+          }
+          return <SidebarItem key={item.name} {...item} />;
+        })}
       <hr />
       <p>{JSON.stringify(session)}</p>
       {session ? (

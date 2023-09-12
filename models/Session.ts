@@ -1,3 +1,5 @@
+
+
 import { Timestamp } from "mongodb";
 import mongoose from "mongoose";
 
@@ -5,7 +7,7 @@ const SessionSchema = new mongoose.Schema({
   expires: Timestamp,
   sessionToken: String,
   userId: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: mongoose.SchemaTypes.ObjectId,
     ref: "User",
   },
 });
