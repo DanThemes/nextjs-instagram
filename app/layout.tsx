@@ -2,7 +2,6 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 
-import { getServerSession } from "next-auth/next";
 import Sidebar from "@/components/sidebar/sidebar";
 import AuthSessionProvider from "@/providers/auth-provider";
 
@@ -24,7 +23,7 @@ export default async function RootLayout({
         <AuthSessionProvider>
           <div className="flex h-full">
             <Sidebar />
-            <main className="flex-1 px-10 py-10">{children}</main>
+            <main className="px-10 py-10 w-[70rem] mx-auto">{children}</main>
           </div>
         </AuthSessionProvider>
       </body>

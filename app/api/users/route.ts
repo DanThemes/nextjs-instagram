@@ -47,7 +47,7 @@ export async function POST(request: NextRequest) {
 
   // create the user
   try {
-    const { username, email, password } = await request.json();
+    const { username, email, password, ...rest } = await request.json();
     if (!username || !email || !password) {
       return NextResponse.json(
         { message: "Please fill in all the required fields" },
@@ -65,7 +65,7 @@ export async function POST(request: NextRequest) {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const user = new User({ username, email, password: hashedPassword });
+    const user = new User({ username, email, password: hashedPassword, rest });
     await user.save();
 
     return NextResponse.json(user, { status: 201 });

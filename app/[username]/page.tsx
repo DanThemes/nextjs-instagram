@@ -33,7 +33,7 @@ const Profile = ({ params }: { params: { username: string } }) => {
 
   const { data: session } = useSession();
 
-  if (!session) return null;
+  // if (!session) return null;
 
   if (error) {
     return <PageNotFound />;
@@ -81,9 +81,10 @@ const Profile = ({ params }: { params: { username: string } }) => {
             <strong>{user.following.length}</strong> following
           </div>
         </div>
-        <div className="flex gap-10 pt-7">
-          <div className="font-bold">{user.displayName || user.username}</div>
-          <div className="font-bold">{isPageOwner ? "page owner" : ""}</div>
+        <div className="flex flex-col pt-7">
+          <p className="font-bold">{user.displayName || user.username}</p>
+          <p>{user.bio}</p>
+          <p className="font-bold">{isPageOwner ? "page owner" : ""}</p>
         </div>
       </div>
     </div>
