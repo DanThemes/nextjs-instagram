@@ -4,7 +4,33 @@ import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcrypt";
 
 export async function GET(request: NextRequest) {
-  return NextResponse.json({ users: ["1", "2"] });
+  // connect to the database
+  try {
+    await dbConnect();
+  } catch (error) {
+    console.error("Database connection error:", error);
+    return NextResponse.json(
+      { message: "Something went wrong" },
+      { status: 400 }
+    );
+  }
+
+  try {
+    const users = await User.find();
+
+    // Remove the password field
+    const safeUsers = users.map((user) => {
+      const { password, ...rest } = user._doc;
+      return rest;
+    });
+    return NextResponse.json({ users: safeUsers }, { status: 200 });
+  } catch (error) {
+    console.log("Error while retrieving the users' list", error);
+    return NextResponse.json(
+      { message: "Error while retrieving the users' list" },
+      { status: 400 }
+    );
+  }
 }
 
 export async function POST(request: NextRequest) {

@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { InferSchemaType } from "mongoose";
 
 export const MediaSchema = new mongoose.Schema({
   type: {
@@ -11,6 +11,8 @@ export const MediaSchema = new mongoose.Schema({
     required: true,
   },
 });
+
+export type Media = InferSchemaType<typeof MediaSchema>;
 
 const Media = mongoose.models.Media || mongoose.model("Media", MediaSchema);
 

@@ -24,7 +24,7 @@ export default async function RootLayout({
         <AuthSessionProvider>
           <div className="flex h-full">
             <Sidebar />
-            <main className="flex-1 px-10 py-4">{children}</main>
+            <main className="flex-1 px-10 py-10">{children}</main>
           </div>
         </AuthSessionProvider>
       </body>
