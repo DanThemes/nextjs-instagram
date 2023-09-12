@@ -73,7 +73,7 @@ const Sidebar = () => {
       username: "user1",
       password: "123",
     });
-    console.log(response);
+    // console.log(response);
   };
 
   // console.log(session);

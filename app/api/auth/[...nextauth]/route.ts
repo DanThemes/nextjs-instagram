@@ -3,8 +3,11 @@ import dbConnect from "@/utils/db";
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcrypt";
+import { MongoDBAdapter } from "@next-auth/mongodb-adapter";
+import clientPromise from "@/utils/clientPromise";
 
 const handler = NextAuth({
+  adapter: MongoDBAdapter(clientPromise),
   providers: [
     CredentialsProvider({
       id: "credentials",
@@ -40,18 +43,19 @@ const handler = NextAuth({
     strategy: "jwt",
     maxAge: 60 * 60 * 24 * 30, // 30 days
   },
+  debug: process.env.NODE_ENV === "development",
   callbacks: {
-    async jwt(data) {
-      data.token.username = "111";
-      console.log("jwtttt");
-      return data.token;
+    async jwt({ token, user, session }) {
+      if (user) {
+        token.username = user.username;
+      }
+      // console.log("callback jwt", { token, user, session });
+      return token;
     },
-    async session(data) {
-      console.log({ data });
-      return {
-        ...data.session,
-        user: { ...data.session.user, username: data.token.username },
-      };
+    async session({ session, token, user }) {
+      // console.log("callback session", { session, token, user });
+      session.user.username = token.username as string;
+      return session;
     },
   },
 });

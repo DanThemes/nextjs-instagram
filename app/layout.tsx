@@ -3,8 +3,8 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 
 import { getServerSession } from "next-auth/next";
-import SessionProvider from "@/providers/auth-provider";
 import Sidebar from "@/components/sidebar/sidebar";
+import AuthSessionProvider from "@/providers/auth-provider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,16 +18,15 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const session = await getServerSession();
   return (
     <html lang="en">
       <body className={inter.className}>
-        <SessionProvider session={session}>
+        <AuthSessionProvider>
           <div className="flex h-full">
             <Sidebar />
             <main className="flex-1 px-10 py-4">{children}</main>
           </div>
-        </SessionProvider>
+        </AuthSessionProvider>
       </body>
     </html>
   );
