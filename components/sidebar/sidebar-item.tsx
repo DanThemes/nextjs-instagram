@@ -15,8 +15,6 @@ type SidebarItemProps = {
 const SidebarItem = ({ icon: Icon, name, link }: SidebarItemProps) => {
   const pathname = usePathname();
 
-  console.log("sidebarItem", { link, pathname });
-
   return (
     <div className="group px-2 py-1">
       <Link href={link}>

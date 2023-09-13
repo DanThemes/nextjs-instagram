@@ -2,7 +2,9 @@
 import { MongoClient } from "mongodb";
 
 if (!process.env.MONGO_URL) {
-  throw new Error("Please add your Mongo URI to .env.local");
+  throw new Error(
+    "Please define the 'MONGO_URL' environment variable inside .env"
+  );
 }
 
 const uri: string = process.env.MONGO_URL;
