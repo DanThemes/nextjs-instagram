@@ -83,7 +83,7 @@ const Sidebar = () => {
 
   // console.log(session);
   return (
-    <aside className="flex-[175px] max-w-[175px] flex-grow-0 border-r border-solid border-r-1 border-[#DBDBDB]">
+    <>
       <h1 className="p-4">
         <Link href="/">Instagram</Link>
       </h1>
@@ -102,7 +102,7 @@ const Sidebar = () => {
       ) : (
         <button onClick={handleSignIn}>Sign in</button>
       )}
-    </aside>
+    </>
   );
 };
 

@@ -22,7 +22,9 @@ export default async function RootLayout({
       <body className={inter.className}>
         <AuthSessionProvider>
           <div className="flex h-full">
-            <Sidebar />
+            <aside className="flex-[175px] w-[175px] flex-grow-0 border-r border-solid border-r-1 border-[#DBDBDB]">
+              <Sidebar />
+            </aside>
             <main className="px-10 py-10 w-[70rem] mx-auto">{children}</main>
           </div>
         </AuthSessionProvider>

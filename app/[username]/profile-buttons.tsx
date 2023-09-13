@@ -4,8 +4,6 @@ import { useSession } from "next-auth/react";
 import { usePathname } from "next/navigation";
 import React from "react";
 import { GoGear } from "react-icons/go";
-// import "@uploadthing/react/styles.css";
-import { UploadButton } from "@/utils/uploadthing";
 
 const ProfileButtons = () => {
   const { data: session, status } = useSession();
@@ -23,20 +21,6 @@ const ProfileButtons = () => {
         <button className="icon_button">
           <GoGear />
         </button>
-        <div className="w-[10rem]">
-          <UploadButton
-            endpoint="imageUploader"
-            onClientUploadComplete={(res) => {
-              // Do something with the response
-              console.log("Files: ", res);
-              alert("Upload Completed");
-            }}
-            onUploadError={(error: Error) => {
-              // Do something with the error.
-              alert(`ERROR! ${error.message}`);
-            }}
-          />
-        </div>
       </>
     );
   }

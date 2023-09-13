@@ -3,6 +3,8 @@
 import React from "react";
 import { GoX } from "react-icons/go";
 import { motion } from "framer-motion";
+// import "@uploadthing/react/styles.css";
+import { UploadButton } from "@/utils/uploadthing";
 
 type ModalProps = {
   isOpen: boolean;
@@ -33,7 +35,20 @@ export default function Modal({ isOpen, toggle }: ModalProps) {
         <div className="border-0 border-b p-10">
           <h3 className="text-2xl">Change Profile Photo</h3>
         </div>
-        <div className="p-10">content</div>
+        <div className="p-10">
+          <UploadButton
+            endpoint="imageUploader"
+            onClientUploadComplete={(res) => {
+              // Do something with the response
+              console.log("Files: ", res);
+              alert("Upload Completed");
+            }}
+            onUploadError={(error: Error) => {
+              // Do something with the error.
+              alert(`ERROR! ${error.message}`);
+            }}
+          />
+        </div>
       </div>
     </motion.div>
   );
