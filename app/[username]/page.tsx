@@ -14,10 +14,7 @@ const Profile = async ({ params }: { params: { username: string } }) => {
   return (
     <div className="flex">
       <div className="flex-1">
-        <ProfileAvatar
-          username={user.username}
-          profileImage={user.profileImage}
-        />
+        <ProfileAvatar profileImage={user.profileImage} />
       </div>
       <div className="flex flex-[2] flex-col">
         <div>

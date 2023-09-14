@@ -7,17 +7,18 @@ import { motion } from "framer-motion";
 type ModalProps = {
   isOpen: boolean;
   toggle: () => void;
+  title: string;
   children: React.ReactNode;
 };
 
-export default function Modal({ isOpen, toggle, children }: ModalProps) {
+export default function Modal({ isOpen, toggle, title, children }: ModalProps) {
   if (!isOpen) {
     return null;
   }
 
   return (
     <motion.div
-      className="w-full h-full fixed inset-0 z-[10] flex items-center justify-center"
+      className="w-full h-full fixed inset-0 z-[10] flex items-center justify-center p-10"
       animate={{ scale: 1.1 }}
     >
       <div
@@ -32,7 +33,7 @@ export default function Modal({ isOpen, toggle, children }: ModalProps) {
           <GoX />
         </div>
         <div className="border-0 border-b p-10">
-          <h3 className="text-2xl">Change Profile Photo</h3>
+          <h3 className="text-2xl">{title}</h3>
         </div>
         <div className="p-10">{children}</div>
       </div>

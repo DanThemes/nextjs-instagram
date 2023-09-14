@@ -1,28 +1,19 @@
 "use client";
 
-import Modal from "@/components/modal/modal";
-import UploadButton from "@/components/upload-button";
+import UploadAvatarModal from "@/components/modals/upload-avatar-modal";
+import useUploadAvatarModal from "@/hooks/useUploadAvatarModal";
 import cn from "@/utils/utils";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
-import React, { useState } from "react";
+import React from "react";
 
 type ProfileAvatarProps = {
-  username: string;
   profileImage?: string | undefined;
 };
 
-export default function ProfileAvatar({
-  username,
-  profileImage,
-}: ProfileAvatarProps) {
-  const [show, setShow] = useState<boolean>(false);
-
+export default function ProfileAvatar({ profileImage }: ProfileAvatarProps) {
+  const uploadAvatarModal = useUploadAvatarModal();
   const { data: session } = useSession();
-
-  const toggle = () => {
-    setShow((prev) => !prev);
-  };
 
   const isCurrentUserOwner = session && session.user.username;
 
@@ -36,18 +27,21 @@ export default function ProfileAvatar({
         className={cn("rounded-full border w-[150px] h-[150px] object-cover", {
           "cursor-pointer": isCurrentUserOwner,
         })}
-        onClick={toggle}
+        onClick={uploadAvatarModal.toggle}
+        priority
       />
-      {isCurrentUserOwner && (
-        <Modal isOpen={show} toggle={toggle}>
+      {/* {isCurrentUserOwner && (
+        <Modal isOpen={isOpen} toggle={toggle} title="Change Profile Photo">
           <UploadButton
             size="small"
             endpoint="avatarUploader"
             idOrUsername={username}
             profileImage={profileImage}
+            toggleModal={toggle}
           />
         </Modal>
-      )}
+      )} */}
+      {isCurrentUserOwner && <UploadAvatarModal />}
     </>
   );
 }

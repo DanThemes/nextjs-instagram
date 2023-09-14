@@ -31,7 +31,8 @@
     "tailwind-merge": "^1.14.0",
     "tailwindcss": "3.3.3",
     "typescript": "5.2.2",
-    "uploadthing": "^5.5.3"
+    "uploadthing": "^5.5.3",
+    "zustand": "^4.4.1"
   },
   "devDependencies": {
     "@auth/mongodb-adapter": "^2.0.0",

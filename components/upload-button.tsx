@@ -11,15 +11,15 @@ import { utapi } from "uploadthing/server";
 type UploadButtonProps = {
   size: "small" | "large";
   endpoint: any; // setting this to string raises a warning...
-  idOrUsername: string;
-  profileImage?: string;
+  username: string;
+  toggleModal?: () => void;
 };
 
 export default function UploadButton({
   size = "small",
   endpoint,
-  idOrUsername,
-  profileImage,
+  username,
+  toggleModal,
 }: UploadButtonProps) {
   const [files, setFiles] = useState<File[] | null>(null);
   const [error, setError] = useState<{ message: string } | null>(null);
@@ -32,18 +32,16 @@ export default function UploadButton({
       onClientUploadComplete: async (data) => {
         if (!data) return;
 
-        console.log({ idOrUsername });
-
         try {
           // Upload new avatar
-          await editUser(idOrUsername, { profileImage: data[0].url });
-
-          // Delete old avatar
-          if (profileImage) {
-            // console.log({ profileImage });
-          }
+          await editUser(username, { profileImage: data[0].url });
 
           setFiles(null);
+
+          if (toggleModal) {
+            toggleModal();
+          }
+
           router.refresh();
         } catch (error) {
           console.log(error);
@@ -106,6 +104,7 @@ export default function UploadButton({
       </div>
       {files && (
         <button
+          disabled={isUploading}
           className="blue_button ml-auto"
           onClick={() => files && startUpload(files)}
         >

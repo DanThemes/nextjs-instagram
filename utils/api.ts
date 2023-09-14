@@ -49,5 +49,3 @@ export async function editUser(idOrUsername: string, values: Partial<User>) {
     console.log("editUser() api.ts", error);
   }
 }
-
-

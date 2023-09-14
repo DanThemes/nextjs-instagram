@@ -7,7 +7,7 @@ import { authOptions } from "../auth/[...nextauth]/route";
 const f = createUploadthing();
 
 const auth = async (req: Request) => {
-  console.log({ req });
+  // console.log({ req });
   const session = await getServerSession(authOptions);
   if (!session) return null;
 
@@ -37,8 +37,8 @@ export const ourFileRouter = {
       try {
         const lastIndex = metadata.profileImage.lastIndexOf("/");
         const fileToBeDeleted = metadata.profileImage.slice(lastIndex + 1);
-        console.log({ fileToBeDeleted: metadata.profileImage });
-        await utapi.deleteFiles(metadata.profileImage);
+        // console.log({ fileToBeDeleted });
+        await utapi.deleteFiles(fileToBeDeleted);
       } catch (error) {
         console.log(error);
       }

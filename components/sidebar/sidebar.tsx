@@ -14,6 +14,7 @@ import SidebarItem from "./sidebar-item";
 import Link from "next/link";
 
 import { signIn, signOut, useSession } from "next-auth/react";
+import NewPostModal from "../modals/new-post-modal";
 
 const items = [
   {
@@ -55,7 +56,8 @@ const items = [
   {
     icon: GoPlusCircle,
     name: "Create",
-    link: "/create",
+    link: "",
+    modal: <NewPostModal />,
     requiresAuth: true,
   },
   {

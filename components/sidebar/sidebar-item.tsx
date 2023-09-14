@@ -10,9 +10,15 @@ type SidebarItemProps = {
   icon?: IconType;
   name: string;
   link: string;
+  modal?: React.ReactNode;
 };
 
-const SidebarItem = ({ icon: Icon, name, link }: SidebarItemProps) => {
+const SidebarItem = ({
+  icon: Icon,
+  name,
+  link,
+  modal: Modal,
+}: SidebarItemProps) => {
   const pathname = usePathname();
 
   return (
@@ -30,6 +36,7 @@ const SidebarItem = ({ icon: Icon, name, link }: SidebarItemProps) => {
           <span className={cn({ "font-bold": pathname === link })}>{name}</span>
         </div>
       </Link>
+      {Modal && <Modal />}
     </div>
   );
 };
