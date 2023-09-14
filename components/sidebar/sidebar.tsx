@@ -57,7 +57,7 @@ const items = [
     icon: GoPlusCircle,
     name: "Create",
     link: "",
-    modal: <NewPostModal />,
+    modal: NewPostModal,
     requiresAuth: true,
   },
   {
