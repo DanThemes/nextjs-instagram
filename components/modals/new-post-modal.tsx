@@ -17,7 +17,7 @@ export default function NewPostModal() {
     <Modal
       isOpen={newPostModal.isOpen}
       toggle={newPostModal.toggle}
-      title="Change Profile Photo"
+      title="Add New Post"
     >
       add new post form here
     </Modal>

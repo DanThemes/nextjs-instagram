@@ -20,7 +20,7 @@ const Posts = () => {
                 src={post.images[0]}
                 alt={post.content}
                 fill
-                className="w-full h-auto"
+                className="w-full h-auto object-cover"
               />
             </div>
             <strong>author</strong> {post.content}

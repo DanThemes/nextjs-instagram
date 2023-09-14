@@ -5,12 +5,13 @@ import { usePathname } from "next/navigation";
 import React from "react";
 import { IconType } from "react-icons/lib/esm/iconBase";
 import cn from "@/utils/utils";
+import useNewPostModal from "@/hooks/useNewPostModal";
 
 type SidebarItemProps = {
   icon?: IconType;
   name: string;
   link: string;
-  modal?: any;
+  modal?: () => JSX.Element | null;
 };
 
 const SidebarItem = ({
@@ -21,10 +22,15 @@ const SidebarItem = ({
 }: SidebarItemProps) => {
   const pathname = usePathname();
 
+  const newPostModal = useNewPostModal();
+
   return (
     <div className="group px-2 py-1">
       <Link href={link}>
-        <div className="group group-hover:bg-neutral-100 transition flex items-center rounded-md p-2 group-active:opacity-50">
+        <div
+          className="group group-hover:bg-neutral-100 transition flex items-center rounded-md p-2 group-active:opacity-50"
+          onClick={() => Modal && newPostModal.toggle()}
+        >
           <span className="mr-3">
             {Icon && (
               <Icon
@@ -36,7 +42,7 @@ const SidebarItem = ({
           <span className={cn({ "font-bold": pathname === link })}>{name}</span>
         </div>
       </Link>
-      {1 === 1 && <Modal />}
+      {Modal && <Modal />}
     </div>
   );
 };
