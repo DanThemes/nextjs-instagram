@@ -2,9 +2,10 @@ import PageNotFound from "@/components/page-not-found";
 import { getUser } from "@/utils/api";
 import ProfileButtons from "./profile-buttons";
 import ProfileAvatar from "./profile-avatar";
+import { User } from "@/models/User";
 
 const Profile = async ({ params }: { params: { username: string } }) => {
-  const user = await getUser(params.username);
+  const user = (await getUser(params.username)) as User;
 
   if (!user) {
     return <PageNotFound />;
@@ -13,7 +14,10 @@ const Profile = async ({ params }: { params: { username: string } }) => {
   return (
     <div className="flex">
       <div className="flex-1">
-        <ProfileAvatar />
+        <ProfileAvatar
+          username={user.username}
+          profileImage={user.profileImage}
+        />
       </div>
       <div className="flex flex-[2] flex-col">
         <div>

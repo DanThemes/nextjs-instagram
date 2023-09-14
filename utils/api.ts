@@ -12,7 +12,8 @@ export async function getUser(idOrUsername: string) {
   }
 
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/users/${idOrUsername}`
+    `${process.env.NEXT_PUBLIC_API_URL}/users/${idOrUsername}`,
+    { cache: "no-store" }
   );
   const data = await response.json();
   return data.user;
@@ -30,18 +31,23 @@ export async function editUser(idOrUsername: string, values: Partial<User>) {
   }
 
   console.log(values);
-  return;
 
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/users/${idOrUsername}`,
-    {
-      method: "PATCH",
-      headers: {
-        "Content-type": "application/json",
-      },
-      body: JSON.stringify(values)
-    }
-  );
-  const data = await response.json();
-  return data.user;
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/users/${idOrUsername}`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: JSON.stringify(values),
+      }
+    );
+    const data = await response.json();
+    return data.user;
+  } catch (error) {
+    console.log("editUser() api.ts", error);
+  }
 }
+
+

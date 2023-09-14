@@ -1,8 +1,19 @@
+import { getUser } from "@/utils/api";
+import { getServerSession } from "next-auth";
 import { createUploadthing, type FileRouter } from "uploadthing/next";
+import { utapi } from "uploadthing/server";
+import { authOptions } from "../auth/[...nextauth]/route";
 
 const f = createUploadthing();
 
-const auth = (req: Request) => ({ id: "fakeId" }); // Fake auth function
+const auth = async (req: Request) => {
+  console.log({ req });
+  const session = await getServerSession(authOptions);
+  if (!session) return null;
+
+  const user = await getUser(session.user.username);
+  return user;
+};
 
 // FileRouter for your app, can contain multiple FileRoutes
 export const ourFileRouter = {
@@ -17,13 +28,20 @@ export const ourFileRouter = {
       if (!user) throw new Error("Unauthorized");
 
       // Whatever is returned here is accessible in onUploadComplete as `metadata`
-      return { userId: user.id };
+      return { profileImage: user.profileImage };
     })
     .onUploadComplete(async ({ metadata, file }) => {
       // This code RUNS ON YOUR SERVER after upload
-      console.log("Upload complete for userId:", metadata.userId);
+      console.log("Upload complete. File url:", file.url);
 
-      console.log("file url", file.url);
+      try {
+        const lastIndex = metadata.profileImage.lastIndexOf("/");
+        const fileToBeDeleted = metadata.profileImage.slice(lastIndex + 1);
+        console.log({ fileToBeDeleted: metadata.profileImage });
+        await utapi.deleteFiles(metadata.profileImage);
+      } catch (error) {
+        console.log(error);
+      }
     }),
 } satisfies FileRouter;
 
