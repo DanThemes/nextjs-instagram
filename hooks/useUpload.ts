@@ -1,25 +1,22 @@
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { editUser } from "@/utils/api";
 import { useUploadThing } from "@/utils/uploadthing";
+import { getServerSession } from "next-auth";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
 type UseUploadType = {
   endpoint: "avatarUploader" | "postMediaUploader";
-  postId?: string;
   toggleModal?: () => void;
 };
 
-export default function useUpload({
-  endpoint,
-  postId,
-  toggleModal,
-}: UseUploadType) {
+export default function useUpload({ endpoint, toggleModal }: UseUploadType) {
   const [files, setFiles] = useState<File[] | null>(null);
-  const [uploadedData, setUploadedData] = useState<string[] | null>(null);
   const [error, setError] = useState<{ message: string } | null>(null);
 
-  const { data: session } = useSession();
+  // const session = await getServerSession(authOptions);
+  const session = { user: { username: "dani" } };
 
   const router = useRouter();
 
@@ -27,14 +24,10 @@ export default function useUpload({
     endpoint,
     {
       onClientUploadComplete: async (data) => {
-        if (!data) return;
-        console.log(data);
+        if (!data || !session) return;
+        // console.log(data);
 
         try {
-          if (!session) {
-            return null;
-          }
-
           // Change user avatar
           if (endpoint === "avatarUploader") {
             await editUser(session.user.username, {
@@ -44,19 +37,7 @@ export default function useUpload({
 
           // Add post media
           if (endpoint === "postMediaUploader") {
-            if (!postId) {
-              return null;
-            }
-
-            // setUploadedData(data.map((item) => item.url));
-            const media = data.map((item) => ({
-              type: "image",
-              url: item.url,
-            }));
-
-            // await editPost(postId, {
-            //   profileImage: data[0].url,
-            // });
+            
           }
 
           setFiles(null);
@@ -87,7 +68,6 @@ export default function useUpload({
     setFiles,
     startUpload,
     isUploading,
-    uploadedData,
     permittedFileInfo,
   };
 }

@@ -50,10 +50,10 @@ h6 {
 }
 
 .blue_button {
-  @apply bg-[#0095F6] text-[white] rounded-lg px-5 py-2 text-sm font-bold hover:bg-[#1877F2] active:opacity-50 cursor-pointer;
+  @apply bg-[#0095F6] text-[white] rounded-lg px-5 py-2 text-sm font-bold hover:bg-[#1877F2] active:opacity-50 cursor-pointer flex gap-2 items-center disabled:opacity-50 disabled:hover:bg-[#0095F6];
 }
 .gray_button {
-  @apply bg-[#efefef] text-[#000] rounded-lg px-5 py-2 text-sm font-bold hover:bg-[#dbdbdb] active:opacity-50 cursor-pointer;
+  @apply bg-[#efefef] text-[#000] rounded-lg px-5 py-2 text-sm font-bold hover:bg-[#dbdbdb] active:opacity-50 cursor-pointer flex gap-2 items-center disabled:opacity-50 disabled:hover:bg-[#efefef];
 }
 
 .icon_button {

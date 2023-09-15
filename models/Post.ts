@@ -10,11 +10,13 @@ const PostSchema = new mongoose.Schema(
     },
     media: [
       {
-        type: MediaSchema,
-        validate: [
-          arrayMinLength,
-          "At least one media item (image or video) is required.",
-        ],
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Media",
+        required: true,
+        // validate: {
+        //   validator: arrayMinLength,
+        //   message: "At least one media item (image or video) is required.",
+        // },
       },
     ],
     caption: String,
@@ -44,7 +46,7 @@ const PostSchema = new mongoose.Schema(
 );
 
 function arrayMinLength(arr: string[]) {
-  return arr && arr.length > 0;
+  return true; //arr && arr.length > 0;
 }
 
 export type Post = InferSchemaType<typeof PostSchema>;

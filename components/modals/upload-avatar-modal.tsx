@@ -6,18 +6,16 @@ import useUploadAvatarModal from "@/hooks/useUploadAvatarModal";
 import { useSession } from "next-auth/react";
 import useUpload from "@/hooks/useUpload";
 import Image from "next/image";
-import { GoX } from "react-icons/go";
+import { GoSync, GoX } from "react-icons/go";
 
 export default function UploadAvatarModal() {
   const uploadAvatarModal = useUploadAvatarModal();
   const { data: session } = useSession();
 
-  const { files, setFiles, startUpload, isUploading, uploadedData } = useUpload(
-    {
-      endpoint: "avatarUploader",
-      toggleModal: uploadAvatarModal.toggle,
-    }
-  );
+  const { files, setFiles, startUpload, isUploading } = useUpload({
+    endpoint: "avatarUploader",
+    toggleModal: uploadAvatarModal.toggle,
+  });
 
   if (!session) {
     return null;
@@ -81,6 +79,11 @@ export default function UploadAvatarModal() {
             onClick={() => files && session && startUpload(files)}
           >
             Upload
+            {isUploading && (
+              <div className="animate-spin">
+                <GoSync />
+              </div>
+            )}
           </button>
         )}
       </div>

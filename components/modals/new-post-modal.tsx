@@ -7,6 +7,9 @@ import useNewPostModal from "@/hooks/useNewPostModal";
 import Image from "next/image";
 import { FieldValues, useForm } from "react-hook-form";
 import useUpload from "@/hooks/useUpload";
+import { GoSync } from "react-icons/go";
+import { addPost, addPostMedia } from "@/utils/api";
+import { Media } from "@/models/Media";
 
 export default function NewPostModal() {
   const newPostModal = useNewPostModal();
@@ -24,25 +27,55 @@ export default function NewPostModal() {
     },
   });
 
-  const { files, setFiles, startUpload, isUploading, uploadedData } = useUpload(
-    {
-      endpoint: "postMediaUploader",
-      toggleModal: newPostModal.toggle,
-    }
-  );
+  const { files, setFiles, startUpload, isUploading } = useUpload({
+    endpoint: "postMediaUploader",
+    toggleModal: newPostModal.toggle,
+  });
 
   if (!session) {
     return null;
   }
 
-  const onSubmit = (data: FieldValues) => {
-    console.log({ data });
+  const onSubmit = async (data: FieldValues) => {
+    const dataArray = Array.from(data.media) as File[];
+    const media = await startUpload(dataArray);
 
-    // setFiles(data.media);
-    startUpload(data.media);
+    const formattedMedia = media?.map((item) => {
+      const isImage = item.url.match(/\.(jpeg|jpg|gif|png)$/i) != null;
+      return {
+        type: isImage ? "image" : "video",
+        url: item.url,
+      };
+    }) as Media[];
+
+    console.log(formattedMedia);
+
+    const mediaIds: string[] = [];
+
+    await Promise.all(
+      formattedMedia.map(async (media) => {
+        const resp = await addPostMedia(media);
+        // TODO: show error message for files which exceed size limit
+        console.log({ resp, respId: resp._id });
+        mediaIds.push(resp._id);
+      })
+    );
+    console.log({ mediaIds });
+
+    // await addPost() here
+    const newPost = await addPost({
+      userId: session.user.id,
+      media: mediaIds,
+      caption: data.caption,
+      comments: [],
+      likes: [],
+    } as any);
+
+    // newPostModal.toggle();
+    // TODO: redirect to newly created post
   };
 
-  console.log({ errors });
+  console.log({ files });
 
   return (
     <Modal
@@ -56,6 +89,7 @@ export default function NewPostModal() {
             <input
               id="avatar-uploader"
               type="file"
+              multiple
               {...register("media", {
                 required: "Please attach one or more images/videos",
                 onChange: (e) => {
@@ -114,8 +148,17 @@ export default function NewPostModal() {
           </div>
 
           <div>
-            <button type="submit" className="blue_button">
+            <button
+              type="submit"
+              className="blue_button"
+              disabled={isUploading}
+            >
               Add post
+              {isUploading && (
+                <div className="animate-spin">
+                  <GoSync />
+                </div>
+              )}
             </button>
           </div>
         </form>
