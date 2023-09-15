@@ -56,7 +56,7 @@ const items = [
   {
     icon: GoPlusCircle,
     name: "Create",
-    link: "",
+    link: "", // TODO: make this an intercepting route
     modal: NewPostModal,
     requiresAuth: true,
   },

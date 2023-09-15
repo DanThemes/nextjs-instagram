@@ -21,9 +21,7 @@ export default function UploadAvatarModal() {
       title="Change Profile Photo"
     >
       <UploadButton
-        size="small"
         endpoint="avatarUploader"
-        username={session.user.username}
         toggleModal={uploadAvatarModal.toggle}
       />
     </Modal>

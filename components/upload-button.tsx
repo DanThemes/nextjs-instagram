@@ -1,61 +1,29 @@
 "use client";
 
-import { editUser } from "@/utils/api";
-import { useUploadThing } from "@/utils/uploadthing";
+import useUpload from "@/hooks/useUpload";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React from "react";
 import { GoX } from "react-icons/go";
-import { utapi } from "uploadthing/server";
 
 type UploadButtonProps = {
-  size: "small" | "large";
-  endpoint: any; // setting this to string raises a warning...
-  username: string;
+  endpoint: "avatarUploader" | "postMediaUploader";
+  postId?: string;
   toggleModal?: () => void;
 };
 
 export default function UploadButton({
-  size = "small",
   endpoint,
-  username,
+  postId,
   toggleModal,
 }: UploadButtonProps) {
-  const [files, setFiles] = useState<File[] | null>(null);
-  const [error, setError] = useState<{ message: string } | null>(null);
+  const { data: session } = useSession();
 
-  const router = useRouter();
-
-  const { startUpload, isUploading, permittedFileInfo } = useUploadThing(
-    endpoint,
+  const { files, setFiles, startUpload, isUploading, uploadedData } = useUpload(
     {
-      onClientUploadComplete: async (data) => {
-        if (!data) return;
-
-        try {
-          // Upload new avatar
-          await editUser(username, { profileImage: data[0].url });
-
-          setFiles(null);
-
-          if (toggleModal) {
-            toggleModal();
-          }
-
-          router.refresh();
-        } catch (error) {
-          console.log(error);
-          // setError(error);
-        }
-      },
-      onUploadError: (error) => {
-        console.log(error);
-        setError(error);
-      },
-      onUploadBegin: () => {
-        setError(null);
-        console.log("upload has begun");
-      },
+      endpoint,
+      postId,
+      toggleModal,
     }
   );
 
@@ -83,13 +51,16 @@ export default function UploadButton({
       <label htmlFor="avatar-uploader" className="gray_button">
         Choose an image
       </label>
-      <div className="flex">
+      <div className="flex gap-5">
         {files &&
           files.map((file) => (
-            <div key={file.name} className="relative my-10">
+            <div
+              key={file.name}
+              className="relative my-10 shadow-lg rounded-lg"
+            >
               <div
                 onClick={clearFiles}
-                className="bg-black w-5 h-5 rounded-full text-white flex items-center justify-center font-bold cursor-pointer active:opacity-50 absolute -right-7 top-0"
+                className="bg-black w-5 h-5 rounded-full text-white flex items-center justify-center font-bold cursor-pointer active:opacity-50 absolute right-2 top-2"
               >
                 <GoX />
               </div>
@@ -97,6 +68,7 @@ export default function UploadButton({
                 src={URL.createObjectURL(file)}
                 width="100"
                 height="100"
+                className="rounded-lg"
                 alt="new avatar preview"
               />
             </div>
@@ -106,7 +78,7 @@ export default function UploadButton({
         <button
           disabled={isUploading}
           className="blue_button ml-auto"
-          onClick={() => files && startUpload(files)}
+          onClick={() => files && session && startUpload(files)}
         >
           Upload
         </button>

@@ -4,6 +4,7 @@ import React from "react";
 import Modal from "./modal";
 import { useSession } from "next-auth/react";
 import useNewPostModal from "@/hooks/useNewPostModal";
+import UploadButton from "../upload-button";
 
 export default function NewPostModal() {
   const newPostModal = useNewPostModal();
@@ -19,6 +20,7 @@ export default function NewPostModal() {
       toggle={newPostModal.toggle}
       title="Add New Post"
     >
+      <UploadButton endpoint="postMediaUploader" toggleModal={() => {}} />
       add new post form here
     </Modal>
   );
