@@ -30,17 +30,6 @@ export default function ProfileAvatar({ profileImage }: ProfileAvatarProps) {
         onClick={uploadAvatarModal.toggle}
         priority
       />
-      {/* {isCurrentUserOwner && (
-        <Modal isOpen={isOpen} toggle={toggle} title="Change Profile Photo">
-          <UploadButton
-            size="small"
-            endpoint="avatarUploader"
-            idOrUsername={username}
-            profileImage={profileImage}
-            toggleModal={toggle}
-          />
-        </Modal>
-      )} */}
       {isCurrentUserOwner && <UploadAvatarModal />}
     </>
   );

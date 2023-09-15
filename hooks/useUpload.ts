@@ -48,9 +48,13 @@ export default function useUpload({
               return null;
             }
 
-            setUploadedData(data.map((item) => item.url));
+            // setUploadedData(data.map((item) => item.url));
+            const media = data.map((item) => ({
+              type: "image",
+              url: item.url,
+            }));
 
-            // await editPost(session.user.username, {
+            // await editPost(postId, {
             //   profileImage: data[0].url,
             // });
           }
