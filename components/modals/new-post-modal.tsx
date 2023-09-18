@@ -10,10 +10,12 @@ import useUpload from "@/hooks/useUpload";
 import { GoSync } from "react-icons/go";
 import { addPost, addPostMedia } from "@/utils/api";
 import { Media } from "@/models/Media";
+import { useRouter } from "next/navigation";
 
 export default function NewPostModal() {
   const newPostModal = useNewPostModal();
   const { data: session } = useSession();
+  const router = useRouter();
 
   const {
     register,
@@ -71,7 +73,8 @@ export default function NewPostModal() {
       likes: [],
     } as any);
 
-    // newPostModal.toggle();
+    newPostModal.toggle();
+    router.refresh();
     // TODO: redirect to newly created post
   };
 

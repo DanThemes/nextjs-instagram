@@ -13,6 +13,7 @@ export default function UploadAvatarModal() {
   const { data: session } = useSession();
 
   const { files, setFiles, startUpload, isUploading } = useUpload({
+    username: session?.user.username,
     endpoint: "avatarUploader",
     toggleModal: uploadAvatarModal.toggle,
   });

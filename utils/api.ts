@@ -106,6 +106,31 @@ export async function addPost(values: Post) {
   }
 }
 
+// Get posts
+export async function getPosts(
+  userId: string,
+  onlyFollowingUsersPosts: boolean = false
+) {
+  if (!process.env.NEXT_PUBLIC_API_URL) {
+    throw new Error(
+      "Please define the 'NEXT_PUBLIC_API_URL' environment variable inside .env"
+    );
+  }
+
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/posts?userId=${userId}&onlyFollowingUsersPosts=${onlyFollowingUsersPosts}`,
+      {
+        cache: "no-store",
+      }
+    );
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.log("getPosts() api.ts", error);
+  }
+}
+
 //  Add post media
 export async function addPostMedia(values: Media) {
   if (!process.env.NEXT_PUBLIC_API_URL) {

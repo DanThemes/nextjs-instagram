@@ -7,17 +7,21 @@ import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
 type UseUploadType = {
+  username?: string;
   endpoint: "avatarUploader" | "postMediaUploader";
   toggleModal?: () => void;
 };
 
-export default function useUpload({ endpoint, toggleModal }: UseUploadType) {
+export default function useUpload({
+  username,
+  endpoint,
+  toggleModal,
+}: UseUploadType) {
   const [files, setFiles] = useState<File[] | null>(null);
   const [error, setError] = useState<{ message: string } | null>(null);
 
   // TODO: get the session somehow or pass it as an argument to useUpload
   // const session = await getServerSession(authOptions);
-  const session = { user: { username: "dani" } };
 
   const router = useRouter();
 
@@ -25,13 +29,13 @@ export default function useUpload({ endpoint, toggleModal }: UseUploadType) {
     endpoint,
     {
       onClientUploadComplete: async (data) => {
-        if (!data || !session) return;
+        if (!data || !username) return;
         // console.log(data);
 
         try {
           // Change user avatar
           if (endpoint === "avatarUploader") {
-            await editUser(session.user.username, {
+            await editUser(username, {
               profileImage: data[0].url,
             });
           }
