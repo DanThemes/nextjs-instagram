@@ -15,6 +15,7 @@ import Link from "next/link";
 
 import { signIn, signOut, useSession } from "next-auth/react";
 import NewPostModal from "../modals/new-post-modal";
+import { useRouter } from "next/navigation";
 
 const items = [
   {
@@ -69,6 +70,7 @@ const items = [
 
 const Sidebar = () => {
   const { data: session, status } = useSession();
+  const router = useRouter();
 
   const handleSignIn = async () => {
     const response = await signIn("credentials", {
@@ -77,6 +79,11 @@ const Sidebar = () => {
       password: "123",
     });
     // console.log(response);
+  };
+
+  const handleSignOut = async () => {
+    await signOut({ redirect: false });
+    router.refresh();
   };
 
   if (status === "loading") {
@@ -107,7 +114,7 @@ const Sidebar = () => {
       <hr />
       <p>{JSON.stringify(session)}</p>
       {session ? (
-        <button onClick={() => signOut({ redirect: false })}>Sign out</button>
+        <button onClick={handleSignOut}>Sign out</button>
       ) : (
         <button onClick={handleSignIn}>Sign in</button>
       )}
