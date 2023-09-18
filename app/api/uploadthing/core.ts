@@ -35,6 +35,8 @@ export const ourFileRouter = {
       console.log("Upload complete. File url:", file.url);
 
       try {
+        if (!metadata.profileImage) return;
+
         const lastIndex = metadata.profileImage.lastIndexOf("/");
         const fileToBeDeleted = metadata.profileImage.slice(lastIndex + 1);
         // console.log({ fileToBeDeleted });

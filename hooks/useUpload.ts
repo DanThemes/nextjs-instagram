@@ -15,6 +15,7 @@ export default function useUpload({ endpoint, toggleModal }: UseUploadType) {
   const [files, setFiles] = useState<File[] | null>(null);
   const [error, setError] = useState<{ message: string } | null>(null);
 
+  // TODO: get the session somehow or pass it as an argument to useUpload
   // const session = await getServerSession(authOptions);
   const session = { user: { username: "dani" } };
 
@@ -37,7 +38,6 @@ export default function useUpload({ endpoint, toggleModal }: UseUploadType) {
 
           // Add post media
           if (endpoint === "postMediaUploader") {
-            
           }
 
           setFiles(null);

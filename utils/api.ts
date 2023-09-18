@@ -62,7 +62,7 @@ export async function editUser(idOrUsername: string, values: Partial<User>) {
     );
   }
 
-  console.log(values);
+  console.log({ idOrUsername, values });
 
   try {
     const response = await fetch(

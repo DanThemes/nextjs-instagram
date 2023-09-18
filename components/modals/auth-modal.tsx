@@ -35,28 +35,39 @@ export default function AuthModal() {
   //   return null;
   // }
 
+  const handleSignIn = async (data: FieldValues) => {
+    const response = await signIn("credentials", {
+      redirect: false,
+      username: data.username,
+      password: data.password,
+    });
+    if (response?.error) {
+      setError("Invalid credentials");
+      return;
+    }
+    console.log({ response });
+    authModal.toggle();
+    router.refresh();
+  };
+
   const onSubmit = async (data: FieldValues) => {
     setError("");
     console.log({ data });
+
     // log in
     if (isLoginTabActive) {
-      const response = await signIn("credentials", {
-        redirect: false,
-        username: data.username,
-        password: data.password,
-      });
-      if (response?.error) {
-        setError("Invalid credentials");
+      handleSignIn(data);
+    }
+
+    // sign up
+    else {
+      const response = await addUser(data);
+      if (response?.message) {
+        setError(response.message);
         return;
       }
-      console.log({ response });
-      authModal.toggle();
-      router.refresh();
-    } else {
-      // const response = await addUser(data);
-      // console.log({ response });
+      handleSignIn(data);
     }
-    // sign up
   };
   console.log({ errors });
 
@@ -103,7 +114,7 @@ export default function AuthModal() {
 
           <div>
             <input
-              type="username"
+              type="text"
               placeholder="Username"
               className="border px-3 py-2 rounded-md w-full"
               {...register("username", {

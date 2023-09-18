@@ -65,7 +65,12 @@ export async function POST(request: NextRequest) {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const user = new User({ username, email, password: hashedPassword, rest });
+    const user = new User({
+      username,
+      email,
+      password: hashedPassword,
+      ...rest,
+    });
     await user.save();
 
     return NextResponse.json(user, { status: 201 });
