@@ -135,10 +135,9 @@ export default function NewPostModal() {
           </button>
         )} */}
           <div>
-            <input
-              type="text"
-              id="caption"
+            <textarea
               placeholder="Caption..."
+              className="border px-3 py-2 rounded-md w-full"
               {...register("caption", {
                 required: "Please enter a caption",
                 maxLength: 1000,

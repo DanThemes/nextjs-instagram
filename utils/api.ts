@@ -2,6 +2,31 @@ import { Media } from "@/models/Media";
 import { Post } from "@/models/Post";
 import { User } from "@/models/User";
 
+// Add user
+export async function addUser(values: Partial<User>) {
+  if (!process.env.NEXT_PUBLIC_API_URL) {
+    throw new Error(
+      "Please define the 'NEXT_PUBLIC_API_URL' environment variable inside .env"
+    );
+  }
+
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users`, {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify(values),
+    });
+    const data = await response.json();
+    console.log(data);
+    return data;
+  } catch (error) {
+    console.log("addUser() api.ts", error);
+  }
+}
+
+// Get user
 export async function getUser(idOrUsername: string) {
   if (!idOrUsername) {
     throw new Error("Invalid or missing user identifier");
@@ -25,6 +50,7 @@ export async function getUser(idOrUsername: string) {
   }
 }
 
+// Edit user
 export async function editUser(idOrUsername: string, values: Partial<User>) {
   if (!idOrUsername) {
     throw new Error("Invalid or missing user identifier");
@@ -56,29 +82,7 @@ export async function editUser(idOrUsername: string, values: Partial<User>) {
   }
 }
 
-export async function addPostMedia(values: Media) {
-  if (!process.env.NEXT_PUBLIC_API_URL) {
-    throw new Error(
-      "Please define the 'NEXT_PUBLIC_API_URL' environment variable inside .env"
-    );
-  }
-
-  try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/media`, {
-      method: "POST",
-      headers: {
-        "Content-type": "application/json",
-      },
-      body: JSON.stringify(values),
-    });
-    const data = await response.json();
-    console.log(data);
-    return data;
-  } catch (error) {
-    console.log("addPostMedia() api.ts", error);
-  }
-}
-
+// Add post
 export async function addPost(values: Post) {
   if (!process.env.NEXT_PUBLIC_API_URL) {
     throw new Error(
@@ -99,5 +103,29 @@ export async function addPost(values: Post) {
     return data;
   } catch (error) {
     console.log("addPost() api.ts", error);
+  }
+}
+
+//  Add post media
+export async function addPostMedia(values: Media) {
+  if (!process.env.NEXT_PUBLIC_API_URL) {
+    throw new Error(
+      "Please define the 'NEXT_PUBLIC_API_URL' environment variable inside .env"
+    );
+  }
+
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/media`, {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify(values),
+    });
+    const data = await response.json();
+    console.log(data);
+    return data;
+  } catch (error) {
+    console.log("addPostMedia() api.ts", error);
   }
 }

@@ -7,6 +7,7 @@ import { FieldValues, useForm } from "react-hook-form";
 import { GoSync } from "react-icons/go";
 import useAuthModal from "@/hooks/useAuthModal";
 import { useRouter } from "next/navigation";
+import { addUser } from "@/utils/api";
 
 export default function AuthModal() {
   const [isLoginTabActive, setIsLoginTabActive] = useState<boolean>(true);
@@ -36,6 +37,7 @@ export default function AuthModal() {
 
   const onSubmit = async (data: FieldValues) => {
     setError("");
+    console.log({ data });
     // log in
     if (isLoginTabActive) {
       const response = await signIn("credentials", {
@@ -51,6 +53,8 @@ export default function AuthModal() {
       authModal.toggle();
       router.refresh();
     } else {
+      // const response = await addUser(data);
+      // console.log({ response });
     }
     // sign up
   };
