@@ -1,3 +1,4 @@
+import Media from "@/models/Media";
 import Post from "@/models/Post";
 import User from "@/models/User";
 import dbConnect from "@/utils/db";
@@ -34,15 +35,31 @@ export async function GET(request: NextRequest) {
       console.log({ usersFollowedList: usersFollowedList[0].following });
       posts = await Post.find({
         userId: { $in: usersFollowedList[0].following },
-      }).populate(["media", "likes"]);
+      })
+        .populate(["media", "likes"])
+        .populate("userId", ["username", "profileImage"]);
     }
     // Get all posts of a user
     else if (userId) {
-      posts = await Post.find({ userId: userId }).populate(["media", "likes"]);
+      try {
+        posts = await Post.find({ userId })
+          // .populate(["media", "likes"])
+          //   .populate("userId", ["username", "profileImage"]);
+          .populate({ path: "media", model: Media })
+          .populate({
+            path: "userId",
+            select: ["username", "profileImage"],
+            model: User,
+          });
+      } catch (error) {
+        console.log(error);
+      }
     }
     // Get all posts
     else {
-      posts = await Post.find().populate(["media", "likes"]);
+      posts = await Post.find()
+        .populate(["media", "likes"])
+        .populate("userId", ["username", "profileImage"]);
     }
     console.log({ posts });
     return NextResponse.json(posts, { status: 200 });

@@ -1,5 +1,5 @@
 import { Media } from "@/models/Media";
-import { Post } from "@/models/Post";
+import { PostType } from "@/models/Post";
 import { User } from "@/models/User";
 
 // Add user
@@ -83,7 +83,7 @@ export async function editUser(idOrUsername: string, values: Partial<User>) {
 }
 
 // Add post
-export async function addPost(values: Post) {
+export async function addPost(values: PostType) {
   if (!process.env.NEXT_PUBLIC_API_URL) {
     throw new Error(
       "Please define the 'NEXT_PUBLIC_API_URL' environment variable inside .env"
@@ -107,10 +107,13 @@ export async function addPost(values: Post) {
 }
 
 // Get posts
-export async function getPosts(
-  userId: string,
-  onlyFollowingUsersPosts: boolean = false
-) {
+export async function getPosts({
+  userId,
+  onlyFollowingUsersPosts = false,
+}: {
+  userId: string;
+  onlyFollowingUsersPosts: boolean;
+}) {
   if (!process.env.NEXT_PUBLIC_API_URL) {
     throw new Error(
       "Please define the 'NEXT_PUBLIC_API_URL' environment variable inside .env"

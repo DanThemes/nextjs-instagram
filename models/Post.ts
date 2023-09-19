@@ -1,5 +1,4 @@
 import mongoose, { InferSchemaType } from "mongoose";
-import { MediaSchema } from "./Media";
 
 const PostSchema = new mongoose.Schema(
   {
@@ -49,7 +48,7 @@ function arrayMinLength(arr: string[]) {
   return true; //arr && arr.length > 0;
 }
 
-export type Post = InferSchemaType<typeof PostSchema>;
+export type PostType = InferSchemaType<typeof PostSchema>;
 
 const Post = mongoose.models.Post || mongoose.model("Post", PostSchema);
 
