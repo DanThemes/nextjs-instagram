@@ -52,8 +52,10 @@ const Posts = async () => {
                 />
                 <div>
                   <span className="font-bold">{post.userId.username}</span>
-                  <span>•</span>
-                  <span>{formatDistance(post.createdAt, new Date())}</span>
+                  <span className="px-1">•</span>
+                  <span>
+                    {formatDistance(new Date(post.createdAt), new Date())}
+                  </span>
                 </div>
               </div>
               <div className="relative w-full h-[40dvh] border border-[#dbdbdb]">
