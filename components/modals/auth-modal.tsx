@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Modal from "./modal";
-import { signIn, useSession } from "next-auth/react";
+import { signIn } from "next-auth/react";
 import { FieldValues, useForm } from "react-hook-form";
 import { GoSync } from "react-icons/go";
 import useAuthModal from "@/hooks/useAuthModal";
@@ -15,7 +15,12 @@ export default function AuthModal() {
   const [isLoginTabActive, setIsLoginTabActive] = useState<boolean>(
     authModal.tab === "login"
   );
+  // OR:
+  // let isLoginTabActive = authModal.tab === "login";
+
   const router = useRouter();
+
+  console.log("authtab", authModal.tab);
 
   const {
     register,
@@ -75,8 +80,11 @@ export default function AuthModal() {
     clearErrors();
     reset();
     setIsLoginTabActive((prev) => !prev);
-    router.refresh();
-    // setIsLoginTabActive((prev) => !prev);
+    if (authModal.tab === "login") {
+      authModal.setTab("register");
+    } else {
+      authModal.setTab("login");
+    }
   };
 
   return (
