@@ -10,10 +10,11 @@ import { useRouter } from "next/navigation";
 import { addUser } from "@/utils/api";
 
 export default function AuthModal() {
-  const [isLoginTabActive, setIsLoginTabActive] = useState<boolean>(true);
   const [error, setError] = useState("");
   const authModal = useAuthModal();
-  const { data: session } = useSession();
+  const [isLoginTabActive, setIsLoginTabActive] = useState<boolean>(
+    authModal.tab === "login"
+  );
   const router = useRouter();
 
   const {
@@ -30,10 +31,6 @@ export default function AuthModal() {
       password: "",
     },
   });
-
-  // if (session) {
-  //   return null;
-  // }
 
   const handleSignIn = async (data: FieldValues) => {
     const response = await signIn("credentials", {
@@ -69,7 +66,7 @@ export default function AuthModal() {
       handleSignIn(data);
     }
   };
-  console.log({ errors });
+  // console.log({ errors });
 
   const title = isLoginTabActive ? "Log in" : "Sign Up";
 
@@ -78,6 +75,8 @@ export default function AuthModal() {
     clearErrors();
     reset();
     setIsLoginTabActive((prev) => !prev);
+    router.refresh();
+    // setIsLoginTabActive((prev) => !prev);
   };
 
   return (

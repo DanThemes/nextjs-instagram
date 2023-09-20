@@ -13,10 +13,23 @@ export default function TopBar() {
         <div className="flex justify-between items-center px-10 py-5 w-[70rem] mx-auto">
           <div>Instagram</div>
           <div className="flex gap-3">
-            <button className="blue_button" onClick={() => authModal.toggle()}>
+            <button
+              className="blue_button"
+              onClick={() => {
+                authModal.setTab("login");
+                authModal.toggle();
+              }}
+            >
               Log In
             </button>
-            <button className="">Sign Up</button>
+            <button
+              onClick={() => {
+                authModal.setTab("register");
+                authModal.toggle();
+              }}
+            >
+              Sign Up
+            </button>
           </div>
         </div>
       </div>
