@@ -8,9 +8,10 @@ import { Pagination, Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
+import { MediaType } from "@/models/Media";
 
 type PostMediaProps = {
-  post: Partial<PostType>;
+  post: Omit<Partial<PostType>, "media"> & { media: MediaType[] };
 };
 
 export default function PostMedia({ post }: PostMediaProps) {
@@ -32,12 +33,21 @@ export default function PostMedia({ post }: PostMediaProps) {
     >
       {post.media?.map((item) => (
         <SwiperSlide key={item.url}>
-          <Image
-            src={item.url}
-            alt={post.caption}
-            fill
-            className="w-full h-auto object-cover"
-          />
+          {item.type === "image" && (
+            <Image
+              src={item.url}
+              alt={post.caption || "post"}
+              fill
+              className="w-full h-full object-cover"
+            />
+          )}
+          {item.type === "video" && (
+            <video
+              src={item.url}
+              controls
+              className="w-full h-full object-cover"
+            />
+          )}
         </SwiperSlide>
       ))}
     </Swiper>

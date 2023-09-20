@@ -40,7 +40,8 @@ export default function NewPostModal() {
   }
 
   const onSubmit = async (data: FieldValues) => {
-    // const dataArray = Array.from(data.media) as File[];
+    if (isUploading) return;
+
     const media = await startUpload(localMedia);
 
     const formattedMedia = media?.map((item) => {
@@ -78,6 +79,7 @@ export default function NewPostModal() {
   };
 
   const handleLocalMedia = (media: FileList) => {
+    if (isUploading) return;
     const mediaArray = Array.from(media);
     console.log({ mediaArray });
     setLocalMedia((prev) => {
@@ -88,7 +90,7 @@ export default function NewPostModal() {
   };
 
   const handleRemoveFromLocalMedia = (index: number) => {
-    console.log({ index });
+    if (isUploading) return;
     setLocalMedia((prev) => {
       const newLocalMedia = prev.filter((item, i) => i !== index);
       setFiles(newLocalMedia);
@@ -112,6 +114,7 @@ export default function NewPostModal() {
               type="file"
               multiple
               accept=".jpg, .JPG, .jpeg, .JPEG, .png, .PNG, .gif, .GIF, .mp4, .MP4, .webm, .WEBM, .ogg, .OGG"
+              disabled={isUploading}
               {...register("media", {
                 required: "Please attach one or more images/videos",
                 onChange: (e) => {
@@ -150,7 +153,8 @@ export default function NewPostModal() {
           <div>
             <textarea
               placeholder="Caption..."
-              className="border px-3 py-2 rounded-md w-full"
+              className="border px-3 py-2 rounded-md w-full disabled:opacity-50"
+              disabled={isUploading}
               {...register("caption", {
                 required: "Please enter a caption",
                 maxLength: 1000,

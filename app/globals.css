@@ -64,3 +64,33 @@ h6 {
 .icon_button {
   @apply text-2xl active:opacity-50 cursor-pointer;
 }
+
+.swiper-button-prev,
+.swiper-button-next {
+  color: #555 !important;
+  background: rgba(255, 255, 255, 0.7) !important;
+  height: 1.5rem !important;
+  width: 1.5rem !important;
+  border-radius: 50% !important;
+}
+.swiper-button-prev::after,
+.swiper-button-next::after {
+  font-size: 0.75rem !important;
+  font-weight: bold !important;
+  left: 1px !important;
+  top: 1px !important;
+  position: relative !important;
+}
+.swiper-button-disabled {
+  opacity: 0 !important;
+  visibility: hidden !important;
+}
+.swiper-pagination-bullet {
+  background: rgba(255, 255, 255, 0.3) !important;
+  width: 6px !important;
+  height: 6px !important;
+  margin: 0 2px !important;
+}
+.swiper-pagination-bullet-active {
+  background: rgba(255, 255, 255, 0.9) !important;
+}
