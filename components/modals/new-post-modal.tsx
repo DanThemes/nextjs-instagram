@@ -1,18 +1,19 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Modal from "./modal";
 import { useSession } from "next-auth/react";
 import useNewPostModal from "@/hooks/useNewPostModal";
 import Image from "next/image";
 import { FieldValues, useForm } from "react-hook-form";
 import useUpload from "@/hooks/useUpload";
-import { GoSync } from "react-icons/go";
+import { GoSync, GoX } from "react-icons/go";
 import { addPost, addPostMedia } from "@/utils/api";
-import { Media } from "@/models/Media";
+import { MediaType } from "@/models/Media";
 import { useRouter } from "next/navigation";
 
 export default function NewPostModal() {
+  const [localMedia, setLocalMedia] = useState<File[]>([]);
   const newPostModal = useNewPostModal();
   const { data: session } = useSession();
   const router = useRouter();
@@ -39,8 +40,8 @@ export default function NewPostModal() {
   }
 
   const onSubmit = async (data: FieldValues) => {
-    const dataArray = Array.from(data.media) as File[];
-    const media = await startUpload(dataArray);
+    // const dataArray = Array.from(data.media) as File[];
+    const media = await startUpload(localMedia);
 
     const formattedMedia = media?.map((item) => {
       const isImage = item.url.match(/\.(jpeg|jpg|gif|png)$/i) != null;
@@ -48,9 +49,7 @@ export default function NewPostModal() {
         type: isImage ? "image" : "video",
         url: item.url,
       };
-    }) as Media[];
-
-    console.log(formattedMedia);
+    }) as MediaType[];
 
     const mediaIds: string[] = [];
 
@@ -64,8 +63,7 @@ export default function NewPostModal() {
     );
     console.log({ mediaIds });
 
-    // await addPost() here
-    const newPost = await addPost({
+    await addPost({
       userId: session.user.id,
       media: mediaIds,
       caption: data.caption,
@@ -74,11 +72,31 @@ export default function NewPostModal() {
     } as any);
 
     newPostModal.toggle();
+    reset();
     router.refresh();
     // TODO: redirect to newly created post
   };
 
-  console.log({ files });
+  const handleLocalMedia = (media: FileList) => {
+    const mediaArray = Array.from(media);
+    console.log({ mediaArray });
+    setLocalMedia((prev) => {
+      const newLocalMedia = [...prev, ...mediaArray];
+      setFiles(newLocalMedia);
+      return newLocalMedia;
+    });
+  };
+
+  const handleRemoveFromLocalMedia = (index: number) => {
+    console.log({ index });
+    setLocalMedia((prev) => {
+      const newLocalMedia = prev.filter((item, i) => i !== index);
+      setFiles(newLocalMedia);
+      return newLocalMedia;
+    });
+  };
+
+  console.log({ localMedia, files });
 
   return (
     <Modal
@@ -93,50 +111,42 @@ export default function NewPostModal() {
               id="avatar-uploader"
               type="file"
               multiple
+              accept=".jpg, .JPG, .jpeg, .JPEG, .png, .PNG, .gif, .GIF, .mp4, .MP4, .webm, .WEBM, .ogg, .OGG"
               {...register("media", {
                 required: "Please attach one or more images/videos",
                 onChange: (e) => {
-                  setFiles(e.target.files);
+                  handleLocalMedia(e.target.files);
                 },
               })}
               className="hidden"
             />
             <label htmlFor="avatar-uploader" className="gray_button">
-              Choose an image
+              Choose an image/video
             </label>
           </div>
-          {/* <div className="flex gap-5">
-          {files &&
-            files.map((file) => (
-              <div
-                key={file.name}
-                className="relative my-10 shadow-lg rounded-lg"
-              >
+          <div className="flex gap-5">
+            {localMedia &&
+              Array.from(localMedia as File[]).map((file, index) => (
                 <div
-                  onClick={clearFiles}
-                  className="bg-black w-5 h-5 rounded-full text-white flex items-center justify-center font-bold cursor-pointer active:opacity-50 absolute right-2 top-2"
+                  key={file.name}
+                  className="relative my-10 shadow-lg rounded-lg"
                 >
-                  <GoX />
+                  <div
+                    onClick={() => handleRemoveFromLocalMedia(index)}
+                    className="bg-black w-5 h-5 rounded-full text-white flex items-center justify-center font-bold cursor-pointer active:opacity-50 absolute right-2 top-2"
+                  >
+                    <GoX />
+                  </div>
+                  <Image
+                    src={URL.createObjectURL(file)}
+                    width="100"
+                    height="100"
+                    className="rounded-lg object-cover h-full"
+                    alt="new avatar preview"
+                  />
                 </div>
-                <Image
-                  src={URL.createObjectURL(file)}
-                  width="100"
-                  height="100"
-                  className="rounded-lg"
-                  alt="new avatar preview"
-                />
-              </div>
-            ))}
-        </div>
-        {files && (
-          <button
-            disabled={isUploading}
-            className="blue_button ml-auto"
-            onClick={() => files && session && startUpload(files)}
-          >
-            Upload
-          </button>
-        )} */}
+              ))}
+          </div>
           <div>
             <textarea
               placeholder="Caption..."

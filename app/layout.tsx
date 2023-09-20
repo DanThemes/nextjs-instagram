@@ -27,7 +27,7 @@ export default async function RootLayout({
       <body className={inter.className}>
         <AuthSessionProvider>
           {!session && <TopBar />}
-          <div className="flex h-full">
+          <div className="flex min-h-full">
             {session && (
               <aside className="flex-[175px] w-[175px] flex-grow-0 border-r border-solid border-r-1 border-[#DBDBDB]">
                 <Sidebar />

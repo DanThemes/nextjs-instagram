@@ -37,15 +37,15 @@ export async function GET(request: NextRequest) {
       // console.log({ usersFollowedList: usersFollowedList[0].following });
       postsPromise = Post.find({
         userId: { $in: usersFollowedList.following },
-      });
+      }).sort({ createdAt: -1 });
     }
     // Get all posts of a user
     else if (userId) {
-      postsPromise = Post.find({ userId });
+      postsPromise = Post.find({ userId }).sort({ createdAt: -1 });
     }
     // Get all posts
     else {
-      postsPromise = Post.find();
+      postsPromise = Post.find().sort({ createdAt: -1 });
     }
 
     const posts = await postsPromise!
