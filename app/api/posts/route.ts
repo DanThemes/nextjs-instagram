@@ -1,3 +1,4 @@
+import Comment from "@/models/Comment";
 import Media from "@/models/Media";
 import Post from "@/models/Post";
 import User from "@/models/User";
@@ -26,42 +27,45 @@ export async function GET(request: NextRequest) {
   console.log("GET", userId, onlyFollowingUsersPosts);
 
   try {
-    let posts;
+    let postsPromise;
+
     // Get all posts of the users followed by a specific user
     if (userId && onlyFollowingUsersPosts) {
-      const usersFollowedList = await User.find({ _id: userId }).select(
+      const usersFollowedList = await User.findOne({ _id: userId }).select(
         "following"
       );
-      console.log({ usersFollowedList: usersFollowedList[0].following });
-      posts = await Post.find({
-        userId: { $in: usersFollowedList[0].following },
-      })
-        .populate(["media", "likes"])
-        .populate("userId", ["username", "profileImage"]);
+      // console.log({ usersFollowedList: usersFollowedList[0].following });
+      postsPromise = Post.find({
+        userId: { $in: usersFollowedList.following },
+      });
     }
     // Get all posts of a user
     else if (userId) {
-      try {
-        posts = await Post.find({ userId })
-          // .populate(["media", "likes"])
-          //   .populate("userId", ["username", "profileImage"]);
-          .populate({ path: "media", model: Media })
-          .populate({
-            path: "userId",
-            select: ["username", "profileImage"],
-            model: User,
-          });
-      } catch (error) {
-        console.log(error);
-      }
+      postsPromise = Post.find({ userId });
     }
     // Get all posts
     else {
-      posts = await Post.find()
-        .populate(["media", "likes"])
-        .populate("userId", ["username", "profileImage"]);
+      postsPromise = Post.find();
     }
-    console.log({ posts });
+
+    const posts = await postsPromise!
+      .populate({ path: "media", model: Media })
+      .populate({ path: "likes", model: Post })
+      .populate({
+        path: "comments",
+        model: Comment,
+        populate: {
+          path: "userId",
+          select: ["username", "profileImage"],
+          model: User,
+        },
+      })
+      .populate({
+        path: "userId",
+        select: ["username", "profileImage"],
+        model: User,
+      });
+
     return NextResponse.json(posts, { status: 200 });
   } catch (error) {
     console.log("Error while retrieving the posts", error);

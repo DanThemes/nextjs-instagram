@@ -12,7 +12,7 @@ export const MediaSchema = new mongoose.Schema({
   },
 });
 
-export type Media = InferSchemaType<typeof MediaSchema>;
+export type MediaType = InferSchemaType<typeof MediaSchema>;
 
 const Media = mongoose.models.Media || mongoose.model("Media", MediaSchema);
 

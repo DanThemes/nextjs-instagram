@@ -10,7 +10,7 @@ const SessionSchema = new mongoose.Schema({
   },
 });
 
-export type Session = InferSchemaType<typeof SessionSchema>;
+export type SessionType = InferSchemaType<typeof SessionSchema>;
 
 const Session =
   mongoose.models.Session || mongoose.model("Session", SessionSchema);

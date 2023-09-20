@@ -4,6 +4,13 @@ import { getServerSession } from "next-auth";
 import { formatDistance } from "date-fns";
 import Image from "next/image";
 import React from "react";
+import {
+  GoBookmark,
+  GoComment,
+  GoHeart,
+  GoPaperAirplane,
+} from "react-icons/go";
+import PostComments from "./post-comments";
 
 const posts = [
   {
@@ -24,8 +31,6 @@ const Posts = async () => {
     onlyFollowingUsersPosts: false,
   }); // change it to true after I add more posts
 
-  console.log({ id: session.user.id, posts });
-
   if (!posts) {
     return null;
   }
@@ -34,13 +39,13 @@ const Posts = async () => {
     return <p>{posts.message}</p>;
   }
 
-  console.log(posts);
+  console.log("thepost", posts);
 
   return (
     <div className="flex flex-col gap-10">
       {posts.map((post: any) => (
         <>
-          <div key={post.id}>
+          <div key={post._id}>
             <div>
               <div className="flex gap-3 items-center pb-3">
                 <Image
@@ -66,7 +71,29 @@ const Posts = async () => {
                   className="w-full h-auto object-cover"
                 />
               </div>
+              <div className="flex justify-between items-center text-2xl py-2">
+                <div className="flex gap-4">
+                  <div className="hover:opacity-50 active:opacity-30 cursor-pointer">
+                    <GoHeart />
+                  </div>
+                  <div className="hover:opacity-50 active:opacity-30 cursor-pointer">
+                    <GoComment />
+                  </div>
+                  <div className="hover:opacity-50 active:opacity-30 cursor-pointer">
+                    <GoPaperAirplane />
+                  </div>
+                </div>
+                <div className="hover:opacity-50 active:opacity-30 cursor-pointer">
+                  <GoBookmark />
+                </div>
+              </div>
+              <div>{post.likes.length} likes</div>
               <strong>author</strong> {post.caption}
+              <PostComments
+                postId={post._id}
+                comments={post.comments}
+                userId={session.user.id}
+              />
             </div>
           </div>
         </>

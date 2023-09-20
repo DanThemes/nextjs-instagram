@@ -157,3 +157,30 @@ export async function addPostMedia(values: Media) {
     console.log("addPostMedia() api.ts", error);
   }
 }
+
+// Add comment
+export async function addComment(postId: string, text: string, userId: string) {
+  if (!process.env.NEXT_PUBLIC_API_URL) {
+    throw new Error(
+      "Please define the 'NEXT_PUBLIC_API_URL' environment variable inside .env"
+    );
+  }
+
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/comments`,
+      {
+        method: "POST",
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: JSON.stringify({ postId, text, userId }),
+      }
+    );
+    const data = await response.json();
+    console.log(data);
+    return data;
+  } catch (error) {
+    console.log("addComment() api.ts", error);
+  }
+}
