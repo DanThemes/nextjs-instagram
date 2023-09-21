@@ -129,6 +129,7 @@ export async function getPosts({
       }
     );
     const data = await response.json();
+    // console.log("getPosts", data);
     return data;
   } catch (error) {
     console.log("getPosts() api.ts", error);

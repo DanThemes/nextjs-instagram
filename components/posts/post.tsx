@@ -15,6 +15,7 @@ import {
   GoPaperAirplane,
 } from "react-icons/go";
 import PostComments from "./post-comments";
+import { UserType } from "@/models/User";
 
 export default function Post({ post }: { post: any }) {
   const router = useRouter();
@@ -57,8 +58,14 @@ export default function Post({ post }: { post: any }) {
             className="hover:opacity-50 active:opacity-30 cursor-pointer"
             onClick={() => handleToggleLike(post._id)}
           >
-            {session && post.likes.includes(session?.user.id as any) ? (
-              <GoHeartFill />
+            {session &&
+            post.likes.find(
+              (like: UserType & { _id: string }) =>
+                like._id === session?.user.id
+            ) ? (
+              <>
+                <GoHeartFill />
+              </>
             ) : (
               <GoHeart />
             )}

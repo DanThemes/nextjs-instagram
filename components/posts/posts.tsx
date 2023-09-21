@@ -13,7 +13,7 @@ const Posts = async () => {
   const posts = await getPosts({
     userId: session.user.id,
     onlyFollowingUsersPosts: false,
-  }); // change it to true after I add more posts
+  }); // change it to true after I add "follow" functionality
 
   if (!posts) {
     return null;

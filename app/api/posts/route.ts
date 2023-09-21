@@ -24,7 +24,7 @@ export async function GET(request: NextRequest) {
       ? false
       : true;
 
-  console.log("GET", userId, onlyFollowingUsersPosts);
+  // console.log("GET", userId, onlyFollowingUsersPosts);
 
   try {
     let postsPromise;
@@ -50,15 +50,22 @@ export async function GET(request: NextRequest) {
 
     const posts = await postsPromise!
       .populate({ path: "media", model: Media })
-      .populate({ path: "likes", model: Post })
+      .populate({ path: "likes", select: ["-password"], model: User })
       .populate({
         path: "comments",
         model: Comment,
-        populate: {
-          path: "userId",
-          select: ["username", "profileImage"],
-          model: User,
-        },
+        populate: [
+          {
+            path: "userId",
+            select: ["username", "profileImage"],
+            model: User,
+          },
+          {
+            path: "likes",
+            select: ["-password"],
+            model: User,
+          },
+        ],
       })
       .populate({
         path: "userId",

@@ -48,7 +48,7 @@ export default function PostComments({
 
     await toggleLike({
       userId,
-      postId: id,
+      commentId: id,
     });
     router.refresh();
   };
@@ -97,8 +97,11 @@ export default function PostComments({
                   className="flex justify-end hover:opacity-50 active:opacity-30 cursor-pointer"
                   onClick={() => handleToggleLike(comment._id)}
                 >
-                  {comment.likes.includes(userId as any) ? (
-                    <GoHeartFill />
+                  {userId &&
+                  comment.likes.find((like: any) => like._id === userId) ? (
+                    <>
+                      <GoHeartFill />
+                    </>
                   ) : (
                     <GoHeart />
                   )}

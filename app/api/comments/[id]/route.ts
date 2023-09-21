@@ -1,4 +1,5 @@
 import Comment from "@/models/Comment";
+import User from "@/models/User";
 import dbConnect from "@/utils/db";
 import { Types } from "mongoose";
 import { NextRequest, NextResponse } from "next/server";
@@ -31,8 +32,8 @@ export async function PATCH(
     } else {
       comment.likes.push(userId);
     }
-    await comment.save();
-
+    const r = await comment.save();
+    console.log({ rComments: r });
     return NextResponse.json({ message: "Action successful" }, { status: 200 });
   } catch (error) {
     return NextResponse.json(
