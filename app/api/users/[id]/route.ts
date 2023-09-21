@@ -1,11 +1,10 @@
 import User from "@/models/User";
 import dbConnect from "@/utils/db";
 import { NextRequest, NextResponse } from "next/server";
-import mongoose from "mongoose";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { idOrUsername: string } }
+  { params }: { params: { id: string } }
 ) {
   // connect to the database
   try {
@@ -18,33 +17,18 @@ export async function GET(
     );
   }
 
-  const idOrUsername = params.idOrUsername;
-
   try {
-    const isID = mongoose.isValidObjectId(idOrUsername);
-    let user;
-
-    if (isID) {
-      user = await User.findOne({
-        _id: idOrUsername,
-      });
-    } else {
-      user = await User.findOne({
-        username: idOrUsername,
-      });
-    }
+    let user = await User.findOne({
+      _id: params.id,
+    });
 
     // Remove the password field
     if (user) {
       delete user?._doc.password;
       return NextResponse.json({ user }, { status: 200 });
     }
-    return NextResponse.json(
-      { message: "Invalid or missing user parameters" },
-      { status: 400 }
-    );
+    throw new Error("Invalid or missing user parameters");
   } catch (error) {
-    console.log("Invalid or missing user parameters", error);
     return NextResponse.json(
       { message: "Invalid or missing user parameters" },
       { status: 400 }
@@ -54,7 +38,7 @@ export async function GET(
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { idOrUsername: string } }
+  { params }: { params: { id: string } }
 ) {
   // connect to the database
   try {
@@ -67,30 +51,18 @@ export async function PATCH(
     );
   }
 
-  const idOrUsername = params.idOrUsername;
-
   // check auth here
 
   try {
     const values = await request.json();
-    const isID = mongoose.isValidObjectId(idOrUsername);
     let user;
 
-    if (isID) {
-      user = await User.updateOne(
-        {
-          _id: idOrUsername,
-        },
-        values
-      );
-    } else {
-      user = await User.updateOne(
-        {
-          username: idOrUsername,
-        },
-        values
-      );
-    }
+    user = await User.updateOne(
+      {
+        _id: params.id,
+      },
+      values
+    );
 
     console.log({ values, user });
 

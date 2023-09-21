@@ -31,6 +31,7 @@ export default function NewPostModal() {
   });
 
   const { files, setFiles, startUpload, isUploading } = useUpload({
+    userId: session?.user.id,
     endpoint: "postMediaUploader",
     toggleModal: newPostModal.toggle,
   });
@@ -160,7 +161,7 @@ export default function NewPostModal() {
                 maxLength: 1000,
               })}
             />
-            {errors.caption && <p>{errors.caption.message}</p>}
+            {errors.caption && <p>{errors.caption.message as string}</p>}
           </div>
 
           <div>

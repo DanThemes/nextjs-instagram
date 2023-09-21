@@ -1,19 +1,16 @@
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { editUser } from "@/utils/api";
 import { useUploadThing } from "@/utils/uploadthing";
-import { getServerSession } from "next-auth";
-import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
 type UseUploadType = {
-  username?: string;
+  userId?: string;
   endpoint: "avatarUploader" | "postMediaUploader";
   toggleModal?: () => void;
 };
 
 export default function useUpload({
-  username,
+  userId,
   endpoint,
   toggleModal,
 }: UseUploadType) {
@@ -29,13 +26,13 @@ export default function useUpload({
     endpoint,
     {
       onClientUploadComplete: async (data) => {
-        if (!data || !username) return;
+        if (!data || !userId) return;
         // console.log(data);
 
         try {
           // Change user avatar
           if (endpoint === "avatarUploader") {
-            await editUser(username, {
+            await editUser(userId, {
               profileImage: data[0].url,
             });
           }

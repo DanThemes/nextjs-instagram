@@ -13,7 +13,7 @@ export default function UploadAvatarModal() {
   const { data: session } = useSession();
 
   const { files, setFiles, startUpload, isUploading } = useUpload({
-    username: session?.user.username,
+    userId: session?.user.id,
     endpoint: "avatarUploader",
     toggleModal: uploadAvatarModal.toggle,
   });
@@ -23,6 +23,7 @@ export default function UploadAvatarModal() {
   }
 
   const handleUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (isUploading) return;
     console.log(e.target.files);
     if (e.target.files) {
       const filesArray = Array.from(e.target.files);
@@ -44,6 +45,8 @@ export default function UploadAvatarModal() {
         <input
           id="avatar-uploader"
           type="file"
+          accept=".jpg, .JPG, .jpeg, .JPEG, .png, .PNG, .gif, .GIF"
+          disabled={isUploading}
           onChange={handleUpload}
           className="hidden"
         />

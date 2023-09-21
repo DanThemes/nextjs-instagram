@@ -12,15 +12,10 @@ import { addUser } from "@/utils/api";
 export default function AuthModal() {
   const [error, setError] = useState("");
   const authModal = useAuthModal();
-  const [isLoginTabActive, setIsLoginTabActive] = useState<boolean>(
-    authModal.tab === "login"
-  );
-  // OR:
-  // let isLoginTabActive = authModal.tab === "login";
+
+  let isLoginTabActive = authModal.tab === "login";
 
   const router = useRouter();
-
-  console.log("authtab", authModal.tab);
 
   const {
     register,
@@ -47,14 +42,12 @@ export default function AuthModal() {
       setError("Invalid credentials");
       return;
     }
-    console.log({ response });
     authModal.toggle();
     router.refresh();
   };
 
   const onSubmit = async (data: FieldValues) => {
     setError("");
-    console.log({ data });
 
     // log in
     if (isLoginTabActive) {
@@ -71,7 +64,6 @@ export default function AuthModal() {
       handleSignIn(data);
     }
   };
-  // console.log({ errors });
 
   const title = isLoginTabActive ? "Log in" : "Sign Up";
 
@@ -79,7 +71,6 @@ export default function AuthModal() {
     setError("");
     clearErrors();
     reset();
-    setIsLoginTabActive((prev) => !prev);
     if (authModal.tab === "login") {
       authModal.setTab("register");
     } else {
@@ -102,7 +93,7 @@ export default function AuthModal() {
                     required: "Please enter an email address",
                   })}
                 />
-                {errors.email && <p>{errors.email.message}</p>}
+                {errors.email && <p>{errors.email.message as string}</p>}
               </div>
 
               <div>
@@ -114,7 +105,9 @@ export default function AuthModal() {
                     required: "Please enter a full name",
                   })}
                 />
-                {errors.displayName && <p>{errors.displayName.message}</p>}
+                {errors.displayName && (
+                  <p>{errors.displayName.message as string}</p>
+                )}
               </div>
             </>
           )}
@@ -128,7 +121,7 @@ export default function AuthModal() {
                 required: "Please enter a username",
               })}
             />
-            {errors.username && <p>{errors.username.message}</p>}
+            {errors.username && <p>{errors.username.message as string}</p>}
           </div>
 
           <div>
@@ -140,7 +133,7 @@ export default function AuthModal() {
                 required: "Please enter a password",
               })}
             />
-            {errors.password && <p>{errors.password.message}</p>}
+            {errors.password && <p>{errors.password.message as string}</p>}
 
             {error && <p>{error}</p>}
           </div>

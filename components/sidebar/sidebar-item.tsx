@@ -21,7 +21,6 @@ const SidebarItem = ({
   modal: Modal,
 }: SidebarItemProps) => {
   const pathname = usePathname();
-
   const newPostModal = useNewPostModal();
 
   return (

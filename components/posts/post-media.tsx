@@ -17,7 +17,7 @@ type PostMediaProps = {
 export default function PostMedia({ post }: PostMediaProps) {
   const pagination = {
     clickable: true,
-    renderBullet: function (index, className) {
+    renderBullet: function (index: any, className: any) {
       return '<span class="' + className + '"></span>';
     },
   };

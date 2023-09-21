@@ -1,7 +1,8 @@
 "use client";
 
-import { User, UserType } from "@/models/User";
-import { addComment } from "@/utils/api";
+import { CommentType } from "@/models/Comment";
+import { UserType } from "@/models/User";
+import { addComment, toggleLike } from "@/utils/api";
 import { formatDistance } from "date-fns";
 import Image from "next/image";
 import Link from "next/link";
@@ -9,12 +10,12 @@ import { useRouter } from "next/navigation";
 import React from "react";
 import { FieldValues, useForm } from "react-hook-form";
 import { BsEmojiSmile } from "react-icons/bs";
-import { GoHeart } from "react-icons/go";
+import { GoHeart, GoHeartFill } from "react-icons/go";
 
 type PostCommentsType = {
   postId: string;
-  comments: { _id: string; text: string; userId: Partial<UserType> }[];
-  userId: string;
+  comments: (Omit<CommentType, "userId"> & { _id: string; userId: UserType })[];
+  userId?: string;
 };
 
 export default function PostComments({
@@ -36,24 +37,21 @@ export default function PostComments({
   const router = useRouter();
 
   const submitComment = async (data: FieldValues) => {
-    if (isSubmitting) return;
+    if (isSubmitting || !userId) return;
     await addComment(postId, data.text, userId);
     reset();
     router.refresh();
   };
 
-  /*
+  const handleToggleLike = async (id: string) => {
+    if (!userId) return;
 
-createdAt
-parentCommentId
-postId
-text
-updatedAt
-userId
-  profileImage
-  username
-
-*/
+    await toggleLike({
+      userId,
+      postId: id,
+    });
+    router.refresh();
+  };
 
   console.log("comments view", comments);
 
@@ -95,30 +93,39 @@ userId
                     <span>Reply</span>
                   </div>
                 </div>
-                <div className="flex justify-end hover:opacity-50 active:opacity-30 cursor-pointer">
-                  <GoHeart />
+                <div
+                  className="flex justify-end hover:opacity-50 active:opacity-30 cursor-pointer"
+                  onClick={() => handleToggleLike(comment._id)}
+                >
+                  {comment.likes.includes(userId as any) ? (
+                    <GoHeartFill />
+                  ) : (
+                    <GoHeart />
+                  )}
                 </div>
               </div>
             </div>
           ))}
         </div>
       )}
-      <div className="flex justify-between border-b py-4">
-        <form onSubmit={handleSubmit(submitComment)} className="flex-1">
-          <input
-            type="text"
-            placeholder="Add a comment..."
-            className="w-full focus:outline-none"
-            {...register("text", {
-              required: true,
-              minLength: 1,
-            })}
-          />
-        </form>
-        <div className="basis-[2rem] cursor-pointer hover:opacity-50 flex justify-end">
-          <BsEmojiSmile />
+      {userId && (
+        <div className="flex justify-between border-b py-4">
+          <form onSubmit={handleSubmit(submitComment)} className="flex-1">
+            <input
+              type="text"
+              placeholder="Add a comment..."
+              className="w-full focus:outline-none"
+              {...register("text", {
+                required: true,
+                minLength: 1,
+              })}
+            />
+          </form>
+          <div className="basis-[2rem] cursor-pointer hover:opacity-50 flex justify-end">
+            <BsEmojiSmile />
+          </div>
         </div>
-      </div>
+      )}
     </>
   );
 }

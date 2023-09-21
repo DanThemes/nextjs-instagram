@@ -16,16 +16,16 @@ export default function TopBar() {
             <button
               className="blue_button"
               onClick={() => {
-                authModal.setTab("login");
                 authModal.toggle();
+                authModal.setTab("login");
               }}
             >
               Log In
             </button>
             <button
               onClick={() => {
-                authModal.setTab("register");
                 authModal.toggle();
+                authModal.setTab("register");
               }}
             >
               Sign Up

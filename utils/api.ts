@@ -1,9 +1,10 @@
-import { Media } from "@/models/Media";
-import { PostType } from "@/models/Post";
-import { User } from "@/models/User";
+import Comment from "@/models/Comment";
+import { MediaType } from "@/models/Media";
+import Post, { PostType } from "@/models/Post";
+import { UserType } from "@/models/User";
 
 // Add user
-export async function addUser(values: Partial<User>) {
+export async function addUser(values: Partial<UserType>) {
   if (!process.env.NEXT_PUBLIC_API_URL) {
     throw new Error(
       "Please define the 'NEXT_PUBLIC_API_URL' environment variable inside .env"
@@ -27,8 +28,8 @@ export async function addUser(values: Partial<User>) {
 }
 
 // Get user
-export async function getUser(idOrUsername: string) {
-  if (!idOrUsername) {
+export async function getUser(id: string) {
+  if (!id) {
     throw new Error("Invalid or missing user identifier");
   }
 
@@ -40,7 +41,7 @@ export async function getUser(idOrUsername: string) {
 
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/users/${idOrUsername}`,
+      `${process.env.NEXT_PUBLIC_API_URL}/users/${id}`,
       { cache: "no-store" }
     );
     const data = await response.json();
@@ -51,8 +52,8 @@ export async function getUser(idOrUsername: string) {
 }
 
 // Edit user
-export async function editUser(idOrUsername: string, values: Partial<User>) {
-  if (!idOrUsername) {
+export async function editUser(id: string, values: Partial<UserType>) {
+  if (!id) {
     throw new Error("Invalid or missing user identifier");
   }
 
@@ -62,11 +63,11 @@ export async function editUser(idOrUsername: string, values: Partial<User>) {
     );
   }
 
-  console.log({ idOrUsername, values });
+  console.log({ id, values });
 
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/users/${idOrUsername}`,
+      `${process.env.NEXT_PUBLIC_API_URL}/users/${id}`,
       {
         method: "PATCH",
         headers: {
@@ -135,7 +136,7 @@ export async function getPosts({
 }
 
 //  Add post media
-export async function addPostMedia(values: Media) {
+export async function addPostMedia(values: MediaType) {
   if (!process.env.NEXT_PUBLIC_API_URL) {
     throw new Error(
       "Please define the 'NEXT_PUBLIC_API_URL' environment variable inside .env"
@@ -182,5 +183,43 @@ export async function addComment(postId: string, text: string, userId: string) {
     return data;
   } catch (error) {
     console.log("addComment() api.ts", error);
+  }
+}
+
+// toggle post/comment like
+export async function toggleLike({
+  userId,
+  postId,
+  commentId,
+}: {
+  userId: string;
+  postId?: string;
+  commentId?: string;
+}) {
+  if (!process.env.NEXT_PUBLIC_API_URL) {
+    throw new Error(
+      "Please define the 'NEXT_PUBLIC_API_URL' environment variable inside .env"
+    );
+  }
+
+  try {
+    const path = postId ? "posts" : "comments";
+    const id = postId ? postId : commentId;
+
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/${path}/${id}`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: JSON.stringify({ userId }),
+      }
+    );
+    const data = await response.json();
+    console.log(data);
+    return data;
+  } catch (error) {
+    console.log("toggleLike() api.ts", error);
   }
 }
