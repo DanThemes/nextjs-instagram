@@ -2,6 +2,8 @@ import User from "@/models/User";
 import dbConnect from "@/utils/db";
 import { NextRequest, NextResponse } from "next/server";
 import mongoose from "mongoose";
+import Media from "@/models/Media";
+import Post from "@/models/Post";
 
 export async function GET(
   request: NextRequest,
@@ -34,9 +36,30 @@ export async function GET(
       });
     }
 
-    const user = await userPromise.populate({ path: "posts", model: "Post" });
+    const user = await userPromise.populate({
+      path: "posts",
+      model: Post,
+      // populate: [
+      //   {
+      //     path: "comments",
+      //     model: Comment,
+      //     populate: [
+      //       {
+      //         path: "userId",
+      //         select: ["username", "profileImage"],
+      //         model: User,
+      //       },
+      //       {
+      //         path: "likes",
+      //         select: ["-password"],
+      //         model: User,
+      //       },
+      //     ],
+      //   },
+      // ],
+    });
 
-    console.log({ user });
+    console.log({ userrrr: user });
     // Remove the password field
     if (user) {
       delete user?._doc.password;

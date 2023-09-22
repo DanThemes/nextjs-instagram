@@ -11,13 +11,20 @@ import { GoSync, GoX } from "react-icons/go";
 import { addPost, addPostMedia } from "@/utils/api";
 import { MediaType } from "@/models/Media";
 import { useRouter } from "next/navigation";
+import clsx from "clsx";
 
 const validateFileSizes = (files: FileList) => {
+  if (!files.length) {
+    return "Please attach one or more images/videos";
+  }
   if (Array.from(files).some((file) => file.size > 4 * 1024 * 1024)) {
     return "File size limit is 4MB for images and 64MB for videos. Files over the allowed size limit have been removed.";
   }
   return true;
 };
+
+const maxImageFileSize = 4 * 1024 * 1024;
+const maxVideoFileSize = 64 * 1024 * 1024;
 
 export default function NewPostModal() {
   const [localMedia, setLocalMedia] = useState<File[]>([]);
@@ -28,11 +35,13 @@ export default function NewPostModal() {
   const {
     register,
     handleSubmit,
+    setValue,
     setError,
     trigger,
     clearErrors,
     formState: { errors },
     reset,
+    watch,
   } = useForm<FieldValues>({
     defaultValues: {
       media: [],
@@ -55,6 +64,7 @@ export default function NewPostModal() {
     // await trigger("media");
     // clearErrors("media");
 
+    // Upload to UploadThing
     const media = await startUpload(localMedia);
 
     const formattedMedia = media?.map((item) => {
@@ -67,6 +77,7 @@ export default function NewPostModal() {
 
     const mediaIds: string[] = [];
 
+    // Save the media to database
     await Promise.all(
       formattedMedia.map(async (media) => {
         const resp = await addPostMedia(media);
@@ -77,6 +88,7 @@ export default function NewPostModal() {
     );
     console.log({ mediaIds });
 
+    // Save the post
     await addPost({
       userId: session.user.id,
       media: mediaIds,
@@ -85,8 +97,9 @@ export default function NewPostModal() {
       likes: [],
     } as any);
 
-    newPostModal.toggle();
+    // newPostModal.toggle();
     reset();
+    setLocalMedia([]);
     router.refresh();
     // TODO: redirect to newly created post
   };
@@ -98,30 +111,34 @@ export default function NewPostModal() {
     // Trigger validation for "media" field
     await trigger("media");
 
+    let mediaArray = Array.from(media);
     // Keep in local state only media below file size limit
-    let mediaArray = Array.from(media).filter(
-      (media) => media.size < 4 * 1024 * 1024
-    );
+    // let mediaArray = Array.from(media).filter(
+    //   (media) => media.size < 4 * 1024 * 1024
+    // );
 
     console.log({ mediaArray });
     setLocalMedia((prev) => {
       const newLocalMedia = [...prev, ...mediaArray];
       setFiles(newLocalMedia);
-
+      setValue("media", newLocalMedia);
       return newLocalMedia;
     });
   };
 
-  const handleRemoveFromLocalMedia = (index: number) => {
+  const handleRemoveFromLocalMedia = async (index: number) => {
     if (isUploading) return;
+    await trigger("media");
+
     setLocalMedia((prev) => {
       const newLocalMedia = prev.filter((item, i) => i !== index);
       setFiles(newLocalMedia);
+      setValue("media", newLocalMedia);
       return newLocalMedia;
     });
   };
 
-  console.log({ localMedia, files, errors });
+  console.log({ localMedia, watchMedia: watch("media"), errors });
 
   return (
     <Modal
@@ -139,7 +156,7 @@ export default function NewPostModal() {
               accept=".jpg, .JPG, .jpeg, .JPEG, .png, .PNG, .gif, .GIF, .mp4, .MP4, .webm, .WEBM, .ogg, .OGG"
               disabled={isUploading}
               {...register("media", {
-                required: "Please attach one or more images/videos",
+                // required: "Please attach one or more images/videos",
                 onChange: (e) => {
                   handleLocalMedia(e.target.files);
                 },
@@ -157,7 +174,11 @@ export default function NewPostModal() {
               Array.from(localMedia as File[]).map((file, index) => (
                 <div
                   key={file.name}
-                  className="relative my-10 shadow-lg rounded-lg"
+                  className={clsx(
+                    "relative my-10 shadow-lg rounded-lg",
+                    file.size > maxImageFileSize &&
+                      "border-[4px] border-solid border-[red]"
+                  )}
                 >
                   <div
                     onClick={() => handleRemoveFromLocalMedia(index)}
