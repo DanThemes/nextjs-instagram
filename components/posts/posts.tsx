@@ -3,20 +3,24 @@ import { getPosts } from "@/utils/api";
 import { getServerSession } from "next-auth";
 import React from "react";
 import Post from "./post";
+import { PostType } from "@/models/Post";
 
-const Posts = async () => {
+const Posts = async ({ posts }: { posts?: PostType }) => {
   const session = await getServerSession(authOptions);
   if (!session) {
     return;
   }
 
-  const posts = await getPosts({
-    userId: session.user.id,
-    onlyFollowingUsersPosts: false,
-  }); // change it to true after I add "follow" functionality
+  const;
 
   if (!posts) {
-    return null;
+    const response = await getPosts({
+      userId: session.user.id,
+      onlyFollowingUsersPosts: false,
+    });
+    if (!response) {
+      posts = response;
+    }
   }
 
   if (posts && !Array.isArray(posts) && "message" in posts) {
