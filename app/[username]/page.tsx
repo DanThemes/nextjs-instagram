@@ -2,10 +2,10 @@ import PageNotFound from "@/components/page-not-found";
 import { getUser } from "@/utils/api";
 import ProfileButtons from "./profile-buttons";
 import ProfileAvatar from "./profile-avatar";
-import { User } from "@/models/User";
+import { UserType } from "@/models/User";
 
 const Profile = async ({ params }: { params: { username: string } }) => {
-  const user = (await getUser(params.username)) as User;
+  const user = (await getUser(params.username)) as UserType;
 
   if (!user) {
     return <PageNotFound />;

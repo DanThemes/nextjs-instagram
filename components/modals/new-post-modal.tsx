@@ -12,6 +12,13 @@ import { addPost, addPostMedia } from "@/utils/api";
 import { MediaType } from "@/models/Media";
 import { useRouter } from "next/navigation";
 
+const validateFileSizes = (files: FileList) => {
+  if (Array.from(files).some((file) => file.size > 4 * 1024 * 1024)) {
+    return "File size limit is 4MB for images and 64MB for videos. Files over the allowed size limit have been removed.";
+  }
+  return true;
+};
+
 export default function NewPostModal() {
   const [localMedia, setLocalMedia] = useState<File[]>([]);
   const newPostModal = useNewPostModal();
@@ -21,6 +28,9 @@ export default function NewPostModal() {
   const {
     register,
     handleSubmit,
+    setError,
+    trigger,
+    clearErrors,
     formState: { errors },
     reset,
   } = useForm<FieldValues>({
@@ -42,6 +52,8 @@ export default function NewPostModal() {
 
   const onSubmit = async (data: FieldValues) => {
     if (isUploading) return;
+    // await trigger("media");
+    // clearErrors("media");
 
     const media = await startUpload(localMedia);
 
@@ -79,13 +91,23 @@ export default function NewPostModal() {
     // TODO: redirect to newly created post
   };
 
-  const handleLocalMedia = (media: FileList) => {
+  // Store file uploads in order to show a preview of the selected files in the UI
+  const handleLocalMedia = async (media: FileList) => {
     if (isUploading) return;
-    const mediaArray = Array.from(media);
+
+    // Trigger validation for "media" field
+    await trigger("media");
+
+    // Keep in local state only media below file size limit
+    let mediaArray = Array.from(media).filter(
+      (media) => media.size < 4 * 1024 * 1024
+    );
+
     console.log({ mediaArray });
     setLocalMedia((prev) => {
       const newLocalMedia = [...prev, ...mediaArray];
       setFiles(newLocalMedia);
+
       return newLocalMedia;
     });
   };
@@ -99,7 +121,7 @@ export default function NewPostModal() {
     });
   };
 
-  console.log({ localMedia, files });
+  console.log({ localMedia, files, errors });
 
   return (
     <Modal
@@ -121,6 +143,7 @@ export default function NewPostModal() {
                 onChange: (e) => {
                   handleLocalMedia(e.target.files);
                 },
+                validate: (v) => validateFileSizes(v),
               })}
               className="hidden"
             />
@@ -128,6 +151,7 @@ export default function NewPostModal() {
               Choose an image/video
             </label>
           </div>
+          {errors.media && <p>{errors.media.message as string}</p>}
           <div className="flex gap-5">
             {localMedia &&
               Array.from(localMedia as File[]).map((file, index) => (

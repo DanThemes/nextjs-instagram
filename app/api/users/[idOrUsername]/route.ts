@@ -1,10 +1,11 @@
 import User from "@/models/User";
 import dbConnect from "@/utils/db";
 import { NextRequest, NextResponse } from "next/server";
+import mongoose from "mongoose";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: { idOrUsername: string } }
 ) {
   // connect to the database
   try {
@@ -17,11 +18,25 @@ export async function GET(
     );
   }
 
-  try {
-    let user = await User.findOne({
-      _id: params.id,
-    });
+  const idOrUsername = params.idOrUsername;
 
+  try {
+    const isID = mongoose.isValidObjectId(idOrUsername);
+    let userPromise;
+
+    if (isID) {
+      userPromise = User.findOne({
+        _id: idOrUsername,
+      });
+    } else {
+      userPromise = User.findOne({
+        username: idOrUsername,
+      });
+    }
+
+    const user = await userPromise.populate({ path: "posts", model: "Post" });
+
+    console.log({ user });
     // Remove the password field
     if (user) {
       delete user?._doc.password;

@@ -12,6 +12,7 @@ const auth = async (req: Request) => {
   if (!session) return null;
 
   const user = await getUser(session.user.username);
+  console.log("middleware user", user);
   return user;
 };
 

@@ -28,8 +28,8 @@ export async function addUser(values: Partial<UserType>) {
 }
 
 // Get user
-export async function getUser(id: string) {
-  if (!id) {
+export async function getUser(idOrUsername: string) {
+  if (!idOrUsername) {
     throw new Error("Invalid or missing user identifier");
   }
 
@@ -41,7 +41,7 @@ export async function getUser(id: string) {
 
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/users/${id}`,
+      `${process.env.NEXT_PUBLIC_API_URL}/users/${idOrUsername}`,
       { cache: "no-store" }
     );
     const data = await response.json();
