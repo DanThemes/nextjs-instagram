@@ -4,6 +4,8 @@ import ProfileButtons from "./profile-buttons";
 import ProfileAvatar from "./profile-avatar";
 import { UserType } from "@/models/User";
 import Posts from "@/components/posts/posts";
+import Post from "@/components/posts/post";
+import PostCard from "@/components/posts/post-card";
 
 const Profile = async ({ params }: { params: { username: string } }) => {
   const user = (await getUser(params.username)) as UserType;
@@ -53,13 +55,12 @@ const Profile = async ({ params }: { params: { username: string } }) => {
           </div>
         </div>
       </div>
-      <div className="flex flex-col gap-10">
-        {/* {user.posts.map((post: any) => (
-          <div key={post._id}>
-            <Post post={post} />
+      <div className="grid gap-10 grid-cols-3">
+        {posts.map((post: any) => (
+          <div key={post._id} className="border border-solid border-[#eee]">
+            <PostCard post={post} />
           </div>
-        ))} */}
-        <Posts posts={posts} />
+        ))}
       </div>
     </>
   );
