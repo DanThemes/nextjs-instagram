@@ -1,10 +1,12 @@
 import { MediaType } from "@/models/Media";
 import { PostType } from "@/models/Post";
 import Image from "next/image";
+import Link from "next/link";
 import React from "react";
+import { GoComment, GoHeart, GoHeartFill } from "react-icons/go";
 
 type PostCardType = {
-  post: Omit<PostType, "media"> & { media: MediaType[] };
+  post: Omit<PostType, "media"> & { media: MediaType[] } & { _id: string };
 };
 
 export default function PostCard({ post }: PostCardType) {
@@ -18,8 +20,24 @@ export default function PostCard({ post }: PostCardType) {
   }
 
   return (
-    <div>
-      <Image src={placeholder} width={300} height={300} alt="post" />
+    <div className="group border border-solid border-[#eee] hover:bg-black/80 relative">
+      <Link href={`/posts/${post._id}`}>
+        <Image
+          src={placeholder}
+          width={300}
+          height={300}
+          alt="post"
+          className="object-cover h-full w-auto relative -z-[1]"
+        />
+        <div className="hidden group-hover:flex absolute gap-5 items-center justify-center inset-0">
+          <div className="flex gap-1 items-center text-white">
+            <GoHeartFill /> {post.likes.length}
+          </div>
+          <div className="flex gap-1 items-center text-white">
+            <GoComment /> {post.comments.length}
+          </div>
+        </div>
+      </Link>
     </div>
   );
 }

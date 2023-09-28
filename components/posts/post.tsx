@@ -16,6 +16,7 @@ import {
 } from "react-icons/go";
 import PostComments from "./post-comments";
 import { UserType } from "@/models/User";
+import Link from "next/link";
 
 export default function Post({ post }: { post: any }) {
   const router = useRouter();
@@ -44,15 +45,24 @@ export default function Post({ post }: { post: any }) {
   return (
     <>
       <div className="flex gap-3 items-center pb-3">
-        <Image
-          src={post.userId.profileImage}
-          alt={post.userId.username}
-          width={40}
-          height={40}
-          className="rounded-full bg-cover border"
-        />
+        <Link href={`/${post.userId.username}`}>
+          <Image
+            src={post.userId.profileImage}
+            alt={post.userId.username}
+            width={40}
+            height={40}
+            className="rounded-full bg-cover border"
+          />
+        </Link>
         <div>
-          <span className="font-bold">{post.userId.username}</span>
+          <span className="font-bold">
+            <Link
+              href={`/${post.userId.username}`}
+              className="hover:opacity-50"
+            >
+              {post.userId.username}
+            </Link>
+          </span>
           <span className="px-1">•</span>
           <span>{formatDistance(new Date(post.createdAt), new Date())}</span>
         </div>

@@ -107,6 +107,28 @@ export async function addPost(values: PostType) {
   }
 }
 
+// Get post
+export async function getPost(id: string) {
+  if (!process.env.NEXT_PUBLIC_API_URL) {
+    throw new Error(
+      "Please define the 'NEXT_PUBLIC_API_URL' environment variable inside .env"
+    );
+  }
+
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/posts/${id}`,
+      {
+        cache: "no-store",
+      }
+    );
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.log("getPost() api.ts", error);
+  }
+}
+
 // Get posts
 export async function getPosts({
   userId,

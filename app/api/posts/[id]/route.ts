@@ -1,7 +1,106 @@
+import Comment from "@/models/Comment";
+import Media from "@/models/Media";
 import Post from "@/models/Post";
+import User from "@/models/User";
 import dbConnect from "@/utils/db";
 import { Types } from "mongoose";
 import { NextRequest, NextResponse } from "next/server";
+
+export async function GET(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  // connect to the database
+  try {
+    await dbConnect();
+  } catch (error) {
+    console.error("Database connection error:", error);
+    return NextResponse.json(
+      { message: "Something went wrong" },
+      { status: 400 }
+    );
+  }
+
+  try {
+    const post = await Post.findOne({ _id: params.id })
+      .populate({ path: "media", model: Media })
+      .populate({ path: "likes", select: ["-password"], model: User })
+      .populate({
+        path: "comments",
+        model: Comment,
+        populate: [
+          {
+            path: "userId",
+            select: ["username", "profileImage"],
+            model: User,
+          },
+          {
+            path: "likes",
+            select: ["-password"],
+            model: User,
+          },
+        ],
+      })
+      .populate({
+        path: "userId",
+        select: ["username", "profileImage"],
+        model: User,
+      });
+
+    console.log("b post", post);
+
+    return NextResponse.json(post, { status: 200 });
+  } catch (error) {
+    console.log("Error while retrieving the post", error);
+    return NextResponse.json(
+      { message: "Error while retrieving the post" },
+      { status: 400 }
+    );
+  }
+}
+
+export async function POST(request: NextRequest) {
+  // connect to the database
+  try {
+    await dbConnect();
+  } catch (error) {
+    console.error("Database connection error:", error);
+    return NextResponse.json(
+      { message: "Something went wrong" },
+      { status: 400 }
+    );
+  }
+
+  // create post
+  try {
+    const { userId, media, caption } = await request.json();
+    if (!userId || !media || !caption) {
+      return NextResponse.json(
+        { message: "Please fill in all the required fields" },
+        { status: 400 }
+      );
+    }
+
+    console.log({ userId, media, caption });
+    const user = await User.findOne({ _id: userId });
+    if (!user) {
+      throw new Error("User not found");
+    }
+    const post = new Post({ userId, media, caption, comments: [], likes: [] });
+    await post.save();
+    user.posts.push(post._id);
+    console.log("ppp", user.posts);
+    await user.save();
+
+    return NextResponse.json(post, { status: 201 });
+  } catch (error) {
+    console.log("Required fields are missing for post creation:", error);
+    return NextResponse.json(
+      { message: "Required fields are missing for post creation" },
+      { status: 400 }
+    );
+  }
+}
 
 export async function PATCH(
   request: NextRequest,

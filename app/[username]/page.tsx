@@ -3,12 +3,10 @@ import { getPosts, getUser } from "@/utils/api";
 import ProfileButtons from "./profile-buttons";
 import ProfileAvatar from "./profile-avatar";
 import { UserType } from "@/models/User";
-import Posts from "@/components/posts/posts";
-import Post from "@/components/posts/post";
 import PostCard from "@/components/posts/post-card";
 
 const Profile = async ({ params }: { params: { username: string } }) => {
-  const user = (await getUser(params.username)) as UserType;
+  const user = (await getUser(params.username)) as UserType & { _id: string };
 
   if (!user) {
     return <PageNotFound />;
@@ -55,11 +53,9 @@ const Profile = async ({ params }: { params: { username: string } }) => {
           </div>
         </div>
       </div>
-      <div className="grid gap-10 grid-cols-3">
+      <div className="grid gap-1 grid-cols-3 mt-10 cursor-pointer">
         {posts.map((post: any) => (
-          <div key={post._id} className="border border-solid border-[#eee]">
-            <PostCard post={post} />
-          </div>
+          <PostCard post={post} key={post._id} />
         ))}
       </div>
     </>
