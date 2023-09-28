@@ -5,7 +5,11 @@ import React from "react";
 import Post from "./post";
 import { PostType } from "@/models/Post";
 
-const Posts = async ({ posts }: { posts?: PostType[] }) => {
+const Posts = async ({
+  posts,
+}: {
+  posts?: PostType[] | { message: string };
+}) => {
   const session = await getServerSession(authOptions);
   if (!session) {
     return;
@@ -22,7 +26,7 @@ const Posts = async ({ posts }: { posts?: PostType[] }) => {
     }
   }
 
-  console.log("aa", posts);
+  // console.log("aa", posts);
 
   if (posts && !Array.isArray(posts) && "message" in posts) {
     return <p>{posts.message}</p>;

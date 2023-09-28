@@ -1,19 +1,24 @@
 import PageNotFound from "@/components/page-not-found";
-import { getUser } from "@/utils/api";
+import { getPosts, getUser } from "@/utils/api";
 import ProfileButtons from "./profile-buttons";
 import ProfileAvatar from "./profile-avatar";
 import { UserType } from "@/models/User";
-import { PostType } from "@/models/Post";
-import Post from "@/components/posts/post";
 import Posts from "@/components/posts/posts";
 
 const Profile = async ({ params }: { params: { username: string } }) => {
-  const user = (await getUser(params.username)) as Omit<UserType, "posts"> & {
-    posts: PostType[];
-  };
+  const user = (await getUser(params.username)) as UserType;
 
   if (!user) {
     return <PageNotFound />;
+  }
+
+  const posts = await getPosts({
+    userId: user._id,
+    onlyFollowingUsersPosts: false,
+  });
+
+  if (!posts) {
+    return null;
   }
 
   return (
@@ -33,7 +38,7 @@ const Profile = async ({ params }: { params: { username: string } }) => {
           </div>
           <div className="flex gap-10 pt-7">
             <div>
-              <strong>{user.posts.length}</strong> posts
+              <strong>{posts.length}</strong> posts
             </div>
             <div>
               <strong>{user.followers.length}</strong> followers
@@ -54,7 +59,7 @@ const Profile = async ({ params }: { params: { username: string } }) => {
             <Post post={post} />
           </div>
         ))} */}
-        <Posts posts={user.posts} />
+        <Posts posts={posts} />
       </div>
     </>
   );

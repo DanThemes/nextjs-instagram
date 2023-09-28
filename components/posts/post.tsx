@@ -3,7 +3,7 @@
 import { toggleLike } from "@/utils/api";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import React from "react";
+import React, { useRef } from "react";
 import PostMedia from "./post-media";
 import { formatDistance } from "date-fns";
 import { useSession } from "next-auth/react";
@@ -31,6 +31,14 @@ export default function Post({ post }: { post: any }) {
     });
 
     router.refresh();
+  };
+
+  const inputRef = useRef<HTMLInputElement | null>(null);
+
+  const handleCommentIconClick = () => {
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
   };
 
   return (
@@ -70,7 +78,10 @@ export default function Post({ post }: { post: any }) {
               <GoHeart />
             )}
           </div>
-          <div className="hover:opacity-50 active:opacity-30 cursor-pointer">
+          <div
+            className="hover:opacity-50 active:opacity-30 cursor-pointer"
+            onClick={() => handleCommentIconClick()}
+          >
             <GoComment />
           </div>
           <div className="hover:opacity-50 active:opacity-30 cursor-pointer">
@@ -81,12 +92,15 @@ export default function Post({ post }: { post: any }) {
           <GoBookmark />
         </div>
       </div>
-      <div>{post.likes.length} likes</div>
+      <div>
+        {post.likes.length === 1 ? `1 like` : `${post.likes.length} likes`}
+      </div>
       <strong>author</strong> {post.caption}
       <PostComments
         postId={post._id}
         comments={post.comments}
         userId={session?.user.id}
+        ref={inputRef}
       />
     </>
   );

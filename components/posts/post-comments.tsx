@@ -7,22 +7,21 @@ import { formatDistance } from "date-fns";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React from "react";
+import React, { forwardRef } from "react";
 import { FieldValues, useForm } from "react-hook-form";
 import { BsEmojiSmile } from "react-icons/bs";
 import { GoHeart, GoHeartFill } from "react-icons/go";
 
-type PostCommentsType = {
+type Props = {
   postId: string;
   comments: (Omit<CommentType, "userId"> & { _id: string; userId: UserType })[];
   userId?: string;
 };
 
-export default function PostComments({
-  postId,
-  comments,
-  userId,
-}: PostCommentsType) {
+const PostComments = forwardRef<HTMLInputElement, Props>(function PostComments(
+  { postId, comments, userId },
+  ref
+) {
   const {
     register,
     handleSubmit,
@@ -52,6 +51,7 @@ export default function PostComments({
     });
     router.refresh();
   };
+  const { ref: registerRef, ...rest } = register("text");
 
   console.log("comments view", comments);
 
@@ -118,10 +118,13 @@ export default function PostComments({
               type="text"
               placeholder="Add a comment..."
               className="w-full focus:outline-none"
-              {...register("text", {
-                required: true,
-                minLength: 1,
-              })}
+              {...rest}
+              ref={(e) => {
+                registerRef(e);
+                if (ref && typeof ref !== "function") {
+                  ref.current = e;
+                }
+              }}
             />
           </form>
           <div className="basis-[2rem] cursor-pointer hover:opacity-50 flex justify-end">
@@ -131,4 +134,5 @@ export default function PostComments({
       )}
     </>
   );
-}
+});
+export default PostComments;
