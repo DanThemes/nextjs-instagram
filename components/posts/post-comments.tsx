@@ -2,7 +2,7 @@
 
 import { CommentType } from "@/models/Comment";
 import { UserType } from "@/models/User";
-import { addComment, toggleLike } from "@/utils/api";
+import { addComment, deleteComment, toggleLike } from "@/utils/api";
 import { formatDistance } from "date-fns";
 import Image from "next/image";
 import Link from "next/link";
@@ -74,7 +74,12 @@ const PostComments = forwardRef<HTMLInputElement, Props>(function PostComments(
     setFocus("text");
   };
 
-  console.log({ isEmojiPickerOpen });
+  const handleDeleteComment = async (id: string) => {
+    if (!userId) return;
+
+    await deleteComment({ userId, commentId: id });
+    router.refresh();
+  };
 
   return (
     <>
@@ -115,6 +120,16 @@ const PostComments = forwardRef<HTMLInputElement, Props>(function PostComments(
                     </span>
                     <span>{comment.likes.length} likes</span>
                     <span>Reply</span>
+                    {comment.userId._id === userId ? (
+                      <span
+                        className="text-red-700 cursor-pointer hover:opacity-50"
+                        onClick={() => handleDeleteComment(comment._id)}
+                      >
+                        Delete
+                      </span>
+                    ) : (
+                      <></>
+                    )}
                   </div>
                 </div>
                 <div
@@ -156,12 +171,12 @@ const PostComments = forwardRef<HTMLInputElement, Props>(function PostComments(
               <BsEmojiSmile />
             </span>
             {isEmojiPickerOpen && (
-              <div className="z-[999]">
+              <div className="z-[999] relative">
                 <div
                   className="fixed inset-0 bg-black/40"
                   onClick={handleCloseEmojiPicker}
                 ></div>
-                <div className="absolute right-0">
+                <div className="absolute top-[2rem] right-0">
                   <EmojiPicker
                     onEmojiClick={handlePickEmoji}
                     height={500}

@@ -1,8 +1,9 @@
 import Comment from "@/models/Comment";
-import User from "@/models/User";
 import dbConnect from "@/utils/db";
 import { Types } from "mongoose";
+import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
+import { authOptions } from "../../auth/[...nextauth]/route";
 
 export async function PATCH(
   request: NextRequest,
@@ -35,6 +36,44 @@ export async function PATCH(
     const r = await comment.save();
     console.log({ rComments: r });
     return NextResponse.json({ message: "Action successful" }, { status: 200 });
+  } catch (error) {
+    return NextResponse.json(
+      { message: "Something went wrong" },
+      { status: 400 }
+    );
+  }
+}
+
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  // connect to the database
+  try {
+    await dbConnect();
+  } catch (error) {
+    console.error("Database connection error:", error);
+    return NextResponse.json(
+      { message: "Something went wrong" },
+      { status: 400 }
+    );
+  }
+
+  // check auth here
+
+  try {
+    const session = await getServerSession(authOptions);
+    const comment = await Comment.findOne({ _id: params.id });
+    console.log("delete", { session, comment });
+    if (session?.user.id === comment.userId.toString()) {
+      await Comment.deleteOne({ _id: params.id });
+      return NextResponse.json(
+        { message: "Action successful" },
+        { status: 200 }
+      );
+    } else {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    }
   } catch (error) {
     return NextResponse.json(
       { message: "Something went wrong" },

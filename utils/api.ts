@@ -209,6 +209,39 @@ export async function addComment(postId: string, text: string, userId: string) {
   }
 }
 
+// Delete comment
+export async function deleteComment({
+  userId,
+  commentId,
+}: {
+  userId: string;
+  commentId: string;
+}) {
+  if (!process.env.NEXT_PUBLIC_API_URL) {
+    throw new Error(
+      "Please define the 'NEXT_PUBLIC_API_URL' environment variable inside .env"
+    );
+  }
+
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/comments/${commentId}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: JSON.stringify({ userId }),
+      }
+    );
+    const data = await response.json();
+    console.log(data);
+    return data;
+  } catch (error) {
+    console.log("deleteComment() api.ts", error);
+  }
+}
+
 // toggle post/comment like
 export async function toggleLike({
   userId,

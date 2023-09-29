@@ -35,6 +35,7 @@ const SidebarItem = ({
 
       const user = await getUser(session.user.id);
       setProfileImage(user.profileImage);
+      console.log("sidebar item");
     })();
   }, [session]);
 
@@ -47,13 +48,13 @@ const SidebarItem = ({
         >
           <span className="mr-3">
             {name === "Profile" && profileImage ? (
-              <div className="w-[1.5rem] h-[1.5rem] rounded-full bg-cover border relative">
+              <div className="w-[1.5rem] h-[1.5rem] rounded-full bg-cover  relative border border-transparent group-hover:scale-105 group-active:scale-95 transition">
                 <Image
                   src={profileImage || "/avatar.jpg"}
                   width={40}
                   height={40}
                   alt="avatar"
-                  className="rounded-full h-full w-auto absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+                  className="rounded-full  absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 border-black border-r border-[1px]"
                 />
               </div>
             ) : (

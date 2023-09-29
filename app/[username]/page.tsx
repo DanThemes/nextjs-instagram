@@ -23,14 +23,14 @@ const Profile = async ({ params }: { params: { username: string } }) => {
 
   return (
     <>
-      <div className="flex">
-        <div className="flex-1">
+      <div className="flex flex-col md:flex-row gap-10">
+        <div className="flex-1 flex justify-center md:block">
           <ProfileAvatar profileImage={user.profileImage} />
         </div>
-        <div className="flex flex-[2] flex-col">
+        <div className="flex flex-[2] flex-col items-center md:items-start">
           <div>
-            <div className="flex gap-2 items-center">
-              <div className="text-lg flex-1">{user.username}</div>
+            <div className="block md:flex text-center md:text-left gap-2 items-center">
+              <div className="text-lg flex-1 mb-5 md:mb-0">{user.username}</div>
               <div className="flex items-center gap-3">
                 <ProfileButtons />
               </div>
@@ -47,7 +47,7 @@ const Profile = async ({ params }: { params: { username: string } }) => {
               <strong>{user.following.length}</strong> following
             </div>
           </div>
-          <div className="flex flex-col pt-7">
+          <div className="flex flex-col pt-7 text-center md:text-left">
             <p className="font-bold">{user.displayName || user.username}</p>
             <p>{user.bio}</p>
           </div>

@@ -12,14 +12,18 @@ import {
   GoComment,
   GoHeart,
   GoHeartFill,
+  GoKebabHorizontal,
   GoPaperAirplane,
 } from "react-icons/go";
 import PostComments from "./post-comments";
 import { UserType } from "@/models/User";
 import Link from "next/link";
+import usePostModal from "@/hooks/usePostModal";
+import PostModal from "../modals/post-modal";
 
 export default function Post({ post }: { post: any }) {
   const router = useRouter();
+  const postModal = usePostModal();
 
   const { data: session } = useSession();
 
@@ -69,6 +73,12 @@ export default function Post({ post }: { post: any }) {
           <span className="px-1">•</span>
           <span>{formatDistance(new Date(post.createdAt), new Date())}</span>
         </div>
+        <div
+          className="ml-auto cursor-pointer hover:opacity-50 p-4 pr-0"
+          onClick={() => postModal.toggle()}
+        >
+          <GoKebabHorizontal />
+        </div>
       </div>
       <div className="relative w-full h-[40dvh] border border-[#dbdbdb]">
         <PostMedia post={post} />
@@ -115,6 +125,7 @@ export default function Post({ post }: { post: any }) {
         userId={session?.user.id}
         ref={inputRef}
       />
+      <PostModal />
     </>
   );
 }
