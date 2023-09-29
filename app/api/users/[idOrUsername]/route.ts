@@ -37,7 +37,9 @@ export async function GET(
       });
     }
 
+    console.log(1);
     const user = await userPromise
+      .select("-password")
       .populate({
         path: "following",
         select: ["username", "profileImage"],
@@ -50,9 +52,7 @@ export async function GET(
       });
 
     console.log({ userrrr: user });
-    // Remove the password field
     if (user) {
-      delete user?._doc.password;
       return NextResponse.json({ user }, { status: 200 });
     }
     throw new Error("Invalid or missing user parameters");
