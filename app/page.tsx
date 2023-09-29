@@ -7,7 +7,7 @@ export default function Home() {
       <div className="flex-[2] flex-shrink-0">
         <Posts />
       </div>
-      <div className="flex-[1] flex-shrink-0">
+      <div className="flex-[1] flex-shrink-0 hidden md:block">
         <HomeSidebar />
       </div>
     </div>

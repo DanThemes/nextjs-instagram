@@ -7,10 +7,11 @@ import { formatDistance } from "date-fns";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React, { forwardRef } from "react";
+import React, { forwardRef, useState } from "react";
 import { FieldValues, useForm } from "react-hook-form";
 import { BsEmojiSmile } from "react-icons/bs";
 import { GoHeart, GoHeartFill } from "react-icons/go";
+import EmojiPicker, { EmojiClickData } from "emoji-picker-react";
 
 type Props = {
   postId: string;
@@ -22,9 +23,13 @@ const PostComments = forwardRef<HTMLInputElement, Props>(function PostComments(
   { postId, comments, userId },
   ref
 ) {
+  const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false);
   const {
     register,
     handleSubmit,
+    setValue,
+    getValues,
+    setFocus,
     formState: { errors, isSubmitting },
     reset,
   } = useForm({
@@ -32,6 +37,7 @@ const PostComments = forwardRef<HTMLInputElement, Props>(function PostComments(
       text: "",
     },
   });
+  const { ref: registerRef, ...rest } = register("text");
 
   const router = useRouter();
 
@@ -51,9 +57,24 @@ const PostComments = forwardRef<HTMLInputElement, Props>(function PostComments(
     });
     router.refresh();
   };
-  const { ref: registerRef, ...rest } = register("text");
 
-  console.log("comments view", comments);
+  const handleOpenEmojiPicker = () => {
+    setIsEmojiPickerOpen(true);
+  };
+
+  const handleCloseEmojiPicker = () => {
+    setIsEmojiPickerOpen(false);
+  };
+
+  // Append emoji to text input field
+  const handlePickEmoji = (emojiData: EmojiClickData, e: MouseEvent) => {
+    const oldText = getValues("text");
+    setValue("text", `${oldText}${emojiData.emoji}`);
+    handleCloseEmojiPicker();
+    setFocus("text");
+  };
+
+  console.log({ isEmojiPickerOpen });
 
   return (
     <>
@@ -63,13 +84,16 @@ const PostComments = forwardRef<HTMLInputElement, Props>(function PostComments(
             <div key={comment._id}>
               <div className="flex gap-3 items-center">
                 <div className="flex flex-col gap-2">
-                  <Link href={`/${comment.userId.username}`}>
+                  <Link
+                    href={`/${comment.userId.username}`}
+                    className="w-[2.25rem] h-[2.25rem] rounded-full bg-cover border relative"
+                  >
                     <Image
-                      src={comment.userId.profileImage!}
-                      alt={comment.userId.username!}
+                      src={comment.userId.profileImage || "/avatar.jpg"}
+                      alt={comment.userId.username}
                       width={30}
                       height={30}
-                      className="rounded-full bg-cover border"
+                      className="rounded-full h-full w-auto absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
                     />
                   </Link>
                 </div>
@@ -127,8 +151,25 @@ const PostComments = forwardRef<HTMLInputElement, Props>(function PostComments(
               }}
             />
           </form>
-          <div className="basis-[2rem] cursor-pointer hover:opacity-50 flex justify-end">
-            <BsEmojiSmile />
+          <div className="basis-[2rem] cursor-pointer flex justify-end">
+            <span className="hover:opacity-50" onClick={handleOpenEmojiPicker}>
+              <BsEmojiSmile />
+            </span>
+            {isEmojiPickerOpen && (
+              <div className="z-[999]">
+                <div
+                  className="fixed inset-0 bg-black/40"
+                  onClick={handleCloseEmojiPicker}
+                ></div>
+                <div className="absolute right-0">
+                  <EmojiPicker
+                    onEmojiClick={handlePickEmoji}
+                    height={500}
+                    width={400}
+                  />
+                </div>
+              </div>
+            )}
           </div>
         </div>
       )}

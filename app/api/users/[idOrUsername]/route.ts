@@ -66,7 +66,7 @@ export async function GET(
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: { idOrUsername: string } }
 ) {
   // connect to the database
   try {
@@ -87,12 +87,12 @@ export async function PATCH(
 
     user = await User.updateOne(
       {
-        _id: params.id,
+        _id: params.idOrUsername,
       },
       values
     );
 
-    console.log({ values, user });
+    // console.log({ values, user });
 
     // Update successful
     if (user.modifiedCount > 0) {

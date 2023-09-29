@@ -45,13 +45,16 @@ export default function Post({ post }: { post: any }) {
   return (
     <>
       <div className="flex gap-3 items-center pb-3">
-        <Link href={`/${post.userId.username}`}>
+        <Link
+          href={`/${post.userId.username}`}
+          className="w-[3rem] h-[3rem] rounded-full bg-cover border relative"
+        >
           <Image
             src={post.userId.profileImage}
             alt={post.userId.username}
             width={40}
             height={40}
-            className="rounded-full bg-cover border"
+            className="rounded-full h-full w-auto absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
           />
         </Link>
         <div>
