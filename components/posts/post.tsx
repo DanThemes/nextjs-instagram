@@ -125,7 +125,6 @@ export default function Post({ post }: { post: any }) {
         userId={session?.user.id}
         ref={inputRef}
       />
-      <PostModal />
     </>
   );
 }
