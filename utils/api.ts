@@ -1,6 +1,5 @@
-import Comment from "@/models/Comment";
 import { MediaType } from "@/models/Media";
-import Post, { PostType } from "@/models/Post";
+import { PostType } from "@/models/Post";
 import { UserType } from "@/models/User";
 
 // Add user
@@ -320,5 +319,40 @@ export async function toggleLike({
     return data;
   } catch (error) {
     console.log("toggleLike() api.ts", error);
+  }
+}
+
+// follow a user
+export async function followUser({
+  followerId,
+  followingId,
+}: {
+  followerId: string;
+  followingId: string;
+}) {
+  if (!process.env.NEXT_PUBLIC_API_URL) {
+    throw new Error(
+      "Please define the 'NEXT_PUBLIC_API_URL' environment variable inside .env"
+    );
+  }
+
+  try {
+    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/${followerId}`, {
+      method: "PATCH",
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify({ following: [followingId] }),
+    });
+
+    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/${followingId}`, {
+      method: "PATCH",
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify({ followers: [followerId] }),
+    });
+  } catch (error) {
+    console.log("followUser() api.ts", error);
   }
 }

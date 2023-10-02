@@ -83,6 +83,32 @@ export async function PATCH(
   try {
     const values = await request.json();
     let user;
+    console.log("valuesvalues", values);
+
+    if ("followers" in values) {
+      const getUser = await User.findOne({ _id: params.idOrUsername }).select(
+        "followers"
+      );
+      if (!getUser.followers.includes(values.followers[0])) {
+        getUser.followers.push(values.followers[0]);
+        await getUser.save();
+      }
+    }
+
+    if ("following" in values) {
+      const getUser = await User.findOne({
+        _id: params.idOrUsername,
+      }).select("following");
+
+      if (!getUser.following.includes(values.following[0])) {
+        getUser.following.push(values.following[0]);
+        await getUser.save();
+      }
+    }
+
+    // Remove followers and following from values object to avoid overwriting
+    delete values.followers;
+    delete values.following;
 
     user = await User.updateOne(
       {

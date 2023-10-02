@@ -77,6 +77,7 @@ export async function POST(request: NextRequest) {
       username,
       email,
       password: hashedPassword,
+      profileImage: "/avatar.jpg",
       ...rest,
     });
     await user.save();
