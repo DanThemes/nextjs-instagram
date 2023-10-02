@@ -51,6 +51,33 @@ export async function getUser(idOrUsername: string) {
   }
 }
 
+// Get user
+export async function getUsers(userIds: string[]) {
+  if (!userIds) {
+    throw new Error("Invalid or missing user identifier");
+  }
+
+  if (!process.env.NEXT_PUBLIC_API_URL) {
+    throw new Error(
+      "Please define the 'NEXT_PUBLIC_API_URL' environment variable inside .env"
+    );
+  }
+
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(userIds),
+    });
+    const data = await response.json();
+    return data.user;
+  } catch (error) {
+    console.log("getUsers() api.ts", error);
+  }
+}
+
 // Edit user
 export async function editUser(id: string, values: Partial<UserType>) {
   if (!id) {

@@ -6,7 +6,6 @@ import { useSession } from "next-auth/react";
 import usePostModal from "@/hooks/usePostModal";
 import { deletePost } from "@/utils/api";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 
 export default function PostModal() {
   const postModal = usePostModal();

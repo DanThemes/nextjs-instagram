@@ -7,7 +7,7 @@ import { motion } from "framer-motion";
 type ModalProps = {
   isOpen: boolean;
   toggle: () => void;
-  title: string;
+  title?: string;
   children: React.ReactNode;
 };
 
@@ -32,9 +32,11 @@ export default function Modal({ isOpen, toggle, title, children }: ModalProps) {
         >
           <GoX />
         </div>
-        <div className="border-0 border-b p-10">
-          <h3 className="text-2xl">{title}</h3>
-        </div>
+        {title && (
+          <div className="border-0 border-b p-10">
+            <h3 className="text-2xl">{title}</h3>
+          </div>
+        )}
         <div className="p-10">{children}</div>
       </div>
     </motion.div>

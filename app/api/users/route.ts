@@ -45,9 +45,17 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  // create the user
   try {
-    const { username, email, password, ...rest } = await request.json();
+    const body = await request.json();
+
+    // Get a list of users
+    if (Array.isArray(body)) {
+      const users = await User.find({ _id: { $in: body } });
+      return NextResponse.json(users, { status: 200 });
+    }
+
+    // Or create a new user
+    const { username, email, password, ...rest } = body;
     if (!username || !email || !password) {
       return NextResponse.json(
         { message: "Please fill in all the required fields" },

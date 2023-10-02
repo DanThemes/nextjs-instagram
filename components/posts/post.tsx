@@ -19,10 +19,12 @@ import PostComments from "./post-comments";
 import { UserType } from "@/models/User";
 import Link from "next/link";
 import usePostModal from "@/hooks/usePostModal";
+import useUsersModal from "@/hooks/useUsersModal";
 
 export default function Post({ post }: { post: any }) {
   const router = useRouter();
   const postModal = usePostModal();
+  const usersModal = useUsersModal();
 
   const { data: session } = useSession();
 
@@ -117,7 +119,13 @@ export default function Post({ post }: { post: any }) {
           <GoBookmark />
         </div>
       </div>
-      <div>
+      <div
+        onClick={() => {
+          usersModal.setUsers(post.likes);
+          usersModal.toggle();
+        }}
+        className="cursor-pointer"
+      >
         {post.likes.length === 1 ? `1 like` : `${post.likes.length} likes`}
       </div>
       <strong>author</strong> {post.caption}
