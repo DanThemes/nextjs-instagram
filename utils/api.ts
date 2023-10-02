@@ -1,6 +1,8 @@
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { MediaType } from "@/models/Media";
 import { PostType } from "@/models/Post";
 import { UserType } from "@/models/User";
+import { getServerSession } from "next-auth";
 
 // Add user
 export async function addUser(values: Partial<UserType>) {
@@ -325,10 +327,10 @@ export async function toggleLike({
 // follow a user
 export async function followUser({
   followerId,
-  followingId,
+  followedId,
 }: {
   followerId: string;
-  followingId: string;
+  followedId: string;
 }) {
   if (!process.env.NEXT_PUBLIC_API_URL) {
     throw new Error(
@@ -342,15 +344,15 @@ export async function followUser({
       headers: {
         "Content-type": "application/json",
       },
-      body: JSON.stringify({ following: [followingId] }),
+      body: JSON.stringify({ followedId }),
     });
 
-    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/${followingId}`, {
+    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/${followedId}`, {
       method: "PATCH",
       headers: {
         "Content-type": "application/json",
       },
-      body: JSON.stringify({ followers: [followerId] }),
+      body: JSON.stringify({ followerId }),
     });
   } catch (error) {
     console.log("followUser() api.ts", error);

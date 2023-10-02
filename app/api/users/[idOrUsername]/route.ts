@@ -85,11 +85,21 @@ export async function PATCH(
     let user;
     console.log("valuesvalues", values);
 
-    if ("followers" in values) {
+    // const session = await getServerSession(authOptions);
+
+    // if(!session || followerId !== session.user.id) {
+
+    // }
+
+    if ("followedId" in values) {
       const getUser = await User.findOne({ _id: params.idOrUsername }).select(
         "followers"
       );
-      if (!getUser.followers.includes(values.followers[0])) {
+      if (getUser.followers.includes(values.followers[0])) {
+        getUser.followers.filter(
+          (user: string) => user !== values.followers[0]
+        );
+      } else {
         getUser.followers.push(values.followers[0]);
         await getUser.save();
       }
@@ -101,6 +111,10 @@ export async function PATCH(
       }).select("following");
 
       if (!getUser.following.includes(values.following[0])) {
+        getUser.following.filter(
+          (user: string) => user !== values.following[0]
+        );
+      } else {
         getUser.following.push(values.following[0]);
         await getUser.save();
       }
