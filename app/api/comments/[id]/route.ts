@@ -64,7 +64,11 @@ export async function DELETE(
   try {
     const session = await getServerSession(authOptions);
     const comment = await Comment.findOne({ _id: params.id });
-    console.log("delete", { session, comment });
+
+    if (!comment) {
+      throw new Error("Comment doesn't exist");
+    }
+
     if (session?.user.id === comment.userId.toString()) {
       await Comment.deleteOne({ _id: params.id });
       return NextResponse.json(

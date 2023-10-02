@@ -4,7 +4,9 @@ import Post from "@/models/Post";
 import User from "@/models/User";
 import dbConnect from "@/utils/db";
 import { Types } from "mongoose";
+import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
+import { authOptions } from "../../auth/[...nextauth]/route";
 
 export async function GET(
   request: NextRequest,
@@ -133,6 +135,47 @@ export async function PATCH(
     const r = await post.save();
     console.log({ r });
     return NextResponse.json({ message: "Action successful" }, { status: 200 });
+  } catch (error) {
+    return NextResponse.json(
+      { message: "Something went wrong" },
+      { status: 400 }
+    );
+  }
+}
+
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  // connect to the database
+  try {
+    await dbConnect();
+  } catch (error) {
+    console.error("Database connection error:", error);
+    return NextResponse.json(
+      { message: "Something went wrong" },
+      { status: 400 }
+    );
+  }
+  console.log("delete", params);
+  // check auth here
+  try {
+    const session = await getServerSession(authOptions);
+    const post = await Post.findOne({ _id: params.id });
+
+    if (!post) {
+      throw new Error("Post doesn't exist");
+    }
+
+    if (session?.user.id === post.userId.toString()) {
+      await Post.deleteOne({ _id: params.id });
+      return NextResponse.json(
+        { message: "Action successful" },
+        { status: 200 }
+      );
+    } else {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    }
   } catch (error) {
     return NextResponse.json(
       { message: "Something went wrong" },

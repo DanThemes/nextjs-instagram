@@ -4,6 +4,7 @@ import ProfileButtons from "./profile-buttons";
 import ProfileAvatar from "./profile-avatar";
 import { UserType } from "@/models/User";
 import PostCard from "@/components/posts/post-card";
+import PostModal from "@/components/modals/post-modal";
 
 const Profile = async ({ params }: { params: { username: string } }) => {
   const user = (await getUser(params.username)) as UserType & { _id: string };

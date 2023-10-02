@@ -51,7 +51,6 @@ export async function GET(
         model: User,
       });
 
-    console.log({ userrrr: user });
     if (user) {
       return NextResponse.json({ user }, { status: 200 });
     }

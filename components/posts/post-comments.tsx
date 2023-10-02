@@ -77,7 +77,7 @@ const PostComments = forwardRef<HTMLInputElement, Props>(function PostComments(
   const handleDeleteComment = async (id: string) => {
     if (!userId) return;
 
-    await deleteComment({ userId, commentId: id });
+    await deleteComment(id);
     router.refresh();
   };
 

@@ -29,8 +29,10 @@ export default async function RootLayout({
           {!session && <TopBar />}
           <div className="flex min-h-full">
             {session && (
-              <aside className="flex-[175px] min-w-[175px] w-[175px] flex-grow-0 border-r border-solid border-r-1 border-[#DBDBDB]">
-                <Sidebar />
+              <aside className="flex-[175px] min-w-[175px] w-[175px] flex-grow-0 border-r border-solid border-r-1 border-[#DBDBDB] relative">
+                <div className="fixed flex-[175px] min-w-[175px] w-[175px]">
+                  <Sidebar />
+                </div>
               </aside>
             )}
             <main className="px-10 py-10 w-[70rem] mx-auto">{children}</main>

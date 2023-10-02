@@ -158,6 +158,29 @@ export async function getPosts({
   }
 }
 
+// Delete post
+export async function deletePost(postId: string) {
+  if (!process.env.NEXT_PUBLIC_API_URL) {
+    throw new Error(
+      "Please define the 'NEXT_PUBLIC_API_URL' environment variable inside .env"
+    );
+  }
+
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/posts/${postId}`,
+      {
+        method: "DELETE",
+      }
+    );
+    const data = await response.json();
+    console.log(data);
+    return data;
+  } catch (error) {
+    console.log("deletePost() api.ts", error);
+  }
+}
+
 //  Add post media
 export async function addPostMedia(values: MediaType) {
   if (!process.env.NEXT_PUBLIC_API_URL) {
@@ -210,13 +233,7 @@ export async function addComment(postId: string, text: string, userId: string) {
 }
 
 // Delete comment
-export async function deleteComment({
-  userId,
-  commentId,
-}: {
-  userId: string;
-  commentId: string;
-}) {
+export async function deleteComment(commentId: string) {
   if (!process.env.NEXT_PUBLIC_API_URL) {
     throw new Error(
       "Please define the 'NEXT_PUBLIC_API_URL' environment variable inside .env"
@@ -231,7 +248,6 @@ export async function deleteComment({
         headers: {
           "Content-type": "application/json",
         },
-        body: JSON.stringify({ userId }),
       }
     );
     const data = await response.json();

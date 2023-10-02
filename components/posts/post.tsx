@@ -19,7 +19,6 @@ import PostComments from "./post-comments";
 import { UserType } from "@/models/User";
 import Link from "next/link";
 import usePostModal from "@/hooks/usePostModal";
-import PostModal from "../modals/post-modal";
 
 export default function Post({ post }: { post: any }) {
   const router = useRouter();
@@ -75,7 +74,10 @@ export default function Post({ post }: { post: any }) {
         </div>
         <div
           className="ml-auto cursor-pointer hover:opacity-50 p-4 pr-0"
-          onClick={() => postModal.toggle()}
+          onClick={() => {
+            postModal.setPostId(post._id);
+            postModal.toggle();
+          }}
         >
           <GoKebabHorizontal />
         </div>

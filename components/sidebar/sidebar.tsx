@@ -102,9 +102,6 @@ const Sidebar = () => {
           if (session && item.name === "Profile") {
             item.link = "/" + session?.user.username;
           }
-          // if (!item.modal) {
-          //   delete item.modal;
-          // }
           return (
             <div key={item.name}>
               <SidebarItem {...item} />

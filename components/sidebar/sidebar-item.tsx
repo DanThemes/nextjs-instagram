@@ -35,7 +35,6 @@ const SidebarItem = ({
 
       const user = await getUser(session.user.id);
       setProfileImage(user.profileImage);
-      console.log("sidebar item");
     })();
   }, [session]);
 

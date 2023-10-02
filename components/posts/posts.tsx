@@ -4,6 +4,7 @@ import { getServerSession } from "next-auth";
 import React from "react";
 import Post from "./post";
 import { PostType } from "@/models/Post";
+import PostModal from "../modals/post-modal";
 
 const Posts = async ({
   posts,
@@ -39,6 +40,7 @@ const Posts = async ({
           <Post post={post} />
         </div>
       ))}
+      <PostModal />
     </div>
   );
 };
