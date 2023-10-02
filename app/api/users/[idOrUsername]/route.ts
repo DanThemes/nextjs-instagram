@@ -5,6 +5,8 @@ import mongoose from "mongoose";
 import Media from "@/models/Media";
 import Post from "@/models/Post";
 import Comment from "@/models/Comment";
+import { getServerSession } from "next-auth";
+import { authOptions } from "../../auth/[...nextauth]/route";
 
 export async function GET(
   request: NextRequest,
@@ -85,44 +87,61 @@ export async function PATCH(
     let user;
     console.log("valuesvalues", values);
 
-    // const session = await getServerSession(authOptions);
+    const session = await getServerSession(authOptions);
 
-    // if(!session || followerId !== session.user.id) {
+    if (!session) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    }
 
-    // }
+    // other user
+    if ("followers" in values) {
+      if (values.followers !== session.user.id) {
+        return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+      }
 
-    if ("followedId" in values) {
       const getUser = await User.findOne({ _id: params.idOrUsername }).select(
         "followers"
       );
-      if (getUser.followers.includes(values.followers[0])) {
-        getUser.followers.filter(
-          (user: string) => user !== values.followers[0]
+      if (getUser.followers.includes(values.followers)) {
+        getUser.followers = getUser.followers.filter(
+          (userId: string) => userId.toString() !== values.followers
         );
+        await getUser.save();
       } else {
-        getUser.followers.push(values.followers[0]);
+        getUser.followers.push(values.followers);
         await getUser.save();
       }
     }
 
+    // logged-in user
     if ("following" in values) {
       const getUser = await User.findOne({
         _id: params.idOrUsername,
       }).select("following");
 
-      if (!getUser.following.includes(values.following[0])) {
-        getUser.following.filter(
-          (user: string) => user !== values.following[0]
+      // console.log({ getUser: getUser._id.toString(), id: session.user.id });
+      if (getUser._id.toString() !== session.user.id) {
+        return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+      }
+
+      console.log(" getUser.following", getUser.following);
+      if (getUser.following.includes(values.following)) {
+        console.log("getUser.following BEFORE", getUser.following);
+        getUser.following = getUser.following.filter(
+          (userId: string) => userId.toString() !== values.following
         );
+        console.log("getUser.following AFTER", getUser.following);
+        await getUser.save();
       } else {
-        getUser.following.push(values.following[0]);
+        console.log("push");
+        getUser.following.push(values.following);
         await getUser.save();
       }
     }
 
-    // Remove followers and following from values object to avoid overwriting
-    delete values.followers;
+    // Delete these values to prevent overwriting
     delete values.following;
+    delete values.followers;
 
     user = await User.updateOne(
       {

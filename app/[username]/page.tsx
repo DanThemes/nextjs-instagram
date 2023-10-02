@@ -4,9 +4,12 @@ import ProfileButtons from "./profile-buttons";
 import ProfileAvatar from "./profile-avatar";
 import { UserType } from "@/models/User";
 import PostCard from "@/components/posts/post-card";
+import { getServerSession } from "next-auth";
+import { authOptions } from "../api/auth/[...nextauth]/route";
 
 const Profile = async ({ params }: { params: { username: string } }) => {
   const user = (await getUser(params.username)) as UserType & { _id: string };
+  const session = await getServerSession(authOptions);
 
   if (!user) {
     return <PageNotFound />;
@@ -31,9 +34,17 @@ const Profile = async ({ params }: { params: { username: string } }) => {
           <div>
             <div className="block md:flex text-center md:text-left gap-2 items-center">
               <div className="text-lg flex-1 mb-5 md:mb-0">{user.username}</div>
-              <div className="flex items-center gap-3">
-                <ProfileButtons userId={user._id} />
-              </div>
+              {session && (
+                <div className="flex items-center gap-3">
+                  <ProfileButtons
+                    userId={user._id}
+                    followers={user.followers.map((follower) =>
+                      follower._id.toString()
+                    )}
+                    loggedInUserId={session?.user.id}
+                  />
+                </div>
+              )}
             </div>
           </div>
           <div className="flex gap-10 pt-7">

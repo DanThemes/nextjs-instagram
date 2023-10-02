@@ -344,7 +344,7 @@ export async function followUser({
       headers: {
         "Content-type": "application/json",
       },
-      body: JSON.stringify({ followedId }),
+      body: JSON.stringify({ following: followedId }),
     });
 
     await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/${followedId}`, {
@@ -352,7 +352,7 @@ export async function followUser({
       headers: {
         "Content-type": "application/json",
       },
-      body: JSON.stringify({ followerId }),
+      body: JSON.stringify({ followers: followerId }),
     });
   } catch (error) {
     console.log("followUser() api.ts", error);

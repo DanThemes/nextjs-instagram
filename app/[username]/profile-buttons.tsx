@@ -2,13 +2,26 @@
 
 import { followUser } from "@/utils/api";
 import { useSession } from "next-auth/react";
-import { usePathname, useRouter } from "next/navigation";
-import React from "react";
-import { GoGear } from "react-icons/go";
+import { useRouter } from "next/navigation";
+import React, { useState } from "react";
+import { GoGear, GoSync } from "react-icons/go";
 
-const ProfileButtons = ({ userId }: { userId: string }) => {
+type ProfileButtonsType = {
+  userId: string;
+  followers: string[];
+  loggedInUserId: string;
+};
+
+const ProfileButtons = ({
+  userId,
+  followers,
+  loggedInUserId,
+}: ProfileButtonsType) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [isFollowed, setIsFollowed] = useState(() =>
+    followers.includes(loggedInUserId)
+  );
   const { data: session, status } = useSession();
-  const pathname = usePathname();
   const router = useRouter();
 
   if (status === "loading") {
@@ -26,26 +39,35 @@ const ProfileButtons = ({ userId }: { userId: string }) => {
       </>
     );
   }
-
-  const isFollowed = () => {
-    return;
-  };
+  console.log({ isFollowed, followers, loggedInUserId });
 
   const handleFollow = async () => {
-    if (!session) return;
+    if (!session || isLoading) return;
+    setIsLoading(true);
 
     await followUser({
       followerId: session.user.id,
-      followingId: userId,
+      followedId: userId,
     });
 
+    setIsFollowed((prev) => !prev);
+    setIsLoading(false);
     router.refresh();
   };
 
   return (
     <>
-      <button className="blue_button" onClick={handleFollow}>
-        Follow
+      <button
+        className="blue_button"
+        disabled={isLoading}
+        onClick={handleFollow}
+      >
+        {isFollowed ? "Unfollow " : "Follow "}
+        {isLoading && (
+          <div className="animate-spin w-[1rem]">
+            <GoSync />
+          </div>
+        )}
       </button>
       <button className="gray_button">Message</button>
       <button>...</button>
