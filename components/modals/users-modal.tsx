@@ -23,8 +23,6 @@ export default function UsersModal() {
   //   })();
   // }, [usersModal]);
 
-  console.log("users-modal", usersModal.users);
-
   if (!session) {
     return null;
   }
