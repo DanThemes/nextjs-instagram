@@ -1,4 +1,4 @@
-// "use client";
+"use client";
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -29,6 +29,8 @@ const SidebarItem = ({
   const pathname = usePathname();
   const newPostModal = useNewPostModal();
 
+  console.log({ sidebarItemUser: user });
+
   return (
     <div className="group px-2 py-1">
       <Link href={link}>
@@ -44,7 +46,7 @@ const SidebarItem = ({
                   width={40}
                   height={40}
                   alt="avatar"
-                  className="w-full h-full rounded-full border border-black"
+                  className="w-full h-full object-cover rounded-full border border-black"
                 />
               </div>
             ) : (

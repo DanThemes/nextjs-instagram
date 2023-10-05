@@ -20,6 +20,7 @@ import { UserType } from "@/models/User";
 import Link from "next/link";
 import usePostModal from "@/hooks/usePostModal";
 import useUsersModal from "@/hooks/useUsersModal";
+import cn from "@/utils/utils";
 
 export default function Post({ post }: { post: any }) {
   const router = useRouter();
@@ -59,7 +60,7 @@ export default function Post({ post }: { post: any }) {
             alt={post.userId.username}
             width={40}
             height={40}
-            className="rounded-full h-full w-auto absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+            className="rounded-full h-full w-full object-cover absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
           />
         </Link>
         <div>
@@ -121,10 +122,12 @@ export default function Post({ post }: { post: any }) {
       </div>
       <div
         onClick={() => {
+          if (!post.likes.length) return;
+
           usersModal.setUsers(post.likes);
           usersModal.toggle();
         }}
-        className="cursor-pointer"
+        className={cn({ "cursor-pointer": post.likes.length })}
       >
         {post.likes.length === 1 ? `1 like` : `${post.likes.length} likes`}
       </div>

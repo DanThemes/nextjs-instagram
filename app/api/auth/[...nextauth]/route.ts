@@ -38,7 +38,7 @@ export const authOptions: AuthOptions = {
       },
     }),
   ],
-  secret: process.env.NEXTJS_SECRET,
+  secret: process.env.NEXTAUTH_SECRET,
   session: {
     strategy: "jwt",
     maxAge: 60 * 60 * 24 * 30, // 30 days
@@ -63,6 +63,17 @@ export const authOptions: AuthOptions = {
       session.user.username = token.username as string;
       session.user.profileImage = token.profileImage as string;
       return session;
+    },
+  },
+  logger: {
+    error(code, metadata) {
+      console.log("error", { code }, { metadata });
+    },
+    warn(code) {
+      console.log("warn", { code });
+    },
+    debug(code, metadata) {
+      console.log("debug", { code, metadata });
     },
   },
 };

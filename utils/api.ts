@@ -46,6 +46,7 @@ export async function getUser(idOrUsername: string) {
       { cache: "no-store" }
     );
     const data = await response.json();
+    // console.log("getUser() api.ts data=", data, { idOrUsername });
     return data.user;
   } catch (error) {
     console.log("getUser() api.ts", error);

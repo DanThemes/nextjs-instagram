@@ -30,7 +30,7 @@ export default function ProfileAvatar({ profileImage }: ProfileAvatarProps) {
         onClick={uploadAvatarModal.toggle}
         priority
       />
-      {isCurrentUserOwner && <UploadAvatarModal />}
+      {/* {isCurrentUserOwner && <UploadAvatarModal />} */}
     </>
   );
 }

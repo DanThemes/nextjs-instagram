@@ -98,7 +98,7 @@ const PostComments = forwardRef<HTMLInputElement, Props>(function PostComments(
                       alt={comment.userId.username}
                       width={30}
                       height={30}
-                      className="rounded-full h-full w-auto absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+                      className="rounded-full h-full w-full object-cover absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
                     />
                   </Link>
                 </div>
