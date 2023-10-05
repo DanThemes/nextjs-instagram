@@ -113,7 +113,6 @@ export async function POST(request: NextRequest) {
     const post = new Post({ userId, media, caption, comments: [], likes: [] });
     await post.save();
     user.posts.push(post._id);
-    console.log("ppp", user.posts);
     await user.save();
 
     return NextResponse.json(post, { status: 201 });

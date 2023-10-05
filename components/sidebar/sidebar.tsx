@@ -104,7 +104,7 @@ const Sidebar = () => {
           }
           return (
             <div key={item.name}>
-              <SidebarItem {...item} />
+              <SidebarItem {...item} user={session?.user} />
             </div>
           );
         })}

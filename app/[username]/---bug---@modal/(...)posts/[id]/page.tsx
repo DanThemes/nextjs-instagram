@@ -6,9 +6,6 @@ import React from "react";
 
 export default async function Page({ params }: any) {
   const post = await getPost(params.id);
-  // console.log({ params });
-  // return null;
-  console.log({ modalPost: post });
 
   if (!post) {
     return <PageNotFound />;

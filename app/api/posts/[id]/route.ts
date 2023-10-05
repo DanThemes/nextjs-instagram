@@ -49,8 +49,6 @@ export async function GET(
         model: User,
       });
 
-    console.log("b post", post);
-
     return NextResponse.json(post, { status: 200 });
   } catch (error) {
     console.log("Error while retrieving the post", error);
@@ -132,8 +130,7 @@ export async function PATCH(
     } else {
       post.likes.push(userId);
     }
-    const r = await post.save();
-    console.log({ r });
+    await post.save();
     return NextResponse.json({ message: "Action successful" }, { status: 200 });
   } catch (error) {
     return NextResponse.json(

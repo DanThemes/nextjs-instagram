@@ -35,8 +35,6 @@ export async function POST(request: NextRequest) {
     });
     await comment.save();
 
-    console.log("serv com", comment);
-
     // Add the comment id to the post's comments array
     const post = await Post.findOne({ _id: postId });
     post.comments.push(comment._id);

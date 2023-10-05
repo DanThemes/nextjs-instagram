@@ -45,10 +45,14 @@ export const authOptions: AuthOptions = {
   },
   debug: process.env.NODE_ENV === "development",
   callbacks: {
-    async jwt({ token, user, session }) {
+    async jwt({ token, user, session, trigger }) {
       if (user) {
         token.id = user.id;
         token.username = user.username;
+        token.profileImage = user.profileImage;
+      }
+      if (trigger === "update" && session?.profileImage) {
+        token.profileImage = session.profileImage;
       }
       // console.log("callback jwt", { token, user, session });
       return token;
@@ -57,6 +61,7 @@ export const authOptions: AuthOptions = {
       // console.log("callback session", { session, token, user });
       session.user.id = token.id as string;
       session.user.username = token.username as string;
+      session.user.profileImage = token.profileImage as string;
       return session;
     },
   },

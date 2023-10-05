@@ -10,7 +10,7 @@ import { GoSync, GoX } from "react-icons/go";
 
 export default function UploadAvatarModal() {
   const uploadAvatarModal = useUploadAvatarModal();
-  const { data: session } = useSession();
+  const { data: session, update } = useSession();
 
   const { files, setFiles, startUpload, isUploading } = useUpload({
     userId: session?.user.id,
@@ -22,13 +22,24 @@ export default function UploadAvatarModal() {
     return null;
   }
 
-  const handleUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSetAvatar = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (isUploading) return;
     console.log(e.target.files);
     if (e.target.files) {
       const filesArray = Array.from(e.target.files);
       setFiles(filesArray);
     }
+  };
+
+  const handleUpload = async () => {
+    if (!files || !session) {
+      return;
+    }
+    const f = await startUpload(files);
+    console.log({ f });
+    // check if the uploaded file URL is in the "f" object
+    // and replace "test" below with it
+    update({ profileImage: "test" });
   };
 
   const clearFiles = () => {
@@ -47,7 +58,7 @@ export default function UploadAvatarModal() {
           type="file"
           accept=".jpg, .JPG, .jpeg, .JPEG, .png, .PNG, .gif, .GIF"
           disabled={isUploading}
-          onChange={handleUpload}
+          onChange={handleSetAvatar}
           className="hidden"
         />
         <label htmlFor="avatar-uploader" className="gray_button">
@@ -80,7 +91,7 @@ export default function UploadAvatarModal() {
           <button
             disabled={isUploading}
             className="blue_button ml-auto"
-            onClick={() => files && session && startUpload(files)}
+            onClick={handleUpload}
           >
             Upload
             {isUploading && (

@@ -34,7 +34,6 @@ export async function PATCH(
       comment.likes.push(userId);
     }
     const r = await comment.save();
-    console.log({ rComments: r });
     return NextResponse.json({ message: "Action successful" }, { status: 200 });
   } catch (error) {
     return NextResponse.json(
