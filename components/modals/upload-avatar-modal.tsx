@@ -35,11 +35,14 @@ export default function UploadAvatarModal() {
     if (!files || !session) {
       return;
     }
-    const f = await startUpload(files);
-    console.log({ f });
-    // check if the uploaded file URL is in the "f" object
-    // and replace "test" below with it
-    update({ profileImage: "test" });
+
+    // Upload file
+    const response = await startUpload(files);
+
+    // Update the session.user.profileImage with the new image URL
+    if (response) {
+      update({ profileImage: response[0].url });
+    }
   };
 
   const clearFiles = () => {

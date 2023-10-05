@@ -29,8 +29,6 @@ const SidebarItem = ({
   const pathname = usePathname();
   const newPostModal = useNewPostModal();
 
-  console.log({ user });
-
   return (
     <div className="group px-2 py-1">
       <Link href={link}>

@@ -90,7 +90,7 @@ const Sidebar = () => {
     return null;
   }
 
-  // console.log(session);
+  console.log({ session });
   return (
     <>
       <h1 className="p-4">
