@@ -42,6 +42,7 @@ export default function AuthModal() {
       setError("Invalid credentials");
       return;
     }
+
     authModal.toggle();
     router.refresh();
   };

@@ -12,10 +12,16 @@ import { FieldValues, useForm } from "react-hook-form";
 import { BsEmojiSmile } from "react-icons/bs";
 import { GoHeart, GoHeartFill } from "react-icons/go";
 import EmojiPicker, { EmojiClickData } from "emoji-picker-react";
+import UserAvatar from "../user-avatar";
+import useUsersModal from "@/hooks/useUsersModal";
+import cn from "@/utils/utils";
 
 type Props = {
   postId: string;
-  comments: (Omit<CommentType, "userId"> & { _id: string; userId: UserType })[];
+  comments: (Omit<CommentType, "userId" | "likes"> & {
+    _id: string;
+    userId: UserType & { _id: string };
+  } & { likes: UserType[] })[];
   userId?: string;
 };
 
@@ -38,6 +44,8 @@ const PostComments = forwardRef<HTMLInputElement, Props>(function PostComments(
     },
   });
   const { ref: registerRef, ...rest } = register("text");
+
+  const usersModal = useUsersModal();
 
   const router = useRouter();
 
@@ -88,19 +96,12 @@ const PostComments = forwardRef<HTMLInputElement, Props>(function PostComments(
           {comments.map((comment) => (
             <div key={comment._id}>
               <div className="flex gap-3 items-center">
-                <div className="flex flex-col gap-2">
-                  <Link
-                    href={`/${comment.userId.username}`}
-                    className="w-[2.25rem] h-[2.25rem] rounded-full bg-cover border relative"
-                  >
-                    <Image
-                      src={comment.userId.profileImage || "/avatar.jpg"}
-                      alt={comment.userId.username}
-                      width={30}
-                      height={30}
-                      className="rounded-full h-full w-full object-cover absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
-                    />
-                  </Link>
+                <div className="flex flex-col gap-2 self-start w-[30px] h-[30px]">
+                  <UserAvatar
+                    src={comment.userId.profileImage}
+                    width={30}
+                    height={30}
+                  />
                 </div>
                 <div className="flex flex-col flex-1 gap-1">
                   <div>
@@ -118,7 +119,19 @@ const PostComments = forwardRef<HTMLInputElement, Props>(function PostComments(
                     <span>
                       {formatDistance(new Date(comment.createdAt), new Date())}
                     </span>
-                    <span>{comment.likes.length} likes</span>
+                    <div
+                      onClick={() => {
+                        if (!comment.likes.length) return;
+
+                        usersModal.setUsers(comment.likes);
+                        usersModal.toggle();
+                      }}
+                      className={cn({ "cursor-pointer": comment.likes.length })}
+                    >
+                      {comment.likes.length === 1
+                        ? `1 like`
+                        : `${comment.likes.length} likes`}
+                    </div>
                     <span>Reply</span>
                     {comment.userId._id === userId ? (
                       <span

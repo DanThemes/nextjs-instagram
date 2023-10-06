@@ -65,16 +65,8 @@ export const authOptions: AuthOptions = {
       return session;
     },
   },
-  logger: {
-    error(code, metadata) {
-      console.log("error", { code }, { metadata });
-    },
-    warn(code) {
-      console.log("warn", { code });
-    },
-    debug(code, metadata) {
-      console.log("debug", { code, metadata });
-    },
+  pages: {
+    signIn: "/",
   },
 };
 

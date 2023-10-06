@@ -10,6 +10,7 @@ import Image from "next/image";
 import { useSession } from "next-auth/react";
 import { getUser } from "@/utils/api";
 import { UserType } from "@/models/User";
+import UserAvatar from "../user-avatar";
 
 type SidebarItemProps = {
   icon?: IconType;
@@ -29,8 +30,6 @@ const SidebarItem = ({
   const pathname = usePathname();
   const newPostModal = useNewPostModal();
 
-  console.log({ sidebarItemUser: user });
-
   return (
     <div className="group px-2 py-1">
       <Link href={link}>
@@ -41,12 +40,13 @@ const SidebarItem = ({
           <span className="mr-3">
             {name === "Profile" && user && user.profileImage ? (
               <div className="w-[1.5rem] h-[1.5rem] rounded-full bg-cover relative group-hover:scale-105 group-active:scale-95 transition">
-                <Image
-                  src={user.profileImage || "/avatar.jpg"}
+                <UserAvatar
+                  src={user.profileImage}
                   width={40}
                   height={40}
-                  alt="avatar"
-                  className="w-full h-full object-cover rounded-full border border-black"
+                  className={
+                    "w-full h-full object-cover rounded-full border border-black"
+                  }
                 />
               </div>
             ) : (

@@ -1,10 +1,11 @@
 "use client";
 
-import UploadAvatarModal from "@/components/modals/upload-avatar-modal";
+import UserAvatar from "@/components/user-avatar";
 import useUploadAvatarModal from "@/hooks/useUploadAvatarModal";
 import cn from "@/utils/utils";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
+import { useParams } from "next/navigation";
 import React from "react";
 
 type ProfileAvatarProps = {
@@ -14,23 +15,17 @@ type ProfileAvatarProps = {
 export default function ProfileAvatar({ profileImage }: ProfileAvatarProps) {
   const uploadAvatarModal = useUploadAvatarModal();
   const { data: session } = useSession();
+  const { username } = useParams();
 
-  const isCurrentUserOwner = session && session.user.username;
+  const isCurrentUserOwner = session && session.user.username === username;
 
   return (
-    <>
-      <Image
-        src={profileImage || "/avatar.jpg"}
-        width={150}
-        height={150}
-        alt={"avatar"}
-        className={cn("rounded-full border w-[150px] h-[150px] object-cover", {
-          "cursor-pointer": isCurrentUserOwner,
-        })}
-        onClick={uploadAvatarModal.toggle}
-        priority
-      />
-      {/* {isCurrentUserOwner && <UploadAvatarModal />} */}
-    </>
+    <UserAvatar
+      src={profileImage}
+      width={150}
+      height={150}
+      className={isCurrentUserOwner ? "cursor-pointer" : ""}
+      onClick={() => isCurrentUserOwner && uploadAvatarModal.toggle()}
+    />
   );
 }

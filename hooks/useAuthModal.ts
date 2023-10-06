@@ -10,9 +10,7 @@ type AuthModalType = {
 const useAuthModal = create<AuthModalType>((set) => ({
   isOpen: false,
   tab: "login",
-  toggle: () => {
-    set((state) => ({ isOpen: !state.isOpen }));
-  },
+  toggle: () => set((state) => ({ isOpen: !state.isOpen })),
   setTab: (value) => {
     if (value) {
       set({ tab: value });

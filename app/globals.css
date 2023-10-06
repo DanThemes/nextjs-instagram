@@ -12,6 +12,11 @@
   margin: 0;
   min-width: 0;
 }
+
+::selection {
+  background-color: rgba(0, 148, 246, 0.352);
+}
+
 pre {
   word-break: break-word;
   width: 100%;

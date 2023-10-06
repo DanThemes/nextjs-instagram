@@ -6,9 +6,12 @@ import { UserType } from "@/models/User";
 import PostCard from "@/components/posts/post-card";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../api/auth/[...nextauth]/route";
+import ProfileInfo from "./profile-info";
 
 const Profile = async ({ params }: { params: { username: string } }) => {
-  const user = (await getUser(params.username)) as UserType & { _id: string };
+  const user = (await getUser(params.username)) as UserType & {
+    _id: string;
+  } & { following: UserType[]; followers: UserType[] };
   const session = await getServerSession(authOptions);
 
   if (!user) {
@@ -48,15 +51,11 @@ const Profile = async ({ params }: { params: { username: string } }) => {
             </div>
           </div>
           <div className="flex gap-10 pt-7">
-            <div>
-              <strong>{posts.length}</strong> posts
-            </div>
-            <div>
-              <strong>{user.followers.length}</strong> followers
-            </div>
-            <div>
-              <strong>{user.following.length}</strong> following
-            </div>
+            <ProfileInfo
+              posts={posts}
+              following={user.following}
+              followers={user.followers}
+            />
           </div>
           <div className="flex flex-col pt-7 text-center md:text-left">
             <p className="font-bold">{user.displayName || user.username}</p>

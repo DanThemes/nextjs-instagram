@@ -9,6 +9,8 @@ import { authOptions } from "./api/auth/[...nextauth]/route";
 import TopBar from "@/components/top-bar";
 import UsersModal from "@/components/modals/users-modal";
 import UploadAvatarModal from "@/components/modals/upload-avatar-modal";
+import AuthModal from "@/components/modals/auth-modal";
+import Login from "@/components/not-logged-in";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -39,6 +41,7 @@ export default async function RootLayout({
             <main className="px-10 py-10 w-[70rem] mx-auto">{children}</main>
           </div>
           <div className="z-[999] relative">
+            <AuthModal />
             <UsersModal />
             <UploadAvatarModal />
           </div>
