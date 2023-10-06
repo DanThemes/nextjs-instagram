@@ -50,7 +50,7 @@ const PostComments = forwardRef<HTMLInputElement, Props>(function PostComments(
   const router = useRouter();
 
   const submitComment = async (data: FieldValues) => {
-    if (isSubmitting || !userId) return;
+    if (isSubmitting || !userId || !data.text.length) return;
     await addComment(postId, data.text, userId);
     reset();
     router.refresh();
