@@ -1,28 +1,18 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Modal from "./modal";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import useUsersModal from "@/hooks/useUsersModal";
-import { getUsers } from "@/utils/api";
 import { UserType } from "@/models/User";
-import Image from "next/image";
 import Link from "next/link";
 import UserAvatar from "../user-avatar";
 
 export default function UsersModal() {
-  // const [users, setUsers] = useState<UserType[] | []>([]);
   const usersModal = useUsersModal();
   const { data: session } = useSession();
   const router = useRouter();
-
-  // useEffect(() => {
-  //   (async () => {
-  //     const users = await getUsers(usersModal.users);
-  //     setUsers(users);
-  //   })();
-  // }, [usersModal]);
 
   if (!session) {
     return null;
@@ -32,6 +22,11 @@ export default function UsersModal() {
     return null;
   }
 
+  const handleClick = (link: string) => {
+    usersModal.toggle();
+    router.push(link);
+  };
+
   return (
     <Modal isOpen={usersModal.isOpen} toggle={usersModal.toggle}>
       <ul className="flex flex-col gap-3">
@@ -40,11 +35,12 @@ export default function UsersModal() {
             key={user._id}
             className="py-2 text-black flex justify-between gap-2"
           >
-            <div className="flex items-center  gap-2 text-sm">
-              <span>
-                <Link href={`/${user.username}`} className="w-[40px] h-[40px]">
-                  <UserAvatar src={user.profileImage} width={40} height={40} />
-                </Link>
+            <div
+              className="flex items-center gap-2 text-sm"
+              onClick={() => handleClick(`/${user.username}`)}
+            >
+              <span className="w-[40px] h-[40px] cursor-pointer">
+                <UserAvatar src={user.profileImage} width={40} height={40} />
               </span>
               <span>
                 <Link href={`/${user.username}`}>{user.username}</Link>
