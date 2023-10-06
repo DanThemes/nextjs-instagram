@@ -1,34 +1,23 @@
 "use client";
 
-import { followUser } from "@/utils/api";
+import FollowButton from "@/components/follow-button";
+import { UserType } from "@/models/User";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
 import React, { useState } from "react";
-import { GoGear, GoSync } from "react-icons/go";
+import { GoGear } from "react-icons/go";
 
 type ProfileButtonsType = {
-  userId: string;
-  followers: string[];
-  loggedInUserId: string;
+  user: UserType & { _id: string };
 };
 
-const ProfileButtons = ({
-  userId,
-  followers,
-  loggedInUserId,
-}: ProfileButtonsType) => {
-  const [isLoading, setIsLoading] = useState(false);
-  const [isFollowed, setIsFollowed] = useState(() =>
-    followers.includes(loggedInUserId)
-  );
+const ProfileButtons = ({ user }: ProfileButtonsType) => {
   const { data: session, status } = useSession();
-  const router = useRouter();
 
   if (status === "loading") {
     return null;
   }
 
-  if (session && session.user.id === userId) {
+  if (session && session.user.id === user._id) {
     return (
       <>
         <button className="gray_button">Edit profile</button>
@@ -39,36 +28,11 @@ const ProfileButtons = ({
       </>
     );
   }
-  console.log({ isFollowed, followers, loggedInUserId });
-
-  const handleFollow = async () => {
-    if (!session || isLoading) return;
-    setIsLoading(true);
-
-    await followUser({
-      followerId: session.user.id,
-      followedId: userId,
-    });
-
-    setIsFollowed((prev) => !prev);
-    setIsLoading(false);
-    router.refresh();
-  };
+  // console.log({ isFollowed, followers, loggedInUserId });
 
   return (
     <>
-      <button
-        className="blue_button"
-        disabled={isLoading}
-        onClick={handleFollow}
-      >
-        {isFollowed ? "Unfollow " : "Follow "}
-        {isLoading && (
-          <div className="animate-spin w-[1rem]">
-            <GoSync />
-          </div>
-        )}
-      </button>
+      <FollowButton user={user} />
       <button className="gray_button">Message</button>
       <button>...</button>
     </>

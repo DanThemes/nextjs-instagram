@@ -33,13 +33,13 @@ export default function UsersModal() {
         {(usersModal.users as (UserType & { _id: string })[]).map((user) => (
           <li
             key={user._id}
-            className="py-2 text-black flex justify-between gap-2"
+            className="py-2 text-black flex justify-between items-center gap-2"
           >
             <div
-              className="flex items-center gap-2 text-sm"
+              className="flex items-center gap-2 text-sm cursor-pointer"
               onClick={() => handleClick(`/${user.username}`)}
             >
-              <span className="w-[40px] h-[40px] cursor-pointer">
+              <span className="w-[40px] h-[40px]">
                 <UserAvatar src={user.profileImage} width={40} height={40} />
               </span>
               <span>

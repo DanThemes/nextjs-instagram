@@ -39,13 +39,7 @@ const Profile = async ({ params }: { params: { username: string } }) => {
               <div className="text-lg flex-1 mb-5 md:mb-0">{user.username}</div>
               {session && (
                 <div className="flex items-center gap-3">
-                  <ProfileButtons
-                    userId={user._id}
-                    followers={user.followers.map((follower) =>
-                      follower._id.toString()
-                    )}
-                    loggedInUserId={session?.user.id}
-                  />
+                  <ProfileButtons user={user} />
                 </div>
               )}
             </div>
@@ -63,7 +57,7 @@ const Profile = async ({ params }: { params: { username: string } }) => {
           </div>
         </div>
       </div>
-      <div className="grid gap-1 grid-cols-3 mt-10 cursor-pointer">
+      <div className="grid gap-1 grid-cols-3 mt-10">
         {posts.map((post: any) => (
           <PostCard post={post} key={post._id} />
         ))}

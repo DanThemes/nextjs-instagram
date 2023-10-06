@@ -96,7 +96,8 @@ const PostComments = forwardRef<HTMLInputElement, Props>(function PostComments(
           {comments.map((comment) => (
             <div key={comment._id}>
               <div className="flex gap-3 items-center">
-                <div className="flex flex-col gap-2 self-start w-[30px] h-[30px]">
+                {/* <div className="flex flex-col gap-2 self-start w-[30px] h-[30px]"> */}
+                <div className="flex flex-col gap-2 self-start">
                   <UserAvatar
                     src={comment.userId.profileImage}
                     width={30}

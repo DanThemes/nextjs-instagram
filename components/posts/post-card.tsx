@@ -20,7 +20,7 @@ export default function PostCard({ post }: PostCardType) {
   }
 
   return (
-    <div className="group border border-solid border-[#eee] hover:bg-black/80 relative">
+    <div className="group border border-solid border-[#eee] hover:bg-black/80 relative aspect-[1] cursor-pointer">
       <Link href={`/posts/${post._id}`}>
         <Image
           src={placeholder}
