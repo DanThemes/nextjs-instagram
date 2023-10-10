@@ -4,7 +4,6 @@ import { getServerSession } from "next-auth";
 import React from "react";
 import Post from "./post";
 import { PostType } from "@/models/Post";
-import PostModal from "../modals/post-modal";
 
 const Posts = async ({
   posts,
@@ -19,7 +18,7 @@ const Posts = async ({
   if (!posts) {
     posts = await getPosts({
       userId: session.user.id,
-      onlyFollowingUsersPosts: false,
+      onlyPostsOfFollowedUsers: true,
     });
 
     if (!posts) {

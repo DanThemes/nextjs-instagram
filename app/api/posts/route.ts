@@ -19,18 +19,18 @@ export async function GET(request: NextRequest) {
 
   // console.log({ searchParams: request.nextUrl.searchParams });
   const userId = request.nextUrl.searchParams.get("userId");
-  const onlyFollowingUsersPosts =
-    request.nextUrl.searchParams.get("onlyFollowingUsersPosts") === "false"
+  const onlyPostsOfFollowedUsers =
+    request.nextUrl.searchParams.get("onlyPostsOfFollowedUsers") === "false"
       ? false
       : true;
 
-  // console.log("GET", userId, onlyFollowingUsersPosts);
+  // console.log("GET", userId, onlyPostsOfFollowedUsers);
 
   try {
     let postsPromise;
 
     // Get all posts of the users followed by a specific user
-    if (userId && onlyFollowingUsersPosts) {
+    if (userId && onlyPostsOfFollowedUsers) {
       const usersFollowedList = await User.findOne({ _id: userId }).select(
         "following"
       );

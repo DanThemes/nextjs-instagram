@@ -159,10 +159,10 @@ export async function getPost(id: string) {
 // Get posts
 export async function getPosts({
   userId,
-  onlyFollowingUsersPosts = false,
+  onlyPostsOfFollowedUsers = false,
 }: {
   userId: string;
-  onlyFollowingUsersPosts: boolean;
+  onlyPostsOfFollowedUsers: boolean;
 }) {
   if (!process.env.NEXT_PUBLIC_API_URL) {
     throw new Error(
@@ -172,7 +172,7 @@ export async function getPosts({
 
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/posts?userId=${userId}&onlyFollowingUsersPosts=${onlyFollowingUsersPosts}`,
+      `${process.env.NEXT_PUBLIC_API_URL}/posts?userId=${userId}&onlyPostsOfFollowedUsers=${onlyPostsOfFollowedUsers}`,
       {
         cache: "no-store",
       }
