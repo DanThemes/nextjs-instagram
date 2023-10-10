@@ -16,14 +16,8 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const users = await User.find();
-
-    // Remove the password field
-    const safeUsers = users.map((user) => {
-      const { password, ...rest } = user._doc;
-      return rest;
-    });
-    return NextResponse.json({ users: safeUsers }, { status: 200 });
+    const users = await User.find().select("-password");
+    return NextResponse.json({ users }, { status: 200 });
   } catch (error) {
     console.log("Error while retrieving the users' list", error);
     return NextResponse.json(
