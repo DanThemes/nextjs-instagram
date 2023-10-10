@@ -28,6 +28,7 @@ export default function ProfileInfo({
           if (!followers.length) return;
 
           usersModal.setUsers(followers);
+          usersModal.setTitle("Followers");
           usersModal.toggle();
         }}
         className={cn({ "cursor-pointer": followers.length })}
@@ -39,6 +40,7 @@ export default function ProfileInfo({
           if (!following.length) return;
 
           usersModal.setUsers(following);
+          usersModal.setTitle("Following");
           usersModal.toggle();
         }}
         className={cn({ "cursor-pointer": following.length })}

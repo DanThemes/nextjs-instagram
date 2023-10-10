@@ -136,7 +136,7 @@ export default function NewPostModal() {
     });
   };
 
-  console.log({ localMedia, watchMedia: watch("media"), errors });
+  // console.log({ localMedia, watchMedia: watch("media"), errors });
 
   return (
     <Modal

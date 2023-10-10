@@ -130,6 +130,7 @@ export default function Post({ post }: { post: any }) {
               if (!post.likes.length) return;
 
               usersModal.setUsers(post.likes);
+              usersModal.setTitle("Likes");
               usersModal.toggle();
             }}
           >

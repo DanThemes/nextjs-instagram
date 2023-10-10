@@ -126,6 +126,7 @@ const PostComments = forwardRef<HTMLInputElement, Props>(function PostComments(
                         if (!comment.likes.length) return;
 
                         usersModal.setUsers(comment.likes);
+                        usersModal.setTitle("Likes");
                         usersModal.toggle();
                       }}
                       className={cn({ "cursor-pointer": comment.likes.length })}
