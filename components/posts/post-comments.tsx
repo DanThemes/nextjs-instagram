@@ -18,6 +18,7 @@ import cn from "@/utils/utils";
 
 type Props = {
   postId: string;
+  commentsDisabled: boolean;
   comments: (Omit<CommentType, "userId" | "likes"> & {
     _id: string;
     userId: UserType & { _id: string };
@@ -26,7 +27,7 @@ type Props = {
 };
 
 const PostComments = forwardRef<HTMLInputElement, Props>(function PostComments(
-  { postId, comments, userId },
+  { postId, commentsDisabled, comments, userId },
   ref
 ) {
   const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false);
@@ -164,7 +165,11 @@ const PostComments = forwardRef<HTMLInputElement, Props>(function PostComments(
           ))}
         </div>
       )}
-      {userId && (
+      {userId && commentsDisabled && (
+        <p className="italic mt-3">New comments are not allowed.</p>
+      )}
+
+      {userId && !commentsDisabled && (
         <div className="flex justify-between border-b py-4">
           <form onSubmit={handleSubmit(submitComment)} className="flex-1">
             <input

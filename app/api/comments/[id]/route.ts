@@ -20,8 +20,7 @@ export async function PATCH(
     );
   }
 
-  // check auth here
-
+  // toggle like
   try {
     const { userId } = await request.json();
     const comment = await Comment.findOne({ _id: params.id });

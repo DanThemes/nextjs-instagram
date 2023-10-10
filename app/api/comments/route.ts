@@ -25,6 +25,11 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    const post = await Post.findOne({ _id: postId });
+    if (post.commentsDisabled) {
+      throw new Error("Comments are disabled for this post");
+    }
+
     const comment = new Comment({
       postId,
       text,
@@ -36,7 +41,6 @@ export async function POST(request: NextRequest) {
     await comment.save();
 
     // Add the comment id to the post's comments array
-    const post = await Post.findOne({ _id: postId });
     post.comments.push(comment._id);
     await post.save();
 

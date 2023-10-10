@@ -35,12 +35,15 @@ const Posts = async ({
 
   return (
     <div className="flex flex-col gap-10">
-      {posts.map((post: any) => (
-        <div key={post._id}>
-          <Post post={post} />
-        </div>
-      ))}
-      <PostModal />
+      {posts.length ? (
+        posts.map((post: any) => (
+          <div key={post._id}>
+            <Post post={post} />
+          </div>
+        ))
+      ) : (
+        <p>No posts found.</p>
+      )}
     </div>
   );
 };

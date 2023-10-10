@@ -79,6 +79,8 @@ export default function Post({ post }: { post: any }) {
           className="ml-auto cursor-pointer hover:opacity-50 p-4 pr-0"
           onClick={() => {
             postModal.setPostId(post._id);
+            postModal.setHideLikes(!!post.hideLikes);
+            postModal.setCommentsDisabled(!!post.commentsDisabled);
             postModal.toggle();
           }}
         >
@@ -120,20 +122,25 @@ export default function Post({ post }: { post: any }) {
           <GoBookmark />
         </div>
       </div>
-      <div
-        onClick={() => {
-          if (!post.likes.length) return;
+      {!post.hideLikes && (
+        <div className="flex">
+          <span
+            className={cn({ "cursor-pointer": post.likes.length })}
+            onClick={() => {
+              if (!post.likes.length) return;
 
-          usersModal.setUsers(post.likes);
-          usersModal.toggle();
-        }}
-        className={cn({ "cursor-pointer": post.likes.length })}
-      >
-        {post.likes.length === 1 ? `1 like` : `${post.likes.length} likes`}
-      </div>
+              usersModal.setUsers(post.likes);
+              usersModal.toggle();
+            }}
+          >
+            {post.likes.length === 1 ? `1 like` : `${post.likes.length} likes`}
+          </span>
+        </div>
+      )}
       <strong>author</strong> {post.caption}
       <PostComments
         postId={post._id}
+        commentsDisabled={post.commentsDisabled}
         comments={post.comments}
         userId={session?.user.id}
         ref={inputRef}

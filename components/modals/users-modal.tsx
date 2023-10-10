@@ -28,8 +28,8 @@ export default function UsersModal() {
   };
 
   return (
-    <Modal isOpen={usersModal.isOpen} toggle={usersModal.toggle}>
-      <ul className="flex flex-col gap-3">
+    <Modal isOpen={usersModal.isOpen} toggle={usersModal.toggle} title="Likes">
+      <ul className="flex flex-col gap-3 max-h-[35dvh] overflow-y-scroll no-scrollbar">
         {(usersModal.users as (UserType & { _id: string })[]).map((user) => (
           <li
             key={user._id}

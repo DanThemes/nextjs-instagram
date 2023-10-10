@@ -59,49 +59,6 @@ export async function GET(
   }
 }
 
-export async function POST(request: NextRequest) {
-  // connect to the database
-  try {
-    await dbConnect();
-  } catch (error) {
-    console.error("Database connection error:", error);
-    return NextResponse.json(
-      { message: "Something went wrong" },
-      { status: 400 }
-    );
-  }
-
-  // create post
-  try {
-    const { userId, media, caption } = await request.json();
-    if (!userId || !media || !caption) {
-      return NextResponse.json(
-        { message: "Please fill in all the required fields" },
-        { status: 400 }
-      );
-    }
-
-    console.log({ userId, media, caption });
-    const user = await User.findOne({ _id: userId });
-    if (!user) {
-      throw new Error("User not found");
-    }
-    const post = new Post({ userId, media, caption, comments: [], likes: [] });
-    await post.save();
-    user.posts.push(post._id);
-    console.log("ppp", user.posts);
-    await user.save();
-
-    return NextResponse.json(post, { status: 201 });
-  } catch (error) {
-    console.log("Required fields are missing for post creation:", error);
-    return NextResponse.json(
-      { message: "Required fields are missing for post creation" },
-      { status: 400 }
-    );
-  }
-}
-
 export async function PATCH(
   request: NextRequest,
   { params }: { params: { id: string } }
@@ -120,18 +77,49 @@ export async function PATCH(
   // check auth here
 
   try {
-    const { userId } = await request.json();
-    const post = await Post.findOne({ _id: params.id });
+    const body = await request.json();
 
-    if (post.likes.includes(userId)) {
-      post.likes = post.likes.filter(
-        (like: Types.ObjectId) => like.toString() !== userId
+    // toggle like
+    if ("userId" in body) {
+      const post = await Post.findOne({ _id: params.id });
+
+      if (post.likes.includes(body.userId)) {
+        post.likes = post.likes.filter(
+          (like: Types.ObjectId) => like.toString() !== body.userId
+        );
+      } else {
+        post.likes.push(body.userId);
+      }
+      await post.save();
+      return NextResponse.json(
+        { message: "Action successful" },
+        { status: 200 }
       );
-    } else {
-      post.likes.push(userId);
     }
-    await post.save();
-    return NextResponse.json({ message: "Action successful" }, { status: 200 });
+
+    // enable/disable comments
+    if ("commentsDisabled" in body) {
+      const post = await Post.findOne({ _id: params.id });
+      post.commentsDisabled = body.commentsDisabled;
+      await post.save();
+      return NextResponse.json(
+        { message: "Action successful" },
+        { status: 200 }
+      );
+    }
+
+    // show/hide like count
+    if ("hideLikes" in body) {
+      const post = await Post.findOne({ _id: params.id });
+      post.hideLikes = body.hideLikes;
+      await post.save();
+      return NextResponse.json(
+        { message: "Action successful" },
+        { status: 200 }
+      );
+    }
+
+    throw new Error("Request body is invalid");
   } catch (error) {
     return NextResponse.json(
       { message: "Something went wrong" },
@@ -155,7 +143,7 @@ export async function DELETE(
     );
   }
   console.log("delete", params);
-  // check auth here
+
   try {
     const session = await getServerSession(authOptions);
     const post = await Post.findOne({ _id: params.id });
@@ -164,8 +152,20 @@ export async function DELETE(
       throw new Error("Post doesn't exist");
     }
 
+    // only owner can delete
     if (session?.user.id === post.userId.toString()) {
+      // delete the postId from the User's post field
+      const user = await User.findOne({ _id: post.userId });
+      if (user) {
+        user.posts = user.posts.filter(
+          (postId: string) => postId.toString() !== params.id
+        );
+        await user.save();
+      }
+
+      // delete the post
       await Post.deleteOne({ _id: params.id });
+
       return NextResponse.json(
         { message: "Action successful" },
         { status: 200 }

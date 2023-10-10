@@ -1,4 +1,4 @@
-import mongoose, { InferSchemaType } from "mongoose";
+import mongoose, { HydratedDocument, InferSchemaType } from "mongoose";
 
 const UserSchema = new mongoose.Schema(
   {
@@ -23,6 +23,7 @@ const UserSchema = new mongoose.Schema(
     displayName: String,
     profileImage: String,
     bio: String,
+    posts: [{ type: mongoose.Schema.Types.ObjectId, ref: "Post" }],
     followers: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
     following: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
   },
@@ -31,7 +32,7 @@ const UserSchema = new mongoose.Schema(
   }
 );
 
-export type UserType = InferSchemaType<typeof UserSchema>;
+export type UserType = HydratedDocument<InferSchemaType<typeof UserSchema>>;
 
 const User = mongoose.models.User || mongoose.model("User", UserSchema);
 

@@ -20,12 +20,14 @@ export default function ProfileAvatar({ profileImage }: ProfileAvatarProps) {
   const isCurrentUserOwner = session && session.user.username === username;
 
   return (
-    <UserAvatar
-      src={profileImage}
-      width={150}
-      height={150}
-      className={isCurrentUserOwner ? "cursor-pointer" : ""}
-      onClick={() => isCurrentUserOwner && uploadAvatarModal.toggle()}
-    />
+    <span className="w-150px] h-[150px]">
+      <UserAvatar
+        src={profileImage}
+        width={150}
+        height={150}
+        className={isCurrentUserOwner ? "cursor-pointer" : ""}
+        onClick={() => isCurrentUserOwner && uploadAvatarModal.toggle()}
+      />
+    </span>
   );
 }

@@ -1,8 +1,6 @@
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { MediaType } from "@/models/Media";
 import { PostType } from "@/models/Post";
 import { UserType } from "@/models/User";
-import { getServerSession } from "next-auth";
 
 // Add user
 export async function addUser(values: Partial<UserType>) {
@@ -322,6 +320,72 @@ export async function toggleLike({
     return data;
   } catch (error) {
     console.log("toggleLike() api.ts", error);
+  }
+}
+
+// hide/show like count
+export async function handleHideLikes({
+  postId,
+  hide,
+}: {
+  postId: string;
+  hide: boolean;
+}) {
+  if (!process.env.NEXT_PUBLIC_API_URL) {
+    throw new Error(
+      "Please define the 'NEXT_PUBLIC_API_URL' environment variable inside .env"
+    );
+  }
+
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/posts/${postId}`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: JSON.stringify({ hideLikes: hide }),
+      }
+    );
+    const data = await response.json();
+    console.log(data);
+    return data;
+  } catch (error) {
+    console.log("disableComments() api.ts", error);
+  }
+}
+
+// enable/disable post comments
+export async function disableComments({
+  postId,
+  disable,
+}: {
+  postId: string;
+  disable: boolean;
+}) {
+  if (!process.env.NEXT_PUBLIC_API_URL) {
+    throw new Error(
+      "Please define the 'NEXT_PUBLIC_API_URL' environment variable inside .env"
+    );
+  }
+
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/posts/${postId}`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: JSON.stringify({ commentsDisabled: disable }),
+      }
+    );
+    const data = await response.json();
+    console.log(data);
+    return data;
+  } catch (error) {
+    console.log("disableComments() api.ts", error);
   }
 }
 

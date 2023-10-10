@@ -93,8 +93,6 @@ export default function NewPostModal() {
       userId: session.user.id,
       media: mediaIds,
       caption: data.caption,
-      comments: [],
-      likes: [],
     } as any);
 
     // newPostModal.toggle();

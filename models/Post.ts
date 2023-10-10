@@ -1,4 +1,4 @@
-import mongoose, { InferSchemaType } from "mongoose";
+import mongoose, { HydratedDocument, InferSchemaType } from "mongoose";
 
 const PostSchema = new mongoose.Schema(
   {
@@ -25,6 +25,8 @@ const PostSchema = new mongoose.Schema(
         ref: "Comment",
       },
     ],
+    commentsDisabled: Boolean,
+    hideLikes: Boolean,
     likes: [
       {
         type: mongoose.Schema.Types.ObjectId,
@@ -41,7 +43,7 @@ function arrayMinLength(arr: string[]) {
   return true; //arr && arr.length > 0;
 }
 
-export type PostType = InferSchemaType<typeof PostSchema>;
+export type PostType = HydratedDocument<InferSchemaType<typeof PostSchema>>;
 
 const Post = mongoose.models.Post || mongoose.model("Post", PostSchema);
 

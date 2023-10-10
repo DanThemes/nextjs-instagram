@@ -105,12 +105,19 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    console.log({ userId, media, caption });
     const user = await User.findOne({ _id: userId });
     if (!user) {
       throw new Error("User not found");
     }
-    const post = new Post({ userId, media, caption, comments: [], likes: [] });
+    const post = new Post({
+      userId,
+      media,
+      caption,
+      commentsDisabled: false,
+      comments: [],
+      hideLikes: false,
+      likes: [],
+    });
     await post.save();
     user.posts.push(post._id);
     await user.save();

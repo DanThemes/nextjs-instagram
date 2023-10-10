@@ -1,5 +1,5 @@
 import { Timestamp } from "mongodb";
-import mongoose, { InferSchemaType } from "mongoose";
+import mongoose, { HydratedDocument, InferSchemaType } from "mongoose";
 
 const SessionSchema = new mongoose.Schema({
   expires: Timestamp,
@@ -10,7 +10,9 @@ const SessionSchema = new mongoose.Schema({
   },
 });
 
-export type SessionType = InferSchemaType<typeof SessionSchema>;
+export type SessionType = HydratedDocument<
+  InferSchemaType<typeof SessionSchema>
+>;
 
 const Session =
   mongoose.models.Session || mongoose.model("Session", SessionSchema);
