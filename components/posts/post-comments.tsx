@@ -167,7 +167,7 @@ const PostComments = forwardRef<HTMLInputElement, Props>(function PostComments(
         </div>
       )}
       {userId && commentsDisabled && (
-        <p className="italic mt-3">New comments are not allowed.</p>
+        <p className="italic mt-3 text-sm">New comments are not allowed.</p>
       )}
 
       {userId && !commentsDisabled && (
