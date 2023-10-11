@@ -104,7 +104,9 @@ const Sidebar = () => {
               />
             </span>
 
-            <span className="hidden lg:block lg:text-2xl">Instagram</span>
+            <span className="hidden lg:block lg:text-[1.2rem] leading-[1.5rem]">
+              Instagram
+            </span>
           </div>
         </Link>
       </div>
