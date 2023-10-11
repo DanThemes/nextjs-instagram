@@ -233,7 +233,12 @@ export async function addPostMedia(values: MediaType) {
 }
 
 // Add comment
-export async function addComment(postId: string, text: string, userId: string) {
+export async function addComment(
+  postId: string,
+  text: string,
+  userId: string,
+  parentCommentId?: string
+) {
   if (!process.env.NEXT_PUBLIC_API_URL) {
     throw new Error(
       "Please define the 'NEXT_PUBLIC_API_URL' environment variable inside .env"
@@ -248,7 +253,7 @@ export async function addComment(postId: string, text: string, userId: string) {
         headers: {
           "Content-type": "application/json",
         },
-        body: JSON.stringify({ postId, text, userId }),
+        body: JSON.stringify({ postId, text, userId, parentCommentId }),
       }
     );
     const data = await response.json();

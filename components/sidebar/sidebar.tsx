@@ -16,6 +16,8 @@ import Link from "next/link";
 import { signIn, signOut, useSession } from "next-auth/react";
 import NewPostModal from "../modals/new-post-modal";
 import { useRouter } from "next/navigation";
+import { BiLogoInstagram } from "react-icons/bi";
+import cn from "@/utils/utils";
 
 const items = [
   {
@@ -86,15 +88,26 @@ const Sidebar = () => {
     router.refresh();
   };
 
-  if (status === "loading") {
+  if (status !== "authenticated") {
     return null;
   }
 
   return (
     <>
-      <h1 className="p-4">
-        <Link href="/">Instagram</Link>
-      </h1>
+      <div className="group px-2 py-1 mb-8">
+        <Link href="/">
+          <div className="group p-2 group-hover:bg-neutral-100 transition flex items-center rounded-md group-active:opacity-50 lg:group-hover:bg-transparent">
+            <span className="mr-0 lg:mr-3 block lg:hidden">
+              <BiLogoInstagram
+                size="1.5rem"
+                className="group-hover:scale-105 group-active:scale-95 transition"
+              />
+            </span>
+
+            <span className="hidden lg:block lg:text-2xl">Instagram</span>
+          </div>
+        </Link>
+      </div>
       {items
         .filter((item) => session || (!item.requiresAuth && !session))
         .map((item) => {

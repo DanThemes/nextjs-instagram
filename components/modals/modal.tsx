@@ -37,7 +37,9 @@ export default function Modal({ isOpen, toggle, title, children }: ModalProps) {
             <h3 className="text-2xl">{title}</h3>
           </div>
         )}
-        <div className="p-10">{children}</div>
+        <div className="p-10 overflow-y-scroll no-scrollbar max-h-[50dvh]">
+          {children}
+        </div>
       </div>
     </motion.div>
   );

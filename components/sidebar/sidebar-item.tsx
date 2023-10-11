@@ -31,13 +31,15 @@ const SidebarItem = ({
   const newPostModal = useNewPostModal();
 
   return (
-    <div className="group px-2 py-1">
+    <div className={cn("group px-2 py-1", { "mb-8": name === "Instagram" })}>
       <Link href={link}>
         <div
-          className="group group-hover:bg-neutral-100 transition flex items-center rounded-md p-2 group-active:opacity-50"
+          className={cn(
+            "group p-2 group-hover:bg-neutral-100 transition flex items-center rounded-md group-active:opacity-50"
+          )}
           onClick={() => Modal && newPostModal.toggle()}
         >
-          <span className="mr-3">
+          <span className="mr-0 lg:mr-3">
             {name === "Profile" && user && user.profileImage ? (
               <div className="w-[1.5rem] h-[1.5rem] rounded-full bg-cover relative group-hover:scale-105 group-active:scale-95 transition">
                 <UserAvatar
@@ -53,12 +55,20 @@ const SidebarItem = ({
               Icon && (
                 <Icon
                   size="1.5rem"
-                  className="group-hover:scale-105 group-active:scale-95 transition"
+                  className={cn(
+                    "group-hover:scale-105 group-active:scale-95 transition"
+                  )}
                 />
               )
             )}
           </span>
-          <span className={cn({ "font-bold": pathname === link })}>{name}</span>
+          <span
+            className={cn("hidden lg:block", {
+              "font-bold": pathname === link,
+            })}
+          >
+            {name}
+          </span>
         </div>
       </Link>
       {Modal && <Modal />}
