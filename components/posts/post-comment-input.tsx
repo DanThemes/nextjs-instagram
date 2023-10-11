@@ -66,6 +66,7 @@ export default forwardRef<HTMLInputElement, PostCommentInputType>(
                 ref.current = e;
               }
             }}
+            autoComplete="off"
           />
           <input type="hidden" {...register("parentCommentId")} />
         </form>

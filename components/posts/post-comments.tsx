@@ -48,6 +48,9 @@ const PostComments = forwardRef<HTMLInputElement, Props>(function PostComments(
                 <PostComment
                   comment={comment}
                   userId={userId}
+                  replies={comments.filter(
+                    (c) => c.parentCommentId === comment._id
+                  )}
                   setValue={form.setValue}
                   ref={ref}
                 />
