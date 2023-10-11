@@ -3,17 +3,18 @@
 import { addComment } from "@/utils/api";
 import { useRouter } from "next/navigation";
 import React, { forwardRef, useState } from "react";
-import { FieldValues, useForm } from "react-hook-form";
+import { FieldValues, UseFormReturn, useForm } from "react-hook-form";
 import { BsEmojiSmile } from "react-icons/bs";
 import EmojiPicker, { EmojiClickData } from "emoji-picker-react";
 
 type PostCommentInputType = {
   postId: string;
   userId?: string;
+  form: UseFormReturn;
 };
 
 export default forwardRef<HTMLInputElement, PostCommentInputType>(
-  function PostCommentInput({ postId, userId }, ref) {
+  function PostCommentInput({ postId, userId, form }, ref) {
     const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false);
     const {
       register,
@@ -23,12 +24,7 @@ export default forwardRef<HTMLInputElement, PostCommentInputType>(
       setFocus,
       formState: { errors, isSubmitting },
       reset,
-    } = useForm({
-      defaultValues: {
-        text: "",
-        parentCommentId: "",
-      },
-    });
+    } = form;
     const { ref: registerRef, ...rest } = register("text");
 
     const router = useRouter();

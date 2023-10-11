@@ -16,10 +16,11 @@ type PostCommentType = {
     userId: UserType & { _id: string };
   } & { likes: UserType[] };
   userId?: string;
+  setValue: (field: any, value: any) => void;
 };
 
 export default forwardRef<HTMLInputElement, PostCommentType>(
-  function PostComment({ comment, userId }, ref) {
+  function PostComment({ comment, userId, setValue }, ref) {
     const usersModal = useUsersModal();
     const router = useRouter();
 
