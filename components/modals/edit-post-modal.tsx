@@ -7,7 +7,7 @@ import Image from "next/image";
 import { FieldValues, useForm } from "react-hook-form";
 import useUpload from "@/hooks/useUpload";
 import { GoSync, GoX } from "react-icons/go";
-import { addPost, addPostMedia } from "@/utils/api";
+import { addPostMedia, editPost } from "@/utils/api";
 import { MediaType } from "@/models/Media";
 import { useRouter } from "next/navigation";
 import clsx from "clsx";
@@ -56,15 +56,24 @@ export default function EditPostModal() {
   });
 
   const onSubmit = async (data: FieldValues) => {
-    if (isUploading) return;
+    if (isUploading || !editPostModal.post) return;
     // await trigger("media");
     // clearErrors("media");
 
-    // Upload to UploadThing
-    setValue("media", localMedia);
-    console.log({ onSubmitLocalMedia: localMedia });
-    const media = await startUpload(localMedia);
+    const localMediaOnlyExistingOnes = localMedia.filter(
+      (item) => !(item instanceof File)
+    );
 
+    const localMediaWithoutExistingOnes = localMedia.filter(
+      (item) => item instanceof File
+    );
+
+    // Upload to UploadThing
+    setValue("media", localMediaWithoutExistingOnes);
+    console.log({ onSubmitLocalMedia: localMediaWithoutExistingOnes });
+    const media = await startUpload(localMediaWithoutExistingOnes);
+
+    // Format to the MediaType type
     const formattedMedia = media?.map((item) => {
       const isImage = item.url.match(/\.(jpeg|jpg|gif|png)$/i) != null;
       return {
@@ -75,7 +84,7 @@ export default function EditPostModal() {
 
     const mediaIds: string[] = [];
 
-    // Save the media to database
+    // Save the media to database as a Media document
     await Promise.all(
       formattedMedia.map(async (media) => {
         const resp = await addPostMedia(media);
@@ -87,9 +96,9 @@ export default function EditPostModal() {
     console.log({ mediaIds });
 
     // Save the post
-    await addPost({
-      userId: session?.user.id,
-      media: mediaIds,
+    await editPost({
+      _id: editPostModal.post._id,
+      media: [...localMediaOnlyExistingOnes, ...mediaIds],
       caption: data.caption,
     } as any);
 
@@ -123,8 +132,19 @@ export default function EditPostModal() {
   }, []);
 
   const handleRemoveFromLocalMedia = async (index: number) => {
-    if (isUploading) return;
+    if (isUploading || !editPostModal.post) return;
     await trigger("media");
+
+    // delete image if it was already uploaded
+    // const fileAlreadyUploaded = localMedia.filter(
+    //   (item, i) => i === index && item._id
+    // );
+    // if (fileAlreadyUploaded.length > 0) {
+    //   await removeMediaFromPost({
+    //     postId: editPostModal.post._id,
+    //     media: fileAlreadyUploaded,
+    //   });
+    // }
 
     setLocalMedia((prev) => {
       const newLocalMedia = prev.filter((_, i) => i !== index);
@@ -173,7 +193,7 @@ export default function EditPostModal() {
                 onChange: (e) => {
                   handleLocalMedia(e.target.files);
                 },
-                validate: (v) => validateFileSizes(v),
+                validate: (v) => localMedia.length > 0 || validateFileSizes(v),
               })}
               className="hidden"
             />
@@ -228,7 +248,7 @@ export default function EditPostModal() {
               className="blue_button"
               disabled={isUploading}
             >
-              Add post
+              Edit post
               {isUploading && (
                 <div className="animate-spin">
                   <GoSync />

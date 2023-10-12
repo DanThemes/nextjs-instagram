@@ -134,6 +134,64 @@ export async function addPost(values: PostType) {
   }
 }
 
+// Edit post
+export async function editPost(values: Partial<PostType>) {
+  if (!process.env.NEXT_PUBLIC_API_URL) {
+    throw new Error(
+      "Please define the 'NEXT_PUBLIC_API_URL' environment variable inside .env"
+    );
+  }
+
+  try {
+    console.log({ insideAPI: { editPost: values } });
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/posts/${values._id}`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: JSON.stringify({ editPost: values }),
+      }
+    );
+    const data = await response.json();
+    console.log(data);
+    return data;
+  } catch (error) {
+    console.log("editPost() api.ts", error);
+  }
+}
+
+// Edit post
+export async function removeMediaFromPost(values: {
+  postId: string;
+  media: any[];
+}) {
+  if (!process.env.NEXT_PUBLIC_API_URL) {
+    throw new Error(
+      "Please define the 'NEXT_PUBLIC_API_URL' environment variable inside .env"
+    );
+  }
+
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/posts/${values.postId}`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: JSON.stringify({ removeMediaFromPost: values.media }),
+      }
+    );
+    const data = await response.json();
+    console.log(data);
+    return data;
+  } catch (error) {
+    console.log("removeMediaFromPost() api.ts", error);
+  }
+}
+
 // Get post
 export async function getPost(id: string) {
   if (!process.env.NEXT_PUBLIC_API_URL) {
@@ -229,6 +287,27 @@ export async function addPostMedia(values: MediaType) {
     return data;
   } catch (error) {
     console.log("addPostMedia() api.ts", error);
+  }
+}
+
+//  Get post media
+export async function getPostMedia(mediaId: string) {
+  if (!process.env.NEXT_PUBLIC_API_URL) {
+    throw new Error(
+      "Please define the 'NEXT_PUBLIC_API_URL' environment variable inside .env"
+    );
+  }
+
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/media/${mediaId}`,
+      { cache: "no-store" }
+    );
+    const data = await response.json();
+    console.log(data);
+    return data;
+  } catch (error) {
+    console.log("getPostMedia() api.ts", error);
   }
 }
 

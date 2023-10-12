@@ -1,5 +1,5 @@
 import Comment from "@/models/Comment";
-import Media from "@/models/Media";
+import Media, { MediaType } from "@/models/Media";
 import Post from "@/models/Post";
 import User from "@/models/User";
 import dbConnect from "@/utils/db";
@@ -7,6 +7,7 @@ import { Types } from "mongoose";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 import { authOptions } from "../../auth/[...nextauth]/route";
+import { getPostMedia } from "@/utils/api";
 
 export async function GET(
   request: NextRequest,
@@ -112,6 +113,43 @@ export async function PATCH(
     if ("hideLikes" in body) {
       const post = await Post.findOne({ _id: params.id });
       post.hideLikes = body.hideLikes;
+      await post.save();
+      return NextResponse.json(
+        { message: "Action successful" },
+        { status: 200 }
+      );
+    }
+
+    // show/hide like count
+    if ("editPost" in body) {
+      const post = await Post.findOne({ _id: params.id });
+
+      console.log({ editMediaasaaaaa: body.editPost.media });
+
+      // Transform the MediaType[] into string[]
+      const mediaArray = body.editPost.media.map((item: MediaType) => item._id);
+
+      // Delete the files that have been added to the post
+      // but are not anymore in the new edited version of the post
+      const filesToBeDeleted = post.media.map(async (mediaId: string) => {
+        if (!mediaArray.includes(mediaId)) {
+          const mediaDoc = await getPostMedia(mediaId);
+          console.log({ mediaDoc });
+          const lastIndex = mediaDoc.url.lastIndexOf("/");
+          const key = mediaDoc.url.substring(lastIndex + 1);
+          console.log({ keyToDelete: key });
+
+          // line below generates the issue
+          // fix something in the /utils/uploadthing.ts file
+          // await utapi.deleteFiles(key);
+        }
+      });
+
+      await Promise.all(filesToBeDeleted);
+
+      console.log({ editPostMedia: body.editPost.media });
+      post.media = mediaArray;
+      post.caption = body.editPost.caption;
       await post.save();
       return NextResponse.json(
         { message: "Action successful" },
