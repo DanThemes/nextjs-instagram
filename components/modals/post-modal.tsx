@@ -6,9 +6,12 @@ import { useSession } from "next-auth/react";
 import usePostModal from "@/hooks/usePostModal";
 import { deletePost, disableComments, handleHideLikes } from "@/utils/api";
 import { useRouter } from "next/navigation";
+import useEditPostModal from "@/hooks/useEditPostModal";
+import { MediaType } from "@/models/Media";
 
 export default function PostModal() {
   const postModal = usePostModal();
+  const editPostModal = useEditPostModal();
   const { data: session } = useSession();
   const router = useRouter();
 
@@ -16,26 +19,44 @@ export default function PostModal() {
     return null;
   }
 
-  if (!postModal.postId) {
+  if (!postModal.post) {
     return null;
   }
 
   console.log({ postModal });
 
+  const handleEditPost = (post: {
+    _id: string;
+    caption: string;
+    media: MediaType[];
+  }) => {
+    if (!postModal.post) return;
+
+    postModal.toggle();
+    editPostModal.setPost(post);
+    editPostModal.toggle();
+  };
+
   const handleDelete = async () => {
-    await deletePost(postModal.postId as string);
+    if (!postModal.post) return;
+
+    await deletePost(postModal.post._id as string);
     postModal.toggle();
     router.refresh();
   };
 
   const handleGoToPost = async () => {
+    if (!postModal.post) return;
+
     postModal.toggle();
-    router.push(`/posts/${postModal.postId}`);
+    router.push(`/posts/${postModal.post._id}`);
   };
 
   const handleToggleDisableComments = async () => {
+    if (!postModal.post) return;
+
     await disableComments({
-      postId: postModal.postId!,
+      postId: postModal.post._id!,
       disable: !postModal.commentsDisabled,
     });
     postModal.toggle();
@@ -43,8 +64,10 @@ export default function PostModal() {
   };
 
   const handleToggleLikeCount = async () => {
+    if (!postModal.post) return;
+
     await handleHideLikes({
-      postId: postModal.postId!,
+      postId: postModal.post._id!,
       hide: !postModal.hideLikes,
     });
     postModal.toggle();
@@ -57,14 +80,17 @@ export default function PostModal() {
       toggle={postModal.toggle}
       title="Post Settings"
     >
-      <ul className="flex flex-col gap-3">
+      <ul className="flex flex-col">
         <li
           className="py-2 border-b border-[#eee] text-red-700 hover:text-red-700/50 cursor-pointer"
           onClick={handleDelete}
         >
           <span>Delete</span>
         </li>
-        <li className="py-2 border-b border-[#eee] text-black hover:text-black/50 cursor-pointer">
+        <li
+          className="py-2 border-b border-[#eee] text-black hover:text-black/50 cursor-pointer"
+          onClick={() => postModal.post && handleEditPost(postModal.post)}
+        >
           <span>Edit post</span>
         </li>
         {postModal.hideLikes ? (

@@ -12,6 +12,7 @@ import UploadAvatarModal from "@/components/modals/upload-avatar-modal";
 import AuthModal from "@/components/modals/auth-modal";
 import Login from "@/components/not-logged-in";
 import PostModal from "@/components/modals/post-modal";
+import EditPostModal from "@/components/modals/edit-post-modal";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -33,7 +34,7 @@ export default async function RootLayout({
           {!session && <TopBar />}
           <div className="flex min-h-full">
             {session && (
-              <aside className="basis-[50px] min-w-[50px] w-[50px] lg:basis:[175px] lg:min-w-[175px] lg:w-[175px] flex-grow-0 border-r border-solid border-r-1 border-[#DBDBDB] relative z-[999]">
+              <aside className="basis-[50px] min-w-[50px] w-[50px] lg:basis:[175px] lg:min-w-[175px] lg:w-[175px] flex-grow-0 border-r border-solid border-r-1 border-[#DBDBDB] relative z-[9]">
                 <div className="fixed flex-[50px] min-w-[50px] w-[50px] lg:flex-[175px] lg:min-w-[175px] lg:w-[175px] no-scrollbar overflow-y-scroll max-h-full">
                   <Sidebar />
                 </div>
@@ -46,6 +47,7 @@ export default async function RootLayout({
             <UsersModal />
             <UploadAvatarModal />
             <PostModal />
+            <EditPostModal />
           </div>
         </AuthSessionProvider>
       </body>

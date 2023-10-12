@@ -1,4 +1,3 @@
-import PostModal from "@/components/modals/post-modal";
 import PageNotFound from "@/components/page-not-found";
 import Post from "@/components/posts/post";
 import { getPost } from "@/utils/api";
@@ -14,7 +13,6 @@ export default async function PostPage({ params }: { params: { id: string } }) {
   return (
     <>
       <Post post={post} />
-      <PostModal />
     </>
   );
 }

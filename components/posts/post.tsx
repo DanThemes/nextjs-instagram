@@ -48,6 +48,8 @@ export default function Post({ post }: { post: any }) {
     }
   };
 
+  console.log({ post });
+
   return (
     <>
       <div className="flex gap-3 items-center pb-3">
@@ -78,7 +80,11 @@ export default function Post({ post }: { post: any }) {
         <div
           className="ml-auto cursor-pointer hover:opacity-50 p-4 pr-0"
           onClick={() => {
-            postModal.setPostId(post._id);
+            postModal.setPost({
+              _id: post._id.toString(),
+              caption: post.caption,
+              media: post.media,
+            });
             postModal.setHideLikes(!!post.hideLikes);
             postModal.setCommentsDisabled(!!post.commentsDisabled);
             postModal.toggle();
@@ -108,12 +114,14 @@ export default function Post({ post }: { post: any }) {
               <GoHeart />
             )}
           </div>
-          <div
-            className="hover:opacity-50 active:opacity-30 cursor-pointer"
-            onClick={() => handleCommentIconClick()}
-          >
-            <GoComment />
-          </div>
+          {!post.commentsDisabled && (
+            <div
+              className="hover:opacity-50 active:opacity-30 cursor-pointer"
+              onClick={() => handleCommentIconClick()}
+            >
+              <GoComment />
+            </div>
+          )}
           <div className="hover:opacity-50 active:opacity-30 cursor-pointer">
             <GoPaperAirplane />
           </div>
