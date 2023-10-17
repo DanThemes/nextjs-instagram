@@ -3,10 +3,10 @@ import { PostType } from "@/models/Post";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
-import { GoComment, GoHeart, GoHeartFill } from "react-icons/go";
+import { GoComment, GoHeartFill } from "react-icons/go";
 
 type PostCardType = {
-  post: Omit<PostType, "media"> & { media: MediaType[] } & { _id: string };
+  post: Omit<PostType, "media"> & { media: MediaType[] };
 };
 
 export default function PostCard({ post }: PostCardType) {
