@@ -1,20 +1,15 @@
 "use client";
 
 import React, { forwardRef, useState } from "react";
-import { CommentType } from "@/models/Comment";
+import { CommentType, PopulatedCommentType } from "@/models/Comment";
 import { UserType } from "@/models/User";
 import PostCommentBody from "./post-comment-body";
+import { Types } from "mongoose";
 
 type PostCommentType = {
-  comment: Omit<CommentType, "userId" | "likes"> & {
-    _id: string;
-    userId: UserType & { _id: string };
-  } & { likes: UserType[] };
-  userId?: string;
-  replies?: (Omit<CommentType, "userId" | "likes"> & {
-    _id: string;
-    userId: UserType & { _id: string };
-  } & { likes: UserType[] })[];
+  comment: Types.ObjectId;
+  userId?: Types.ObjectId;
+  replies?: Types.ObjectId[];
   setValue: (field: any, value: any) => void;
 };
 
@@ -46,7 +41,7 @@ export default forwardRef<HTMLInputElement, PostCommentType>(
               <div className="mt-3 pl-5 flex flex-col gap-3">
                 {replies?.map((reply) => (
                   <PostCommentBody
-                    key={reply._id}
+                    key={reply._id.toString()}
                     comment={reply}
                     userId={userId}
                     setValue={setValue}

@@ -1,4 +1,4 @@
-import { CommentType } from "@/models/Comment";
+import { CommentType, PopulatedCommentType } from "@/models/Comment";
 import { UserType } from "@/models/User";
 import React, { forwardRef } from "react";
 import { GoHeart, GoHeartFill } from "react-icons/go";
@@ -9,13 +9,11 @@ import useUsersModal from "@/hooks/useUsersModal";
 import { useRouter } from "next/navigation";
 import { deleteComment, toggleLike } from "@/utils/api";
 import cn from "@/utils/utils";
+import { Types } from "mongoose";
 
 type PostCommentBodyType = {
-  comment: Omit<CommentType, "userId" | "likes"> & {
-    _id: string;
-    userId: UserType & { _id: string };
-  } & { likes: UserType[] };
-  userId?: string;
+  comment: Types.ObjectId;
+  userId?: Types.ObjectId;
   setValue: (field: any, value: any) => void;
 };
 
@@ -24,7 +22,7 @@ export default forwardRef<HTMLInputElement, PostCommentBodyType>(
     const usersModal = useUsersModal();
     const router = useRouter();
 
-    const handleDeleteComment = async (id: string) => {
+    const handleDeleteComment = async (id: Types.ObjectId) => {
       if (!userId) return;
 
       await deleteComment(id);
@@ -39,7 +37,7 @@ export default forwardRef<HTMLInputElement, PostCommentBodyType>(
       setValue("parentCommentId", parentCommentId);
     };
 
-    const handleToggleLike = async (id: string) => {
+    const handleToggleLike = async (id: Types.ObjectId) => {
       if (!userId) return;
 
       await toggleLike({

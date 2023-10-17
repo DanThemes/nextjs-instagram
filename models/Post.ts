@@ -54,15 +54,18 @@ function arrayMinLength(arr: string[]) {
   return true; //arr && arr.length > 0;
 }
 
-export type PostType = Omit<
-  HydratedDocument<InferSchemaType<typeof PostSchema>>,
+export type PostType = HydratedDocument<InferSchemaType<typeof PostSchema>> & {
+  _id: Types.ObjectId;
+};
+
+export type PopulatedPostType = Omit<
+  PostType,
   "userId" | "media" | "comments" | "likes"
 > & {
-  _id: Types.ObjectId;
-  userId: Types.ObjectId | UserType;
-  media: (Types.ObjectId | MediaType)[];
-  comments: (Types.ObjectId | CommentType)[];
-  likes: (Types.ObjectId | UserType)[];
+  userId: UserType;
+  media: MediaType[];
+  comments: CommentType[];
+  likes: UserType[];
 };
 
 const Post = mongoose.models.Post || mongoose.model("Post", PostSchema);

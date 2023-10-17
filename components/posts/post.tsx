@@ -22,9 +22,9 @@ import usePostModal from "@/hooks/usePostModal";
 import useUsersModal from "@/hooks/useUsersModal";
 import cn from "@/utils/utils";
 import { Types } from "mongoose";
-import { PostType } from "@/models/Post";
+import { PopulatedPostType, PostType } from "@/models/Post";
 
-export default function Post({ post }: { post: PostType }) {
+export default function Post({ post }: { post: PopulatedPostType }) {
   const router = useRouter();
   const postModal = usePostModal();
   const usersModal = useUsersModal();
@@ -50,17 +50,15 @@ export default function Post({ post }: { post: PostType }) {
     }
   };
 
-  console.log({ post });
-
   return (
     <>
       <div className="flex gap-3 items-center pb-3">
         <Link
-          href={`/${(post.userId as UserType).username}`}
+          href={`/${post.userId.username}`}
           className="w-[3rem] h-[3rem] rounded-full bg-cover border relative"
         >
           <Image
-            src={post.userId.profileImage}
+            src={post.userId.profileImage || ""}
             alt={post.userId.username}
             width={40}
             height={40}
@@ -105,9 +103,8 @@ export default function Post({ post }: { post: PostType }) {
             onClick={() => handleToggleLike(post._id)}
           >
             {session &&
-            post.likes.find(
-              (like: UserType & { _id: string }) =>
-                like._id === session?.user.id
+            (post.likes as UserType[]).find(
+              (like: UserType) => like._id === session?.user.id
             ) ? (
               <>
                 <GoHeartFill />

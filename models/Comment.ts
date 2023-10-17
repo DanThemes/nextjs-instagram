@@ -1,4 +1,5 @@
 import mongoose, { HydratedDocument, InferSchemaType, Types } from "mongoose";
+import { UserType } from "./User";
 
 export const CommentSchema = new mongoose.Schema(
   {
@@ -42,6 +43,14 @@ export type CommentType = HydratedDocument<
   InferSchemaType<typeof CommentSchema>
 > & {
   _id: Types.ObjectId;
+};
+
+export type PopulatedCommentType = Omit<
+CommentType,
+  "userId" | "likes"
+> & {
+  userId: UserType;
+  likes: UserType[];
 };
 
 const Comment =

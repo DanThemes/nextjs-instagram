@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import Image from "next/image";
-import { PostType } from "@/models/Post";
+import { PopulatedPostType, PostType } from "@/models/Post";
 import { Pagination, Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
@@ -16,9 +16,7 @@ import { GoHeartFill } from "react-icons/go";
 import { motion } from "framer-motion";
 
 type PostMediaProps = {
-  post: Omit<Partial<PostType>, "media"> & { media: MediaType[] } & {
-    _id: string;
-  };
+  post: Partial<PopulatedPostType>;
 };
 
 export default function PostMedia({ post }: PostMediaProps) {

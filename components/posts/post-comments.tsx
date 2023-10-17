@@ -1,20 +1,19 @@
 "use client";
 
 import React, { forwardRef } from "react";
-import { CommentType } from "@/models/Comment";
+import { CommentType, PopulatedCommentType } from "@/models/Comment";
 import { UserType } from "@/models/User";
 import PostComment from "./post-comment";
 import PostCommentInput from "./post-comment-input";
 import { useForm } from "react-hook-form";
+import { Types } from "mongoose";
+import { PopulatedPostType } from "@/models/Post";
 
 type Props = {
-  postId: string;
+  postId: Types.ObjectId;
   commentsDisabled: boolean;
-  comments: (Omit<CommentType, "userId" | "likes"> & {
-    _id: string;
-    userId: UserType & { _id: string };
-  } & { likes: UserType[] })[];
-  userId?: string;
+  comments: PopulatedCommentType[];
+  userId?: Types.ObjectId;
 };
 
 const PostComments = forwardRef<HTMLInputElement, Props>(function PostComments(
@@ -44,7 +43,7 @@ const PostComments = forwardRef<HTMLInputElement, Props>(function PostComments(
           {comments
             .filter((comment) => comment.parentCommentId === null)
             .map((comment) => (
-              <div key={comment._id}>
+              <div key={comment._id.toString()}>
                 <PostComment
                   comment={comment}
                   userId={userId}
