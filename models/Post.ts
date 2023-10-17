@@ -1,4 +1,15 @@
-import mongoose, { HydratedDocument, InferSchemaType } from "mongoose";
+import mongoose, {
+  HydratedDocument,
+  InferSchemaType,
+  PopulatedDoc,
+  Types,
+  Document,
+} from "mongoose";
+import { UserType } from "./User";
+import { MediaType } from "./Media";
+import { CommentType } from "./Comment";
+
+type LikesType = mongoose.Schema.Types.ObjectId[] | PopulatedDoc<UserType>[];
 
 const PostSchema = new mongoose.Schema(
   {
@@ -43,7 +54,16 @@ function arrayMinLength(arr: string[]) {
   return true; //arr && arr.length > 0;
 }
 
-export type PostType = HydratedDocument<InferSchemaType<typeof PostSchema>>;
+export type PostType = Omit<
+  HydratedDocument<InferSchemaType<typeof PostSchema>>,
+  "userId" | "media" | "comments" | "likes"
+> & {
+  _id: Types.ObjectId;
+  userId: Types.ObjectId | UserType;
+  media: (Types.ObjectId | MediaType)[];
+  comments: (Types.ObjectId | CommentType)[];
+  likes: (Types.ObjectId | UserType)[];
+};
 
 const Post = mongoose.models.Post || mongoose.model("Post", PostSchema);
 

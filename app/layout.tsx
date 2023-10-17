@@ -13,6 +13,7 @@ import AuthModal from "@/components/modals/auth-modal";
 import Login from "@/components/not-logged-in";
 import PostModal from "@/components/modals/post-modal";
 import EditPostModal from "@/components/modals/edit-post-modal";
+import EditProfileModal from "@/components/modals/edit-profile-modal";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -48,6 +49,7 @@ export default async function RootLayout({
             <UploadAvatarModal />
             <PostModal />
             <EditPostModal />
+            <EditProfileModal />
           </div>
         </AuthSessionProvider>
       </body>

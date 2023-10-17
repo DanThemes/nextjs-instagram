@@ -1,4 +1,4 @@
-import mongoose, { HydratedDocument, InferSchemaType } from "mongoose";
+import mongoose, { HydratedDocument, InferSchemaType, Types } from "mongoose";
 
 export const MediaSchema = new mongoose.Schema({
   type: {
@@ -12,7 +12,11 @@ export const MediaSchema = new mongoose.Schema({
   },
 });
 
-export type MediaType = HydratedDocument<InferSchemaType<typeof MediaSchema>>;
+export type MediaType = HydratedDocument<
+  InferSchemaType<typeof MediaSchema>
+> & {
+  _id: Types.ObjectId;
+};
 
 const Media = mongoose.models.Media || mongoose.model("Media", MediaSchema);
 

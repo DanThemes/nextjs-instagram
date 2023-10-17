@@ -5,6 +5,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcrypt";
 import { MongoDBAdapter } from "@next-auth/mongodb-adapter";
 import clientPromise from "@/utils/clientPromise";
+import { Types } from "mongoose";
 
 export const authOptions: AuthOptions = {
   adapter: MongoDBAdapter(clientPromise),
@@ -59,7 +60,7 @@ export const authOptions: AuthOptions = {
     },
     async session({ session, token, user }) {
       // console.log("callback session", { session, token, user });
-      session.user.id = token.id as string;
+      session.user.id = token.id as Types.ObjectId;
       session.user.username = token.username as string;
       session.user.profileImage = token.profileImage as string;
       return session;

@@ -43,11 +43,11 @@ export default forwardRef<HTMLInputElement, PostCommentType>(
               {replies.length})
             </div>
             {showReplies && (
-              <div className="mt-3 pl-5">
+              <div className="mt-3 pl-5 flex flex-col gap-3">
                 {replies?.map((reply) => (
                   <PostCommentBody
                     key={reply._id}
-                    comment={comment}
+                    comment={reply}
                     userId={userId}
                     setValue={setValue}
                     ref={ref}

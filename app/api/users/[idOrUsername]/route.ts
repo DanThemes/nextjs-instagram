@@ -39,7 +39,6 @@ export async function GET(
       });
     }
 
-    console.log(1);
     const user = await userPromise
       .select("-password")
       .populate({

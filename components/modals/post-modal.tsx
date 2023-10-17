@@ -8,6 +8,7 @@ import { deletePost, disableComments, handleHideLikes } from "@/utils/api";
 import { useRouter } from "next/navigation";
 import useEditPostModal from "@/hooks/useEditPostModal";
 import { MediaType } from "@/models/Media";
+import { Types } from "mongoose";
 
 export default function PostModal() {
   const postModal = usePostModal();
@@ -26,7 +27,7 @@ export default function PostModal() {
   console.log({ postModal });
 
   const handleEditPost = (post: {
-    _id: string;
+    _id: Types.ObjectId;
     caption: string;
     media: MediaType[];
   }) => {
@@ -40,7 +41,7 @@ export default function PostModal() {
   const handleDelete = async () => {
     if (!postModal.post) return;
 
-    await deletePost(postModal.post._id as string);
+    await deletePost(postModal.post._id);
     postModal.toggle();
     router.refresh();
   };

@@ -1,6 +1,7 @@
 import { MediaType } from "@/models/Media";
 import { PostType } from "@/models/Post";
 import { UserType } from "@/models/User";
+import { Types } from "mongoose";
 
 // Add user
 export async function addUser(values: Partial<UserType>) {
@@ -27,7 +28,7 @@ export async function addUser(values: Partial<UserType>) {
 }
 
 // Get user
-export async function getUser(idOrUsername: string) {
+export async function getUser(idOrUsername: Types.ObjectId | string) {
   if (!idOrUsername) {
     throw new Error("Invalid or missing user identifier");
   }
@@ -52,7 +53,7 @@ export async function getUser(idOrUsername: string) {
 }
 
 // Get user
-export async function getUsers(userIds: string[]) {
+export async function getUsers(userIds: (Types.ObjectId | string)[]) {
   if (!userIds) {
     throw new Error("Invalid or missing user identifier");
   }
@@ -79,7 +80,7 @@ export async function getUsers(userIds: string[]) {
 }
 
 // Edit user
-export async function editUser(id: string, values: Partial<UserType>) {
+export async function editUser(id: Types.ObjectId, values: Partial<UserType>) {
   if (!id) {
     throw new Error("Invalid or missing user identifier");
   }
@@ -164,7 +165,7 @@ export async function editPost(values: Partial<PostType>) {
 
 // Edit post
 export async function removeMediaFromPost(values: {
-  postId: string;
+  postId: Types.ObjectId;
   media: any[];
 }) {
   if (!process.env.NEXT_PUBLIC_API_URL) {
@@ -193,7 +194,7 @@ export async function removeMediaFromPost(values: {
 }
 
 // Get post
-export async function getPost(id: string) {
+export async function getPost(id: Types.ObjectId) {
   if (!process.env.NEXT_PUBLIC_API_URL) {
     throw new Error(
       "Please define the 'NEXT_PUBLIC_API_URL' environment variable inside .env"
@@ -219,7 +220,7 @@ export async function getPosts({
   userId,
   onlyPostsOfFollowedUsers = false,
 }: {
-  userId: string;
+  userId: Types.ObjectId;
   onlyPostsOfFollowedUsers: boolean;
 }) {
   if (!process.env.NEXT_PUBLIC_API_URL) {
@@ -244,7 +245,7 @@ export async function getPosts({
 }
 
 // Delete post
-export async function deletePost(postId: string) {
+export async function deletePost(postId: Types.ObjectId) {
   if (!process.env.NEXT_PUBLIC_API_URL) {
     throw new Error(
       "Please define the 'NEXT_PUBLIC_API_URL' environment variable inside .env"
@@ -291,7 +292,7 @@ export async function addPostMedia(values: MediaType) {
 }
 
 //  Get post media
-export async function getPostMedia(mediaId: string) {
+export async function getPostMedia(mediaId: Types.ObjectId) {
   if (!process.env.NEXT_PUBLIC_API_URL) {
     throw new Error(
       "Please define the 'NEXT_PUBLIC_API_URL' environment variable inside .env"
@@ -313,10 +314,10 @@ export async function getPostMedia(mediaId: string) {
 
 // Add comment
 export async function addComment(
-  postId: string,
+  postId: Types.ObjectId,
   text: string,
-  userId: string,
-  parentCommentId?: string
+  userId: Types.ObjectId,
+  parentCommentId?: Types.ObjectId
 ) {
   if (!process.env.NEXT_PUBLIC_API_URL) {
     throw new Error(
@@ -344,7 +345,7 @@ export async function addComment(
 }
 
 // Delete comment
-export async function deleteComment(commentId: string) {
+export async function deleteComment(commentId: Types.ObjectId) {
   if (!process.env.NEXT_PUBLIC_API_URL) {
     throw new Error(
       "Please define the 'NEXT_PUBLIC_API_URL' environment variable inside .env"
@@ -375,9 +376,9 @@ export async function toggleLike({
   postId,
   commentId,
 }: {
-  userId: string;
-  postId?: string;
-  commentId?: string;
+  userId: Types.ObjectId;
+  postId?: Types.ObjectId;
+  commentId?: Types.ObjectId;
 }) {
   if (!process.env.NEXT_PUBLIC_API_URL) {
     throw new Error(
@@ -412,7 +413,7 @@ export async function handleHideLikes({
   postId,
   hide,
 }: {
-  postId: string;
+  postId: Types.ObjectId;
   hide: boolean;
 }) {
   if (!process.env.NEXT_PUBLIC_API_URL) {
@@ -445,7 +446,7 @@ export async function disableComments({
   postId,
   disable,
 }: {
-  postId: string;
+  postId: Types.ObjectId;
   disable: boolean;
 }) {
   if (!process.env.NEXT_PUBLIC_API_URL) {
@@ -478,8 +479,8 @@ export async function followUser({
   followerId,
   followedId,
 }: {
-  followerId: string;
-  followedId: string;
+  followerId: Types.ObjectId;
+  followedId: Types.ObjectId;
 }) {
   if (!process.env.NEXT_PUBLIC_API_URL) {
     throw new Error(

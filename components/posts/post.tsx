@@ -21,15 +21,17 @@ import Link from "next/link";
 import usePostModal from "@/hooks/usePostModal";
 import useUsersModal from "@/hooks/useUsersModal";
 import cn from "@/utils/utils";
+import { Types } from "mongoose";
+import { PostType } from "@/models/Post";
 
-export default function Post({ post }: { post: any }) {
+export default function Post({ post }: { post: PostType }) {
   const router = useRouter();
   const postModal = usePostModal();
   const usersModal = useUsersModal();
 
   const { data: session } = useSession();
 
-  const handleToggleLike = async (id: string) => {
+  const handleToggleLike = async (id: Types.ObjectId) => {
     if (!session) return;
 
     await toggleLike({
@@ -54,7 +56,7 @@ export default function Post({ post }: { post: any }) {
     <>
       <div className="flex gap-3 items-center pb-3">
         <Link
-          href={`/${post.userId.username}`}
+          href={`/${(post.userId as UserType).username}`}
           className="w-[3rem] h-[3rem] rounded-full bg-cover border relative"
         >
           <Image
@@ -81,8 +83,8 @@ export default function Post({ post }: { post: any }) {
           className="ml-auto cursor-pointer hover:opacity-50 p-4 pr-0"
           onClick={() => {
             postModal.setPost({
-              _id: post._id.toString(),
-              caption: post.caption,
+              _id: post._id,
+              caption: post.caption || "",
               media: post.media,
             });
             postModal.setHideLikes(!!post.hideLikes);

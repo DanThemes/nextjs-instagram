@@ -1,7 +1,7 @@
 import Comment from "@/models/Comment";
-import Media from "@/models/Media";
-import Post from "@/models/Post";
-import User from "@/models/User";
+import Media, { MediaType } from "@/models/Media";
+import Post, { PostType } from "@/models/Post";
+import User, { UserType } from "@/models/User";
 import dbConnect from "@/utils/db";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -49,9 +49,13 @@ export async function GET(request: NextRequest) {
     }
 
     const posts = await postsPromise!
-      .populate({ path: "media", model: Media })
-      .populate({ path: "likes", select: ["-password"], model: User })
-      .populate({
+      .populate<{ media: MediaType }>({ path: "media", model: Media })
+      .populate<{ likes: UserType }>({
+        path: "likes",
+        select: ["-password"],
+        model: User,
+      })
+      .populate<{ comments: PostType }>({
         path: "comments",
         model: Comment,
         populate: [
@@ -67,7 +71,7 @@ export async function GET(request: NextRequest) {
           },
         ],
       })
-      .populate({
+      .populate<{ userId: PostType }>({
         path: "userId",
         select: ["username", "profileImage"],
         model: User,

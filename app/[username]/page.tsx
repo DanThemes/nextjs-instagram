@@ -10,8 +10,9 @@ import ProfileInfo from "./profile-info";
 
 const Profile = async ({ params }: { params: { username: string } }) => {
   const user = (await getUser(params.username)) as UserType & {
-    _id: string;
-  } & { following: UserType[]; followers: UserType[] };
+    following: UserType[];
+    followers: UserType[];
+  };
   const session = await getServerSession(authOptions);
 
   if (!user) {

@@ -1,7 +1,12 @@
 import { MediaType } from "@/models/Media";
+import { Types } from "mongoose";
 import { create } from "zustand";
 
-type LimitedPostType = { _id: string; caption: string; media: MediaType[] };
+type LimitedPostType = {
+  _id: Types.ObjectId;
+  caption: string;
+  media: MediaType[];
+};
 
 type PostModalType = {
   isOpen: boolean;
