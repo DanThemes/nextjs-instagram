@@ -148,7 +148,7 @@ export default function Post({ post }: { post: PopulatedPostType }) {
       <strong>author</strong> {post.caption}
       <PostComments
         postId={post._id}
-        commentsDisabled={post.commentsDisabled}
+        commentsDisabled={post.commentsDisabled!}
         comments={post.comments}
         userId={session?.user.id}
         ref={inputRef}

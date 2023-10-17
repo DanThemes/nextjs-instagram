@@ -1,4 +1,4 @@
-import Comment from "@/models/Comment";
+import Comment, { CommentType } from "@/models/Comment";
 import Media, { MediaType } from "@/models/Media";
 import Post, { PostType } from "@/models/Post";
 import User, { UserType } from "@/models/User";
@@ -55,7 +55,7 @@ export async function GET(request: NextRequest) {
         select: ["-password"],
         model: User,
       })
-      .populate<{ comments: PostType }>({
+      .populate<{ comments: CommentType }>({
         path: "comments",
         model: Comment,
         populate: [

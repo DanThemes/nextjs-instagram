@@ -3,12 +3,12 @@ import { getPosts } from "@/utils/api";
 import { getServerSession } from "next-auth";
 import React from "react";
 import Post from "./post";
-import { PostType } from "@/models/Post";
+import { PopulatedPostType, PostType } from "@/models/Post";
 
 const Posts = async ({
   posts,
 }: {
-  posts?: PostType[] | { message: string };
+  posts?: PopulatedPostType[] | { message: string };
 }) => {
   const session = await getServerSession(authOptions);
   if (!session) {

@@ -12,7 +12,7 @@ import cn from "@/utils/utils";
 import { Types } from "mongoose";
 
 type PostCommentBodyType = {
-  comment: Types.ObjectId;
+  comment: PopulatedCommentType;
   userId?: Types.ObjectId;
   setValue: (field: any, value: any) => void;
 };

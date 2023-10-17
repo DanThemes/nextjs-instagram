@@ -7,7 +7,7 @@ import mongoose, {
 } from "mongoose";
 import { UserType } from "./User";
 import { MediaType } from "./Media";
-import { CommentType } from "./Comment";
+import { CommentType, PopulatedCommentType } from "./Comment";
 
 type LikesType = mongoose.Schema.Types.ObjectId[] | PopulatedDoc<UserType>[];
 
@@ -64,7 +64,7 @@ export type PopulatedPostType = Omit<
 > & {
   userId: UserType;
   media: MediaType[];
-  comments: CommentType[];
+  comments: PopulatedCommentType[];
   likes: UserType[];
 };
 

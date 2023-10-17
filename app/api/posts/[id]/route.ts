@@ -131,19 +131,21 @@ export async function PATCH(
 
       // Delete the files that have been added to the post
       // but are not anymore in the new edited version of the post
-      const filesToBeDeleted = post.media.map(async (mediaId: string) => {
-        if (!mediaArray.includes(mediaId)) {
-          const mediaDoc = await getPostMedia(mediaId);
-          console.log({ mediaDoc });
-          const lastIndex = mediaDoc.url.lastIndexOf("/");
-          const key = mediaDoc.url.substring(lastIndex + 1);
-          console.log({ keyToDelete: key });
+      const filesToBeDeleted = post.media.map(
+        async (mediaId: Types.ObjectId) => {
+          if (!mediaArray.includes(mediaId)) {
+            const mediaDoc = await getPostMedia(mediaId);
+            console.log({ mediaDoc });
+            const lastIndex = mediaDoc.url.lastIndexOf("/");
+            const key = mediaDoc.url.substring(lastIndex + 1);
+            console.log({ keyToDelete: key });
 
-          // line below generates the issue
-          // fix something in the /utils/uploadthing.ts file
-          // await utapi.deleteFiles(key);
+            // line below generates the issue
+            // fix something in the /utils/uploadthing.ts file
+            // await utapi.deleteFiles(key);
+          }
         }
-      });
+      );
 
       await Promise.all(filesToBeDeleted);
 

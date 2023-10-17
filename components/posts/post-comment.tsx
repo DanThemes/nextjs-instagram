@@ -7,9 +7,9 @@ import PostCommentBody from "./post-comment-body";
 import { Types } from "mongoose";
 
 type PostCommentType = {
-  comment: Types.ObjectId;
+  comment: PopulatedCommentType;
   userId?: Types.ObjectId;
-  replies?: Types.ObjectId[];
+  replies?: PopulatedCommentType[];
   setValue: (field: any, value: any) => void;
 };
 

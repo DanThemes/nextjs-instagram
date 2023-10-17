@@ -5,7 +5,7 @@ import { create } from "zustand";
 type LimitedPostType = {
   _id: Types.ObjectId;
   caption: string;
-  media: (Types.ObjectId | MediaType)[];
+  media: MediaType[];
 };
 
 type PostModalType = {
