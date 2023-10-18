@@ -1,4 +1,5 @@
 "use client";
+
 import { UserType } from "@/models/User";
 import { followUser } from "@/utils/api";
 import { Types } from "mongoose";

@@ -1,3 +1,5 @@
+"use client";
+
 import { MediaType } from "@/models/Media";
 import { PostType } from "@/models/Post";
 import Image from "next/image";

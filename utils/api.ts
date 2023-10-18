@@ -53,7 +53,7 @@ export async function getUser(idOrUsername: Types.ObjectId | string) {
 }
 
 // Get user
-export async function getUsers(userIds: (Types.ObjectId | string)[]) {
+export async function getUsers(userIds: Types.ObjectId[]) {
   if (!userIds) {
     throw new Error("Invalid or missing user identifier");
   }
@@ -108,6 +108,31 @@ export async function editUser(id: Types.ObjectId, values: Partial<UserType>) {
     return data.user;
   } catch (error) {
     console.log("editUser() api.ts", error);
+  }
+}
+
+// Search for a user or users
+export async function searchUsersByUsername(username: string) {
+  if (!username) {
+    throw new Error("Invalid or missing user identifier");
+  }
+
+  if (!process.env.NEXT_PUBLIC_API_URL) {
+    throw new Error(
+      "Please define the 'NEXT_PUBLIC_API_URL' environment variable inside .env"
+    );
+  }
+
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/search?username=${username}`,
+      { cache: "no-store" }
+    );
+    const data = await response.json();
+    // console.log("getUser() api.ts data=", data, { username });
+    return data.users;
+  } catch (error) {
+    console.log("searchUsersByUsername() api.ts", error);
   }
 }
 

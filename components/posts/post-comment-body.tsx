@@ -1,3 +1,5 @@
+"use client";
+
 import { CommentType, PopulatedCommentType } from "@/models/Comment";
 import { UserType } from "@/models/User";
 import React, { forwardRef } from "react";

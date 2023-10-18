@@ -18,6 +18,5 @@ export default withAuth({
 });
 
 export const config = {
-  // matcher: ["/", "/(search|explore|reels|messages|notifications)"],
-  matcher: ["/(search|explore|reels|messages|notifications)"],
+  matcher: ["/(explore|reels|messages|notifications)"],
 };

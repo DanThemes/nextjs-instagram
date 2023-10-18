@@ -31,6 +31,17 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
+
+         
+  return (
+    <html lang="en">
+      <body className={inter.className}>
+      {children}
+      </body>
+      </html>
+  );
+
+  return (
         <AuthSessionProvider>
           {!session && <TopBar />}
           <div className="flex min-h-full">
@@ -44,12 +55,12 @@ export default async function RootLayout({
             <main className="px-10 py-10 w-[70rem] mx-auto">{children}</main>
           </div>
           <div className="z-[999] relative">
-            <AuthModal />
+            {/* <AuthModal />
             <UsersModal />
             <UploadAvatarModal />
             <PostModal />
             <EditPostModal />
-            <EditProfileModal />
+            <EditProfileModal /> */}
           </div>
         </AuthSessionProvider>
       </body>

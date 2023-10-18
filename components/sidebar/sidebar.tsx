@@ -30,7 +30,7 @@ const items = [
   {
     icon: GoSearch,
     name: "Search",
-    link: "/search",
+    link: "",
     requiresAuth: false,
   },
   {
@@ -74,21 +74,21 @@ const items = [
 const Sidebar = () => {
   const { data: session, status } = useSession();
   const [searchOpen, setSearchOpen] = useState(true);
-  // const router = useRouter();
+  const router = useRouter();
 
-  // const handleSignIn = async () => {
-  //   const response = await signIn("credentials", {
-  //     redirect: false,
-  //     username: "dani",
-  //     password: "123",
-  //   });
-  //   // console.log(response);
-  // };
+  const handleSignIn = async () => {
+    const response = await signIn("credentials", {
+      redirect: false,
+      username: "dani",
+      password: "123",
+    });
+    // console.log(response);
+  };
 
-  // const handleSignOut = async () => {
-  //   await signOut({ redirect: false });
-  //   router.refresh();
-  // };
+  const handleSignOut = async () => {
+    await signOut({ redirect: false });
+    router.refresh();
+  };
 
   if (status !== "authenticated") {
     return null;
@@ -123,7 +123,8 @@ const Sidebar = () => {
               return (
                 <div
                   key={item.name}
-                  onClick={() => {
+                  onClick={(e) => {
+                    e.preventDefault();
                     setSearchOpen((prev) => !prev);
                     console.log({ searchOpen });
                   }}

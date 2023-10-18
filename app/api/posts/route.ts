@@ -24,7 +24,7 @@ export async function GET(request: NextRequest) {
       ? false
       : true;
 
-  // console.log("GET", userId, onlyPostsOfFollowedUsers);
+  console.log("GET", userId, onlyPostsOfFollowedUsers);
 
   try {
     let postsPromise;
@@ -34,7 +34,7 @@ export async function GET(request: NextRequest) {
       const usersFollowedList = await User.findOne({ _id: userId }).select(
         "following"
       );
-      // console.log({ usersFollowedList: usersFollowedList[0].following });
+      // console.log({ usersFollowedList: usersFollowedList.following });
       postsPromise = Post.find({
         userId: { $in: usersFollowedList.following },
       }).sort({ createdAt: -1 });

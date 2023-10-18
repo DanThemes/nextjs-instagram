@@ -64,7 +64,7 @@ const SidebarItem = ({
           </span>
           <span
             className={cn("hidden lg:block", {
-              "font-bold": pathname === link,
+              "font-bold": pathname === link && name !== "Search",
             })}
           >
             {name}

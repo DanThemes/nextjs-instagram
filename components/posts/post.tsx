@@ -22,7 +22,7 @@ import usePostModal from "@/hooks/usePostModal";
 import useUsersModal from "@/hooks/useUsersModal";
 import cn from "@/utils/utils";
 import { Types } from "mongoose";
-import { PopulatedPostType, PostType } from "@/models/Post";
+import { PopulatedPostType } from "@/models/Post";
 
 export default function Post({ post }: { post: PopulatedPostType }) {
   const router = useRouter();
