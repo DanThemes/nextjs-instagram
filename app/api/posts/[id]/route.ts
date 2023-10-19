@@ -8,7 +8,7 @@ import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 import { authOptions } from "../../auth/[...nextauth]/route";
 import { getPostMedia } from "@/utils/api";
-import { utapi } from "@/utils/uploadthing";
+import { UTApi } from "uploadthing/server";
 
 export async function GET(
   request: NextRequest,
@@ -130,36 +130,37 @@ export async function PATCH(
 
     // edit post
     if ("editPost" in body) {
-      console.log({ editMediaasaaaaa: body.editPost.media });
-
       // Transform the MediaType[] into ObjectId[]
-      const mediaArray = body.editPost.media.map((item: MediaType) => item._id);
+
+      const postMedia = post.media.map((id: Types.ObjectId) => id.toString());
+
+      console.log({ newMedia: body.editPost.media, oldMedia: postMedia });
 
       // Delete the files that have been added to the post
       // but are not anymore in the new edited version of the post
-      const deleteFilesPromises = post.media.map(
-        async (mediaId: Types.ObjectId) => {
-          if (!mediaArray.includes(mediaId)) {
-            const mediaDoc = await getPostMedia(mediaId);
-            console.log({ mediaDoc });
-            const lastIndex = mediaDoc.url.lastIndexOf("/");
-            const key = mediaDoc.url.substring(lastIndex + 1);
-            console.log({ keyToDelete: key });
+      const utapi = new UTApi();
 
-            // line below generates the issue
-            // fix something in the /utils/uploadthing.ts file
-            return new Promise((resolve) => resolve({ success: true }));
-            // return await utapi.deleteFiles(key);
+      postMedia.forEach(async (mediaId: Types.ObjectId) => {
+        if (!body.editPost.media.includes(mediaId)) {
+          const response = await getPostMedia(mediaId);
+          console.log({ mediaDoc: response });
+          const lastIndex = response.media.url.lastIndexOf("/");
+          const key = response.media.url.substring(lastIndex + 1);
+          console.log({ keyToDelete: key });
+
+          // delete files from UploadThing
+          try {
+            console.log({ tryKey: key });
+            return await utapi.deleteFiles([key]);
+          } catch (error) {
+            console.error("Error deleting files:", error);
           }
-          return null;
         }
-      );
-
-      const filesToBeDeleted = await Promise.all(deleteFilesPromises);
-      console.log({ filesToBeDeleted });
+        return null;
+      });
 
       console.log({ editPostMedia: body.editPost.media });
-      post.media = mediaArray;
+      post.media = body.editPost.media;
       post.caption = body.editPost.caption;
       await post.save();
       return NextResponse.json(

@@ -58,9 +58,9 @@ export default function EditPostModal() {
   const onSubmit = async (data: FieldValues) => {
     if (isUploading || !editPostModal.post) return;
 
-    const localMediaOnlyExistingOnes = localMedia.filter(
-      (item) => !(item instanceof File)
-    );
+    const localMediaOnlyExistingOnes = localMedia
+      .filter((item) => !(item instanceof File))
+      .map((item) => item._id);
 
     const localMediaWithoutExistingOnes = localMedia.filter(
       (item) => item instanceof File
@@ -100,7 +100,7 @@ export default function EditPostModal() {
       caption: data.caption,
     } as any);
 
-    reset();
+    setValue("media", []);
     setLocalMedia([]);
     router.refresh();
   };

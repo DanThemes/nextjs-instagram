@@ -330,7 +330,6 @@ export async function getPostMedia(mediaId: Types.ObjectId) {
       { cache: "no-store" }
     );
     const data = await response.json();
-    console.log(data);
     return data;
   } catch (error) {
     console.log("getPostMedia() api.ts", error);
