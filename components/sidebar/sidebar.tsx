@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   GoHome,
   GoSearch,
@@ -15,7 +15,7 @@ import Link from "next/link";
 
 import { signIn, signOut, useSession } from "next-auth/react";
 import NewPostModal from "../modals/new-post-modal";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { BiLogoInstagram } from "react-icons/bi";
 import cn from "@/utils/utils";
 import SidebarSearch from "./sidebar-search";
@@ -73,8 +73,9 @@ const items = [
 
 const Sidebar = () => {
   const { data: session, status } = useSession();
-  const [searchOpen, setSearchOpen] = useState(true);
+  const [searchOpen, setSearchOpen] = useState(false);
   const router = useRouter();
+  const pathname = usePathname();
 
   const handleSignIn = async () => {
     const response = await signIn("credentials", {
@@ -89,6 +90,10 @@ const Sidebar = () => {
     await signOut({ redirect: false });
     router.refresh();
   };
+
+  useEffect(() => {
+    setSearchOpen(false);
+  }, [pathname]);
 
   if (status !== "authenticated") {
     return null;

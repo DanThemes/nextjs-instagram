@@ -31,6 +31,8 @@ export default function Post({ post }: { post: PopulatedPostType }) {
 
   const { data: session } = useSession();
 
+  const isOwner = session?.user.id === post.userId._id;
+
   const handleToggleLike = async (id: Types.ObjectId) => {
     if (!session) return;
 
@@ -77,21 +79,23 @@ export default function Post({ post }: { post: PopulatedPostType }) {
           <span className="px-1">•</span>
           <span>{formatDistance(new Date(post.createdAt), new Date())}</span>
         </div>
-        <div
-          className="ml-auto cursor-pointer hover:opacity-50 p-4 pr-0"
-          onClick={() => {
-            postModal.setPost({
-              _id: post._id,
-              caption: post.caption || "",
-              media: post.media,
-            });
-            postModal.setHideLikes(!!post.hideLikes);
-            postModal.setCommentsDisabled(!!post.commentsDisabled);
-            postModal.toggle();
-          }}
-        >
-          <GoKebabHorizontal />
-        </div>
+        {isOwner && (
+          <div
+            className="ml-auto cursor-pointer hover:opacity-50 p-4 pr-0"
+            onClick={() => {
+              postModal.setPost({
+                _id: post._id,
+                caption: post.caption || "",
+                media: post.media,
+              });
+              postModal.setHideLikes(!!post.hideLikes);
+              postModal.setCommentsDisabled(!!post.commentsDisabled);
+              postModal.toggle();
+            }}
+          >
+            <GoKebabHorizontal />
+          </div>
+        )}
       </div>
       <div className="relative w-full h-[40dvh] border border-[#dbdbdb]">
         <PostMedia post={post} />

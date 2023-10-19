@@ -2,14 +2,10 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { IconType } from "react-icons/lib/esm/iconBase";
 import cn from "@/utils/utils";
 import useNewPostModal from "@/hooks/useNewPostModal";
-import Image from "next/image";
-import { useSession } from "next-auth/react";
-import { getUser } from "@/utils/api";
-import { UserType } from "@/models/User";
 import UserAvatar from "../user-avatar";
 
 type SidebarItemProps = {

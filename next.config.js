@@ -3,10 +3,10 @@ const nextConfig = {
   images: {
     remotePatterns: [{ protocol: "https", hostname: "**" }],
   },
-  experimental: {
-    esmExternals: "loose",
-    serverComponentsExternalPackages: ["mongoose"],
-  },
+  // experimental: {
+  //   esmExternals: "loose",
+  //   serverComponentsExternalPackages: ["mongoose"],
+  // },
 };
 
 module.exports = nextConfig;

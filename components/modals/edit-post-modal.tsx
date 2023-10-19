@@ -57,8 +57,6 @@ export default function EditPostModal() {
 
   const onSubmit = async (data: FieldValues) => {
     if (isUploading || !editPostModal.post) return;
-    // await trigger("media");
-    // clearErrors("media");
 
     const localMediaOnlyExistingOnes = localMedia.filter(
       (item) => !(item instanceof File)
@@ -102,11 +100,9 @@ export default function EditPostModal() {
       caption: data.caption,
     } as any);
 
-    // newPostModal.toggle();
     reset();
     setLocalMedia([]);
     router.refresh();
-    // TODO: redirect to newly created post
   };
 
   // Store file uploads in order to show a preview of the selected files in the UI
@@ -135,17 +131,6 @@ export default function EditPostModal() {
     if (isUploading || !editPostModal.post) return;
     await trigger("media");
 
-    // delete image if it was already uploaded
-    // const fileAlreadyUploaded = localMedia.filter(
-    //   (item, i) => i === index && item._id
-    // );
-    // if (fileAlreadyUploaded.length > 0) {
-    //   await removeMediaFromPost({
-    //     postId: editPostModal.post._id,
-    //     media: fileAlreadyUploaded,
-    //   });
-    // }
-
     setLocalMedia((prev) => {
       const newLocalMedia = prev.filter((_, i) => i !== index);
       setFiles(newLocalMedia);
@@ -167,11 +152,19 @@ export default function EditPostModal() {
     });
   }, [editPostModal.post, setValue]);
 
+  useEffect(() => {
+    (async () => {
+      if (!session) return;
+
+      setValue("caption", editPostModal.post?.caption);
+    })();
+  }, [editPostModal.post?.caption, session, setValue]);
+
   if (!session) {
     return null;
   }
 
-  console.log({ localMedia, watchMedia: watch("media"), errors });
+  // console.log({ localMedia, watchMedia: watch("media"), errors });
 
   return (
     <Modal

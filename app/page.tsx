@@ -11,11 +11,11 @@ export default async function Home() {
     return <NotLoggedIn />;
   }
 
-  // return <div className="flex gap-10">test</div>;
-
   return (
     <div className="flex gap-10">
-      <div className="flex-[2] flex-shrink-0">{/* <Posts /> */}</div>
+      <div className="flex-[2] flex-shrink-0">
+        <Posts />
+      </div>
       <div className="flex-[1] flex-shrink-0 hidden md:block">
         <HomeSidebar />
       </div>

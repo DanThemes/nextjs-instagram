@@ -51,7 +51,7 @@ export default forwardRef<HTMLInputElement, PostCommentBodyType>(
 
     return (
       <div className="flex gap-3 items-center">
-        <div className="flex flex-col gap-2 self-start">
+        <div className="flex flex-col gap-2 self-start w-[30px] h-[30px]">
           <UserAvatar
             src={comment.userId.profileImage}
             width={30}

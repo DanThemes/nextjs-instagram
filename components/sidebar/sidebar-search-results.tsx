@@ -12,15 +12,15 @@ type SidebarSearchResultsProps = {
 export default function SidebarSearchResults({
   results,
 }: SidebarSearchResultsProps) {
-  if (!results) {
+  if (!results || !results.length) {
     return <p>No results</p>;
   }
   return (
     <div>
       <p className="font-bold">Recent</p>
-      <ul className="flex flex-col gap-4 justify-center">
+      <ul className="flex flex-col gap-3 mt-3 justify-center">
         {results.map((user) => (
-          <li key={user._id.toString()} className="flex items-center">
+          <li key={user._id.toString()} className="flex items-center gap-2">
             <span className="flex gap-3 items-center">
               <Link
                 href={`/${user.username}`}
@@ -36,8 +36,10 @@ export default function SidebarSearchResults({
               </Link>
             </span>
             <span className="flex flex-col">
-              <span>{user.username}</span>
-              <span>{user.displayName}</span>
+              <span className="leading-[1rem]">{user.username}</span>
+              <span className="leading-[1rem] text-slate-400">
+                {user.displayName}
+              </span>
             </span>
           </li>
         ))}

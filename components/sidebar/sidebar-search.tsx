@@ -1,7 +1,7 @@
 "use client";
 
 import cn from "@/utils/utils";
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { FieldValues, useForm } from "react-hook-form";
 import SidebarSearchResults from "./sidebar-search-results";
@@ -14,21 +14,34 @@ type SidebarSearchProps = {
 
 export default function SidebarSearch({ searchOpen }: SidebarSearchProps) {
   const [searchResults, setSearchResults] = useState<UserType[] | null>(null);
-  const { register, handleSubmit } = useForm({
+  const { register, handleSubmit, watch } = useForm({
     defaultValues: {
-      username: "d",
+      username: "",
     },
   });
+
+  const username = watch("username");
 
   const submitSearch = async (data: FieldValues) => {
     if (!data.username) return;
 
-    const results = await searchUsersByUsername(data.username);
-    console.log({ results });
-    setSearchResults(results);
+    if (data.username !== username) {
+      const results = await searchUsersByUsername(data.username);
+      setSearchResults(results);
+    }
   };
 
-  console.log({ searchResults });
+  // debounce search
+  useEffect(() => {
+    if (!username) return;
+
+    const timeout = setTimeout(async () => {
+      const results = await searchUsersByUsername(username);
+      setSearchResults(results);
+    }, 500);
+
+    return () => clearTimeout(timeout);
+  }, [username]);
 
   return (
     <motion.div
@@ -50,7 +63,7 @@ export default function SidebarSearch({ searchOpen }: SidebarSearchProps) {
           autoComplete="off"
         />
       </form>
-      <SidebarSearchResults results={searchResults} />
+      {username && <SidebarSearchResults results={searchResults} />}
       {/* 
       TODO: save to localStorage the recent username searches
             and display them here if they exist
