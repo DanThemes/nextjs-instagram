@@ -1,7 +1,7 @@
 import React from "react";
 
-const Reels = () => {
+const ReelsPage = () => {
   return <div>Reels</div>;
 };
 
-export default Reels;
+export default ReelsPage;
