@@ -26,7 +26,7 @@ export default function UserAvatar({
       height={height}
       alt={"avatar"}
       className={cn(
-        `rounded-full border w-[${width}px] h-[${height}px] object-cover`,
+        `rounded-full border w-[${width}px] h-[${height}px] object-cover aspect-[1]`,
         className
       )}
       onClick={() => onClick && onClick()}
