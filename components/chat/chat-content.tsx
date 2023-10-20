@@ -4,6 +4,7 @@ import React from "react";
 import UserAvatar from "../user-avatar";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
+import ChatForm from "./chat-form";
 
 export default function ChatContent() {
   const { data: session } = useSession();
@@ -82,8 +83,9 @@ export default function ChatContent() {
           </div>
         </div>
 
-        {/* Message input */}
-        <div>input</div>
+        <div className="p-6">
+          <ChatForm />
+        </div>
       </div>
     </>
   );
