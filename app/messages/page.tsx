@@ -8,7 +8,7 @@ export default function MessagesPage() {
       <div className="w-[24rem] border-r border-[#DBDBDB] h-[100dvh] p-3 overflow-y-scroll no-scrollbar">
         <ChatSidebar />
       </div>
-      <div className="h-[100dvh] p-3">
+      <div className="h-[100dvh] w-full flex flex-col">
         <ChatContent />
       </div>
     </div>
