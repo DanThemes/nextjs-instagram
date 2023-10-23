@@ -68,12 +68,16 @@ export default function PostMedia({ post }: PostMediaProps) {
                 className="w-full h-full object-cover"
               />
               {isLikeToggling && (
-                <motion.div
+                <>
+                  {/* <motion.div
                   className="absolute inset-0 flex items-center justify-center text-[3rem] text-red-700"
                   animate={{ scale: 1.5 }}
-                >
-                  <GoHeartFill />
-                </motion.div>
+                > */}
+                  <div className="absolute inset-0 flex items-center justify-center text-[3rem] text-red-700">
+                    <GoHeartFill />
+                  </div>
+                  {/* </motion.div> */}
+                </>
               )}
             </>
           )}

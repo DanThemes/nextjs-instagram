@@ -44,7 +44,8 @@ export default function SidebarSearch({ searchOpen }: SidebarSearchProps) {
   }, [username]);
 
   return (
-    <motion.div
+    <>
+      {/* <motion.div
       className={cn(
         "absolute bg-white top-0 left-[-100%] border-r border-solid  border-[#DBDBDB] h-full px-3 py-3"
       )}
@@ -52,22 +53,29 @@ export default function SidebarSearch({ searchOpen }: SidebarSearchProps) {
         left: searchOpen ? "100%" : "-100%",
         width: searchOpen ? "18rem" : "0rem",
       }}
-    >
-      <h4 className="text-2xl">Search</h4>
-      <form onSubmit={handleSubmit(submitSearch)}>
-        <input
-          type="text"
-          {...register("username")}
-          placeholder="Search"
-          className="bg-neutral-100 rounded-[0.5rem] p-3 my-8 outline-none w-full"
-          autoComplete="off"
-        />
-      </form>
-      {username && <SidebarSearchResults results={searchResults} />}
-      {/* 
+    > */}
+      <div
+        className={cn(
+          "absolute bg-white top-0 left-[-100%] border-r border-solid  border-[#DBDBDB] h-full px-3 py-3"
+        )}
+      >
+        <h4 className="text-2xl">Search</h4>
+        <form onSubmit={handleSubmit(submitSearch)}>
+          <input
+            type="text"
+            {...register("username")}
+            placeholder="Search"
+            className="bg-neutral-100 rounded-[0.5rem] p-3 my-8 outline-none w-full"
+            autoComplete="off"
+          />
+        </form>
+        {username && <SidebarSearchResults results={searchResults} />}
+        {/* 
       TODO: save to localStorage the recent username searches
-            and display them here if they exist
-      */}
-    </motion.div>
+      and display them here if they exist
+    */}
+      </div>
+      {/* </motion.div> */}
+    </>
   );
 }

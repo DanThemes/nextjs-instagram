@@ -40,8 +40,6 @@ export async function GET(
       return message.toUserId;
     });
 
-    // ...
-
     return NextResponse.json({ users, messages }, { status: 200 });
   } catch (error) {
     return NextResponse.json(

@@ -575,7 +575,6 @@ export async function addChatMessage({
 // Get chat info
 export async function getChatInfo(userId: Types.ObjectId) {
   if (!userId) {
-    console.log({ userId });
     throw new Error("Invalid or missing user identifier");
   }
 
@@ -585,18 +584,16 @@ export async function getChatInfo(userId: Types.ObjectId) {
     );
   }
 
+  console.log("11");
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/chat/${userId}`,
       {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(userId),
+        cache: "no-store",
       }
     );
     const data = await response.json();
+    console.log({ data2: data });
     return data;
   } catch (error) {
     console.log("getChatInfo() api.ts", error);

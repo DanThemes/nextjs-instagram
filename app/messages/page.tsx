@@ -3,16 +3,18 @@ import ChatSidebar from "@/components/chat/chat-sidebar";
 import { getChatInfo } from "@/utils/api";
 import { getServerSession } from "next-auth";
 import React from "react";
+import { authOptions } from "../api/auth/[...nextauth]/route";
 
 export default async function MessagesPage() {
-  const session = await getServerSession();
+  const session = await getServerSession(authOptions);
 
   if (!session) {
     return null;
   }
   console.log({ session: session });
 
-  const { users, messages } = await getChatInfo(session.user.id);
+  const data = await getChatInfo(session.user.id);
+  console.log({ data });
 
   return (
     <div className="-m-10 flex">
@@ -20,7 +22,7 @@ export default async function MessagesPage() {
         <ChatSidebar />
       </div>
       <div className="h-[100dvh] w-full flex flex-col">
-        <ChatContent messages={messages} />
+        <ChatContent messages={data} />
       </div>
     </div>
   );

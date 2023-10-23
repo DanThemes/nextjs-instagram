@@ -46,6 +46,6 @@
   "devDependencies": {
     "@auth/mongodb-adapter": "^2.0.1",
     "@types/bcrypt": "^5.0.0",
-    "mongodb": "^6.2.0"
+    "mongodb": "6.0.0"
   }
 }
