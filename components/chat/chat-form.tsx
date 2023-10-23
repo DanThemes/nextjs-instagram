@@ -1,18 +1,37 @@
+"use client";
+
+import { SessionType } from "@/models/Session";
+import { addChatMessage, getChatInfo } from "@/utils/api";
 import EmojiPicker, { EmojiClickData } from "emoji-picker-react";
+import { Types } from "mongoose";
+import { Session } from "next-auth";
 import React, { useState } from "react";
 import { FieldValues, useForm } from "react-hook-form";
 import { BsEmojiSmile } from "react-icons/bs";
 
-export default function ChatForm() {
+type ChatFormProps = {
+  session: Session;
+};
+
+export default function ChatForm({ session }: ChatFormProps) {
   const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false);
 
-  const { register, handleSubmit, setValue, setFocus, getValues } = useForm({
-    defaultValues: {
-      text: "",
-    },
-  });
+  const { register, handleSubmit, setValue, setFocus, getValues, reset } =
+    useForm({
+      defaultValues: {
+        text: "",
+      },
+    });
 
-  const submitMessage = (data: FieldValues) => {};
+  const submitMessage = async (data: FieldValues) => {
+    await addChatMessage({
+      fromUserId: session.user.id,
+      toUserId: new Types.ObjectId("1"),
+      text: data.text,
+      seen: false,
+    });
+    reset();
+  };
 
   const handleOpenEmojiPicker = () => {
     setIsEmojiPickerOpen(true);

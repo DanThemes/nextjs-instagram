@@ -52,7 +52,7 @@ export async function getUser(idOrUsername: Types.ObjectId | string) {
   }
 }
 
-// Get user
+// Get users
 export async function getUsers(userIds: Types.ObjectId[]) {
   if (!userIds) {
     throw new Error("Invalid or missing user identifier");
@@ -530,5 +530,75 @@ export async function followUser({
     });
   } catch (error) {
     console.log("followUser() api.ts", error);
+  }
+}
+
+// Add chat message
+type ChatMessage = {
+  fromUserId: Types.ObjectId;
+  toUserId: Types.ObjectId;
+  text: string;
+  seen: boolean;
+};
+
+export async function addChatMessage({
+  fromUserId,
+  toUserId,
+  text,
+  seen,
+}: ChatMessage) {
+  if (!process.env.NEXT_PUBLIC_API_URL) {
+    throw new Error(
+      "Please define the 'NEXT_PUBLIC_API_URL' environment variable inside .env"
+    );
+  }
+
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/messages`,
+      {
+        method: "POST",
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: JSON.stringify({ fromUserId, toUserId, text, seen }),
+      }
+    );
+    const data = await response.json();
+    console.log(data);
+    return data;
+  } catch (error) {
+    console.log("addChatMessage() api.ts", error);
+  }
+}
+
+// Get chat info
+export async function getChatInfo(userId: Types.ObjectId) {
+  if (!userId) {
+    console.log({ userId });
+    throw new Error("Invalid or missing user identifier");
+  }
+
+  if (!process.env.NEXT_PUBLIC_API_URL) {
+    throw new Error(
+      "Please define the 'NEXT_PUBLIC_API_URL' environment variable inside .env"
+    );
+  }
+
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/chat/${userId}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(userId),
+      }
+    );
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.log("getChatInfo() api.ts", error);
   }
 }
