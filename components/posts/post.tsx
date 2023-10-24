@@ -21,7 +21,6 @@ import Link from "next/link";
 import usePostModal from "@/hooks/usePostModal";
 import useUsersModal from "@/hooks/useUsersModal";
 import cn from "@/utils/utils";
-import { Types } from "mongoose";
 import { PopulatedPostType } from "@/models/Post";
 
 export default function Post({ post }: { post: PopulatedPostType }) {
@@ -31,9 +30,9 @@ export default function Post({ post }: { post: PopulatedPostType }) {
 
   const { data: session } = useSession();
 
-  const isOwner = session?.user.id === post.userId._id;
+  const isOwner = session?.user.id === post.userId._id.toString();
 
-  const handleToggleLike = async (id: Types.ObjectId) => {
+  const handleToggleLike = async (id: string) => {
     if (!session) return;
 
     await toggleLike({
@@ -84,7 +83,7 @@ export default function Post({ post }: { post: PopulatedPostType }) {
             className="ml-auto cursor-pointer hover:opacity-50 p-4 pr-0"
             onClick={() => {
               postModal.setPost({
-                _id: post._id,
+                _id: post._id.toString(),
                 caption: post.caption || "",
                 media: post.media,
               });
@@ -104,11 +103,11 @@ export default function Post({ post }: { post: PopulatedPostType }) {
         <div className="flex gap-4">
           <div
             className="hover:opacity-50 active:opacity-30 cursor-pointer"
-            onClick={() => handleToggleLike(post._id)}
+            onClick={() => handleToggleLike(post._id.toString())}
           >
             {session &&
             (post.likes as UserType[]).find(
-              (like: UserType) => like._id === session?.user.id
+              (like: UserType) => like._id.toString() === session?.user.id
             ) ? (
               <>
                 <GoHeartFill />
@@ -151,7 +150,7 @@ export default function Post({ post }: { post: PopulatedPostType }) {
       )}
       <strong>author</strong> {post.caption}
       <PostComments
-        postId={post._id}
+        postId={post._id.toString()}
         commentsDisabled={post.commentsDisabled!}
         comments={post.comments}
         userId={session?.user.id}

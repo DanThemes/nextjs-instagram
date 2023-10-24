@@ -1,11 +1,10 @@
 import { editUser } from "@/utils/api";
 import { useUploadThing } from "@/utils/uploadthing";
-import { Types } from "mongoose";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
 type UseUploadType = {
-  userId?: Types.ObjectId;
+  userId?: string;
   endpoint: "avatarUploader" | "postMediaUploader";
   toggleModal?: () => void;
 };

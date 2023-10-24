@@ -21,7 +21,7 @@ export default function FollowButton({ user }: FollowButtonType) {
   const [isFollowing, setIsFollowing] = useState(() => {
     if (!session) return false;
 
-    const followers = user.followers.map((follower) => follower._id);
+    const followers = user.followers.map((follower) => follower._id.toString());
 
     return followers.includes(session?.user.id);
   });
@@ -36,7 +36,7 @@ export default function FollowButton({ user }: FollowButtonType) {
 
     await followUser({
       followerId: session.user.id,
-      followedId: user._id,
+      followedId: user._id.toString(),
     });
 
     setIsFollowing((prev) => !prev);

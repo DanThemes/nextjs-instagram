@@ -6,11 +6,10 @@ import React, { forwardRef, useState } from "react";
 import { FieldValues, UseFormReturn, useForm } from "react-hook-form";
 import { BsEmojiSmile } from "react-icons/bs";
 import EmojiPicker, { EmojiClickData } from "emoji-picker-react";
-import { Types } from "mongoose";
 
 type PostCommentInputType = {
-  postId: Types.ObjectId;
-  userId?: Types.ObjectId;
+  postId: string;
+  userId?: string;
   form: UseFormReturn<
     {
       text: string;

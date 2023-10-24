@@ -5,13 +5,12 @@ import { PopulatedCommentType } from "@/models/Comment";
 import PostComment from "./post-comment";
 import PostCommentInput from "./post-comment-input";
 import { useForm } from "react-hook-form";
-import { Types } from "mongoose";
 
 type Props = {
-  postId: Types.ObjectId;
+  postId: string;
   commentsDisabled: boolean;
   comments: PopulatedCommentType[];
-  userId?: Types.ObjectId;
+  userId?: string;
 };
 
 const PostComments = forwardRef<HTMLInputElement, Props>(function PostComments(

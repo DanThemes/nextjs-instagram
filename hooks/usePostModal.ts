@@ -1,9 +1,8 @@
 import { MediaType } from "@/models/Media";
-import { Types } from "mongoose";
 import { create } from "zustand";
 
 type LimitedPostType = {
-  _id: Types.ObjectId;
+  _id: string;
   caption: string;
   media: MediaType[];
 };

@@ -13,16 +13,16 @@ export default async function MessagesPage() {
   }
   console.log({ session: session });
 
-  const data = await getChatInfo(111);
-  console.log({ data });
+  const data = await getChatInfo(session.user.id);
+  console.log({ dataUsers: data.users, dataMessages: data.messages });
 
   return (
     <div className="-m-10 flex">
       <div className="w-[24rem] border-r border-[#DBDBDB] h-[100dvh] p-3 overflow-y-scroll no-scrollbar">
-        <ChatSidebar />
+        <ChatSidebar users={data.users} />
       </div>
       <div className="h-[100dvh] w-full flex flex-col">
-        <ChatContent messages={data} />
+        <ChatContent messages={data.messages} />
       </div>
     </div>
   );

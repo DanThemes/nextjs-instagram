@@ -43,7 +43,7 @@ export default function PostMedia({ post }: PostMediaProps) {
     setIsLikeToggling(true);
     await toggleLike({
       userId: session.user.id,
-      postId: post._id,
+      postId: post._id!.toString(),
     });
 
     setIsLikeToggling(false);

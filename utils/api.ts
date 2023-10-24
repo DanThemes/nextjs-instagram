@@ -1,7 +1,6 @@
 import { MediaType } from "@/models/Media";
 import { PostType } from "@/models/Post";
 import { UserType } from "@/models/User";
-// import { Types } from "mongoose";
 
 // Add user
 export async function addUser(values: Partial<UserType>) {

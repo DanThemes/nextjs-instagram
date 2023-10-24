@@ -1,7 +1,6 @@
 "use client";
 
-import { SessionType } from "@/models/Session";
-import { addChatMessage, getChatInfo } from "@/utils/api";
+import { addChatMessage } from "@/utils/api";
 import EmojiPicker, { EmojiClickData } from "emoji-picker-react";
 import { Session } from "next-auth";
 import React, { useState } from "react";
@@ -25,7 +24,7 @@ export default function ChatForm({ session }: ChatFormProps) {
   const submitMessage = async (data: FieldValues) => {
     await addChatMessage({
       fromUserId: session.user.id,
-      toUserId: "111",
+      toUserId: "651a84db2c5f661dd7845bb5",
       text: data.text,
       seen: false,
     });

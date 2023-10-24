@@ -2,9 +2,6 @@ import User from "@/models/User";
 import dbConnect from "@/utils/db";
 import { NextRequest, NextResponse } from "next/server";
 import mongoose from "mongoose";
-import Media from "@/models/Media";
-import Post from "@/models/Post";
-import Comment from "@/models/Comment";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../../auth/[...nextauth]/route";
 

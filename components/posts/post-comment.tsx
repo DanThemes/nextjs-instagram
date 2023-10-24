@@ -1,14 +1,12 @@
 "use client";
 
 import React, { forwardRef, useState } from "react";
-import { CommentType, PopulatedCommentType } from "@/models/Comment";
-import { UserType } from "@/models/User";
+import { PopulatedCommentType } from "@/models/Comment";
 import PostCommentBody from "./post-comment-body";
-import { Types } from "mongoose";
 
 type PostCommentType = {
   comment: PopulatedCommentType;
-  userId?: Types.ObjectId;
+  userId?: string;
   replies?: PopulatedCommentType[];
   setValue: (field: any, value: any) => void;
 };
