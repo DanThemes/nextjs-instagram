@@ -2,7 +2,17 @@
 
 import { createContext, useContext, useState } from "react";
 
-const ChatSelectUser = createContext(null);
+type StateType = {
+  selectedUserId: string | null;
+  setSelectedUserId: React.Dispatch<React.SetStateAction<string | null>>;
+};
+
+const initialState = {
+  selectedUserId: null,
+  setSelectedUserId: () => {},
+};
+
+const ChatSelectUser = createContext<StateType>(initialState);
 
 export const useChatSelectedUser = () => {
   return useContext(ChatSelectUser);
@@ -16,7 +26,7 @@ export const ChatSelectUserProvider = ({
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
 
   const value = {
-    selectedUserId: selectedUserId || null,
+    selectedUserId,
     setSelectedUserId,
   };
 
