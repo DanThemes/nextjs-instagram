@@ -11,7 +11,7 @@ import { getUser } from "@/utils/api";
 import { UserType } from "@/models/User";
 
 type ChatContentProps = {
-  selectedUser: UserType;
+  selectedUser: UserType | null;
   messages: any;
 };
 
@@ -20,17 +20,17 @@ export default function ChatContent({
   messages,
 }: ChatContentProps) {
   const { data: session } = useSession();
-  const { userId } = useParams();
+  // const { userId } = useParams();
 
-  useEffect(() => {
-    const user = getUser(userId as string);
-  }, [userId]);
+  // useEffect(() => {
+  //   const user = getUser(userId as string);
+  // }, [userId]);
 
   if (!session) {
     return null;
   }
 
-  if (!userId) {
+  if (!selectedUser) {
     return <ChatContentEmpty />;
   }
 

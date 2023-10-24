@@ -1,22 +1,6 @@
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import ChatContent from "@/components/chat/chat-content";
-import { getChatInfo, getUser } from "@/utils/api";
-import { getServerSession } from "next-auth";
+import ChatContentEmpty from "@/components/chat/chat-content-empty";
 import React from "react";
 
-export default async function MessagesPage({
-  params,
-}: {
-  params: { userId: string };
-}) {
-  const session = await getServerSession(authOptions);
-
-  if (!session) {
-    return null;
-  }
-
-  const data = await getChatInfo(session.user.id);
-  const selectedUser = await getUser(params.userId);
-
-  return <ChatContent selectedUser={selectedUser} messages={data.messages} />;
+export default async function MessagesPage() {
+  return <ChatContentEmpty />;
 }

@@ -33,12 +33,14 @@ export async function GET(
         model: User,
       });
 
+    // TODO: below code needs to be fixed
     const users = messages.map((message) => {
-      if (message.fromUserId === params.userId) {
-        return message.fromUserId;
+      if (message.fromUserId._id.toString() === params.userId) {
+        return message.toUserId;
       }
-      return message.toUserId;
+      return message.fromUserId;
     });
+    // const uniqueUsers = [...new Set(users)];
 
     return NextResponse.json({ users, messages }, { status: 200 });
   } catch (error) {

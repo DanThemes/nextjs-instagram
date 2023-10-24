@@ -4,11 +4,14 @@ import FollowButton from "@/components/follow-button";
 import useEditProfileModal from "@/hooks/useEditProfileModal";
 import { UserType } from "@/models/User";
 import { useSession } from "next-auth/react";
-import React, { useState } from "react";
+import Link from "next/link";
+import React from "react";
 import { GoGear } from "react-icons/go";
 
 type ProfileButtonsType = {
-  user: UserType;
+  user: Omit<UserType, "followers"> & {
+    followers: UserType[];
+  };
 };
 
 const ProfileButtons = ({ user }: ProfileButtonsType) => {
@@ -43,7 +46,9 @@ const ProfileButtons = ({ user }: ProfileButtonsType) => {
   return (
     <>
       <FollowButton user={user} />
-      <button className="gray_button">Message</button>
+      <Link href={`/messages/${user._id.toString()}`}>
+        <button className="gray_button">Message</button>
+      </Link>
       <button>...</button>
     </>
   );

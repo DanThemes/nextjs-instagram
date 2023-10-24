@@ -16,7 +16,9 @@ export default async function MessagePage({
   }
 
   const data = await getChatInfo(session.user.id);
-  const selectedUser = await getUser(params.userId);
+  const selectedUser = params.userId ? await getUser(params.userId) : null;
+
+  console.log(data.users);
 
   return <ChatContent selectedUser={selectedUser} messages={data.messages} />;
 }
