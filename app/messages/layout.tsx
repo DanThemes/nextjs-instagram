@@ -1,0 +1,28 @@
+import ChatSidebar from "@/components/chat/chat-sidebar";
+import { getChatInfo } from "@/utils/api";
+import { getServerSession } from "next-auth";
+import React from "react";
+import { authOptions } from "../api/auth/[...nextauth]/route";
+
+export default async function MessagesLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const session = await getServerSession(authOptions);
+
+  if (!session) {
+    return null;
+  }
+
+  const { users } = await getChatInfo(session.user.id);
+
+  return (
+    <div className="-m-10 flex">
+      <div className="w-[24rem] border-r border-[#DBDBDB] h-[100dvh]overflow-y-scroll no-scrollbar">
+        <ChatSidebar users={users} />
+      </div>
+      <div className="h-[100dvh] w-full flex flex-col">{children}</div>
+    </div>
+  );
+}

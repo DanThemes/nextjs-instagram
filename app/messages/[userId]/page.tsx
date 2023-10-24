@@ -4,7 +4,7 @@ import { getChatInfo, getUser } from "@/utils/api";
 import { getServerSession } from "next-auth";
 import React from "react";
 
-export default async function MessagesPage({
+export default async function MessagePage({
   params,
 }: {
   params: { userId: string };

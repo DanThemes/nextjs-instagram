@@ -3,6 +3,7 @@
 import { addChatMessage } from "@/utils/api";
 import EmojiPicker, { EmojiClickData } from "emoji-picker-react";
 import { Session } from "next-auth";
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { FieldValues, useForm } from "react-hook-form";
 import { BsEmojiSmile } from "react-icons/bs";
@@ -13,6 +14,7 @@ type ChatFormProps = {
 
 export default function ChatForm({ session }: ChatFormProps) {
   const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false);
+  const router = useRouter();
 
   const { register, handleSubmit, setValue, setFocus, getValues, reset } =
     useForm({
@@ -24,11 +26,12 @@ export default function ChatForm({ session }: ChatFormProps) {
   const submitMessage = async (data: FieldValues) => {
     await addChatMessage({
       fromUserId: session.user.id,
-      toUserId: "651a84db2c5f661dd7845bb5",
+      toUserId: "65084415cee10b04c5ff7cbe",
       text: data.text,
       seen: false,
     });
     reset();
+    router.refresh();
   };
 
   const handleOpenEmojiPicker = () => {

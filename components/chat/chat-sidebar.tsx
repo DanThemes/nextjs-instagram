@@ -4,8 +4,8 @@ import { useSession } from "next-auth/react";
 import React from "react";
 import UserAvatar from "../user-avatar";
 import { UserType } from "@/models/User";
-import { useChatSelectedUser } from "@/providers/chat-select-user-provider";
 import cn from "@/utils/utils";
+import { useParams, useRouter } from "next/navigation";
 
 type ChatSidebarProps = {
   users: UserType[];
@@ -13,29 +13,25 @@ type ChatSidebarProps = {
 
 export default function ChatSidebar({ users }: ChatSidebarProps) {
   const { data: session } = useSession();
-  const { selectedUserId, setSelectedUserId } = useChatSelectedUser();
+  const router = useRouter();
+
+  const { userId } = useParams();
 
   if (!session) {
     return null;
   }
 
-  const handleSelectChatUser = (userId: string) => {
-    console.log({ userId });
-    setSelectedUserId(userId);
-    console.log({ setSelectedUserId });
-  };
-
   return (
     <>
-      <p>Selected user: {selectedUserId}</p>
+      <p>Selected user: {userId}</p>
       {users.map((user) => (
         <div
           key={user._id.toString()}
           className={cn(
-            "flex gap-3 items-center",
-            selectedUserId === user._id.toString() && "bg-slate-200"
+            "flex gap-3 p-3 items-center cursor-pointer hover:bg-[#eee]",
+            userId === user._id.toString() && "bg-slate-200"
           )}
-          onClick={() => handleSelectChatUser(user._id.toString())}
+          onClick={() => router.push(`/messages/${user._id.toString()}`)}
         >
           <UserAvatar width={40} height={40} src={user.profileImage} />
           <div>
