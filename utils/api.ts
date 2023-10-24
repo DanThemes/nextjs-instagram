@@ -1,7 +1,7 @@
 import { MediaType } from "@/models/Media";
 import { PostType } from "@/models/Post";
 import { UserType } from "@/models/User";
-import { Types } from "mongoose";
+// import { Types } from "mongoose";
 
 // Add user
 export async function addUser(values: Partial<UserType>) {
@@ -28,7 +28,7 @@ export async function addUser(values: Partial<UserType>) {
 }
 
 // Get user
-export async function getUser(idOrUsername: Types.ObjectId | string) {
+export async function getUser(idOrUsername: string) {
   if (!idOrUsername) {
     throw new Error("Invalid or missing user identifier");
   }
@@ -53,7 +53,7 @@ export async function getUser(idOrUsername: Types.ObjectId | string) {
 }
 
 // Get users
-export async function getUsers(userIds: Types.ObjectId[]) {
+export async function getUsers(userIds: string[]) {
   if (!userIds) {
     throw new Error("Invalid or missing user identifier");
   }
@@ -80,7 +80,7 @@ export async function getUsers(userIds: Types.ObjectId[]) {
 }
 
 // Edit user
-export async function editUser(id: Types.ObjectId, values: Partial<UserType>) {
+export async function editUser(id: string, values: Partial<UserType>) {
   if (!id) {
     throw new Error("Invalid or missing user identifier");
   }
@@ -190,7 +190,7 @@ export async function editPost(values: Partial<PostType>) {
 
 // Edit post
 export async function removeMediaFromPost(values: {
-  postId: Types.ObjectId;
+  postId: string;
   media: any[];
 }) {
   if (!process.env.NEXT_PUBLIC_API_URL) {
@@ -219,7 +219,7 @@ export async function removeMediaFromPost(values: {
 }
 
 // Get post
-export async function getPost(id: Types.ObjectId) {
+export async function getPost(id: string) {
   if (!process.env.NEXT_PUBLIC_API_URL) {
     throw new Error(
       "Please define the 'NEXT_PUBLIC_API_URL' environment variable inside .env"
@@ -245,7 +245,7 @@ export async function getPosts({
   userId,
   onlyPostsOfFollowedUsers = false,
 }: {
-  userId: Types.ObjectId;
+  userId: string;
   onlyPostsOfFollowedUsers: boolean;
 }) {
   if (!process.env.NEXT_PUBLIC_API_URL) {
@@ -270,7 +270,7 @@ export async function getPosts({
 }
 
 // Delete post
-export async function deletePost(postId: Types.ObjectId) {
+export async function deletePost(postId: string) {
   if (!process.env.NEXT_PUBLIC_API_URL) {
     throw new Error(
       "Please define the 'NEXT_PUBLIC_API_URL' environment variable inside .env"
@@ -317,7 +317,7 @@ export async function addPostMedia(values: MediaType) {
 }
 
 //  Get post media
-export async function getPostMedia(mediaId: Types.ObjectId) {
+export async function getPostMedia(mediaId: string) {
   if (!process.env.NEXT_PUBLIC_API_URL) {
     throw new Error(
       "Please define the 'NEXT_PUBLIC_API_URL' environment variable inside .env"
@@ -338,10 +338,10 @@ export async function getPostMedia(mediaId: Types.ObjectId) {
 
 // Add comment
 export async function addComment(
-  postId: Types.ObjectId,
+  postId: string,
   text: string,
-  userId: Types.ObjectId,
-  parentCommentId?: Types.ObjectId
+  userId: string,
+  parentCommentId?: string
 ) {
   if (!process.env.NEXT_PUBLIC_API_URL) {
     throw new Error(
@@ -369,7 +369,7 @@ export async function addComment(
 }
 
 // Delete comment
-export async function deleteComment(commentId: Types.ObjectId) {
+export async function deleteComment(commentId: string) {
   if (!process.env.NEXT_PUBLIC_API_URL) {
     throw new Error(
       "Please define the 'NEXT_PUBLIC_API_URL' environment variable inside .env"
@@ -400,9 +400,9 @@ export async function toggleLike({
   postId,
   commentId,
 }: {
-  userId: Types.ObjectId;
-  postId?: Types.ObjectId;
-  commentId?: Types.ObjectId;
+  userId: string;
+  postId?: string;
+  commentId?: string;
 }) {
   if (!process.env.NEXT_PUBLIC_API_URL) {
     throw new Error(
@@ -437,7 +437,7 @@ export async function handleHideLikes({
   postId,
   hide,
 }: {
-  postId: Types.ObjectId;
+  postId: string;
   hide: boolean;
 }) {
   if (!process.env.NEXT_PUBLIC_API_URL) {
@@ -470,7 +470,7 @@ export async function disableComments({
   postId,
   disable,
 }: {
-  postId: Types.ObjectId;
+  postId: string;
   disable: boolean;
 }) {
   if (!process.env.NEXT_PUBLIC_API_URL) {
@@ -503,8 +503,8 @@ export async function followUser({
   followerId,
   followedId,
 }: {
-  followerId: Types.ObjectId;
-  followedId: Types.ObjectId;
+  followerId: string;
+  followedId: string;
 }) {
   if (!process.env.NEXT_PUBLIC_API_URL) {
     throw new Error(
@@ -535,8 +535,8 @@ export async function followUser({
 
 // Add chat message
 type ChatMessage = {
-  fromUserId: Types.ObjectId;
-  toUserId: Types.ObjectId;
+  fromUserId: string;
+  toUserId: string;
   text: string;
   seen: boolean;
 };
@@ -573,7 +573,7 @@ export async function addChatMessage({
 }
 
 // Get chat info
-export async function getChatInfo(userId: Types.ObjectId) {
+export async function getChatInfo(userId: string) {
   if (!userId) {
     throw new Error("Invalid or missing user identifier");
   }
@@ -584,7 +584,6 @@ export async function getChatInfo(userId: Types.ObjectId) {
     );
   }
 
-  console.log("11");
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/chat/${userId}`,

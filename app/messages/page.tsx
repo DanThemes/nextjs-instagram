@@ -13,7 +13,7 @@ export default async function MessagesPage() {
   }
   console.log({ session: session });
 
-  const data = await getChatInfo(session.user.id);
+  const data = await getChatInfo(111);
   console.log({ data });
 
   return (

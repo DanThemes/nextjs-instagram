@@ -2,7 +2,6 @@
 
 import { UserType } from "@/models/User";
 import { followUser } from "@/utils/api";
-import { Types } from "mongoose";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";

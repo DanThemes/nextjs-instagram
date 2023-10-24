@@ -11,11 +11,10 @@ import useUsersModal from "@/hooks/useUsersModal";
 import { useRouter } from "next/navigation";
 import { deleteComment, toggleLike } from "@/utils/api";
 import cn from "@/utils/utils";
-import { Types } from "mongoose";
 
 type PostCommentBodyType = {
   comment: PopulatedCommentType;
-  userId?: Types.ObjectId;
+  userId?: string;
   setValue: (field: any, value: any) => void;
 };
 
@@ -24,7 +23,7 @@ export default forwardRef<HTMLInputElement, PostCommentBodyType>(
     const usersModal = useUsersModal();
     const router = useRouter();
 
-    const handleDeleteComment = async (id: Types.ObjectId) => {
+    const handleDeleteComment = async (id: string) => {
       if (!userId) return;
 
       await deleteComment(id);
@@ -39,7 +38,7 @@ export default forwardRef<HTMLInputElement, PostCommentBodyType>(
       setValue("parentCommentId", parentCommentId);
     };
 
-    const handleToggleLike = async (id: Types.ObjectId) => {
+    const handleToggleLike = async (id: string) => {
       if (!userId) return;
 
       await toggleLike({
@@ -101,10 +100,10 @@ export default forwardRef<HTMLInputElement, PostCommentBodyType>(
             >
               Reply
             </span>
-            {comment.userId._id === userId ? (
+            {comment.userId._id.toString() === userId ? (
               <span
                 className="text-red-700 cursor-pointer hover:opacity-50"
-                onClick={() => handleDeleteComment(comment._id)}
+                onClick={() => handleDeleteComment(comment._id.toString())}
               >
                 Delete
               </span>
@@ -115,7 +114,7 @@ export default forwardRef<HTMLInputElement, PostCommentBodyType>(
         </div>
         <div
           className="flex justify-end hover:opacity-50 active:opacity-30 cursor-pointer"
-          onClick={() => handleToggleLike(comment._id)}
+          onClick={() => handleToggleLike(comment._id.toString())}
         >
           {userId && comment.likes.find((like: any) => like._id === userId) ? (
             <>

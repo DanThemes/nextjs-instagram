@@ -3,7 +3,6 @@
 import { SessionType } from "@/models/Session";
 import { addChatMessage, getChatInfo } from "@/utils/api";
 import EmojiPicker, { EmojiClickData } from "emoji-picker-react";
-import { Types } from "mongoose";
 import { Session } from "next-auth";
 import React, { useState } from "react";
 import { FieldValues, useForm } from "react-hook-form";
@@ -26,7 +25,7 @@ export default function ChatForm({ session }: ChatFormProps) {
   const submitMessage = async (data: FieldValues) => {
     await addChatMessage({
       fromUserId: session.user.id,
-      toUserId: new Types.ObjectId("1"),
+      toUserId: "111",
       text: data.text,
       seen: false,
     });
