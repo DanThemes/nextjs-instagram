@@ -31,7 +31,8 @@ export async function GET(
         path: "toUserId",
         select: "-password",
         model: User,
-      });
+      })
+      .sort({ createdAt: 1 });
 
     // TODO: below code needs to be fixed
     const users = messages.map((message) => {
@@ -40,9 +41,9 @@ export async function GET(
       }
       return message.fromUserId;
     });
-    // const uniqueUsers = [...new Set(users)];
+    const uniqueUsers = Array.from(new Set(users));
 
-    return NextResponse.json({ users, messages }, { status: 200 });
+    return NextResponse.json({ users: uniqueUsers, messages }, { status: 200 });
   } catch (error) {
     return NextResponse.json(
       { message: "Something went wrong" },

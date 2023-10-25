@@ -1,5 +1,6 @@
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import ChatContent from "@/components/chat/chat-content";
+import { PopulatedMessageType } from "@/models/Message";
 import { getChatInfo, getUser } from "@/utils/api";
 import { getServerSession } from "next-auth";
 import React from "react";
@@ -18,7 +19,11 @@ export default async function MessagePage({
   const data = await getChatInfo(session.user.id);
   const selectedUser = params.userId ? await getUser(params.userId) : null;
 
-  console.log(data.users);
+  const messages = data.messages.filter(
+    (message: PopulatedMessageType) =>
+      message.fromUserId._id.toString() === params.userId ||
+      message.toUserId._id.toString() === params.userId
+  );
 
-  return <ChatContent selectedUser={selectedUser} messages={data.messages} />;
+  return <ChatContent selectedUser={selectedUser} messages={messages} />;
 }
