@@ -19,6 +19,7 @@ export default async function MessagePage({
   const data = await getChatInfo(session.user.id);
   const selectedUser = params.userId ? await getUser(params.userId) : null;
 
+  // Keep only messages for the current params.userId
   const messages = data.messages.filter(
     (message: PopulatedMessageType) =>
       message.fromUserId._id.toString() === params.userId ||
