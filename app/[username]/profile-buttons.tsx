@@ -9,9 +9,7 @@ import React from "react";
 import { GoGear } from "react-icons/go";
 
 type ProfileButtonsType = {
-  user: Omit<UserType, "followers"> & {
-    followers: UserType[];
-  };
+  user: UserType;
 };
 
 const ProfileButtons = ({ user }: ProfileButtonsType) => {
@@ -41,7 +39,6 @@ const ProfileButtons = ({ user }: ProfileButtonsType) => {
       </>
     );
   }
-  // console.log({ isFollowed, followers, loggedInUserId });
 
   return (
     <>

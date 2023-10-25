@@ -20,7 +20,7 @@ const Profile = async ({ params }: { params: { username: string } }) => {
   }
 
   const posts = await getPosts({
-    userId: user._id,
+    userId: user._id.toString(),
     onlyPostsOfFollowedUsers: false,
   });
 

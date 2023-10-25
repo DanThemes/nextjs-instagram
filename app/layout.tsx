@@ -42,14 +42,14 @@ export default async function RootLayout({
               </aside>
             )}
             <main className="px-10 py-10 w-[70rem] mx-auto">{children}</main>
-          </div>
-          <div className="z-[999] relative">
-            <AuthModal />
-            <UsersModal />
-            <UploadAvatarModal />
-            <PostModal />
-            <EditPostModal />
-            <EditProfileModal />
+            <div className="z-[999] relative">
+              <AuthModal />
+              <UsersModal />
+              <UploadAvatarModal />
+              <PostModal />
+              <EditPostModal />
+              <EditProfileModal />
+            </div>
           </div>
         </AuthSessionProvider>
       </body>

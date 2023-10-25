@@ -36,6 +36,11 @@ export type UserType = HydratedDocument<InferSchemaType<typeof UserSchema>> & {
   _id: Types.ObjectId;
 };
 
+export type PopulatedUserType = Omit<UserType, "followers" | "following"> & {
+  followers: UserType[];
+  following: UserType[];
+};
+
 const User = mongoose.models.User || mongoose.model("User", UserSchema);
 
 export default User;

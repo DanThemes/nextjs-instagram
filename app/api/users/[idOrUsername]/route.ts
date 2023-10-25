@@ -40,12 +40,12 @@ export async function GET(
       .select("-password")
       .populate({
         path: "following",
-        select: ["username", "profileImage"],
+        select: ["-password"],
         model: User,
       })
       .populate({
         path: "followers",
-        select: ["username", "profileImage"],
+        select: ["-password"],
         model: User,
       });
 

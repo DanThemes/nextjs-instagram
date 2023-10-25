@@ -8,9 +8,7 @@ import React, { useState } from "react";
 import { GoSync } from "react-icons/go";
 
 type FollowButtonType = {
-  user: Omit<UserType, "followers"> & {
-    followers: UserType[];
-  };
+  user: UserType | (Omit<UserType, "followers"> & { followers: UserType[] });
 };
 
 export default function FollowButton({ user }: FollowButtonType) {
@@ -21,8 +19,12 @@ export default function FollowButton({ user }: FollowButtonType) {
   const [isFollowing, setIsFollowing] = useState(() => {
     if (!session) return false;
 
-    const followers = user.followers.map((follower) => follower._id.toString());
-
+    const followers = user.followers.map((follower) =>
+      typeof follower._id !== "undefined"
+        ? follower._id.toString()
+        : follower.toString()
+    );
+    console.log({ user, followers });
     return followers.includes(session?.user.id);
   });
 

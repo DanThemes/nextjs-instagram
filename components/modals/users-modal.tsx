@@ -8,6 +8,7 @@ import useUsersModal from "@/hooks/useUsersModal";
 import { UserType } from "@/models/User";
 import Link from "next/link";
 import UserAvatar from "../user-avatar";
+import FollowButton from "../follow-button";
 
 export default function UsersModal() {
   const usersModal = useUsersModal();
@@ -54,7 +55,7 @@ export default function UsersModal() {
             </div>
             {user._id !== session.user.id && (
               <span>
-                <button className="blue_button">Follow</button>
+                <FollowButton user={user} />
               </span>
             )}
           </li>
