@@ -3,6 +3,7 @@ import { getChatInfo } from "@/utils/api";
 import { getServerSession } from "next-auth";
 import React from "react";
 import { authOptions } from "../api/auth/[...nextauth]/route";
+import { SocketProvider } from "@/providers/socket-provider";
 
 export default async function MessagesLayout({
   children,
@@ -18,11 +19,13 @@ export default async function MessagesLayout({
   const { users } = await getChatInfo(session.user.id);
 
   return (
-    <div className="-m-10 flex">
-      <div className="w-[24rem] border-r border-[#DBDBDB] h-[100dvh]overflow-y-scroll no-scrollbar">
-        <ChatSidebar users={users} />
+    <SocketProvider>
+      <div className="-m-10 flex">
+        <div className="w-[24rem] border-r border-[#DBDBDB] h-[100dvh]overflow-y-scroll no-scrollbar">
+          <ChatSidebar users={users} />
+        </div>
+        <div className="h-[100dvh] w-full flex flex-col">{children}</div>
       </div>
-      <div className="h-[100dvh] w-full flex flex-col">{children}</div>
-    </div>
+    </SocketProvider>
   );
 }

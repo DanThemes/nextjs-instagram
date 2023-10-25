@@ -6,6 +6,7 @@ import UserAvatar from "../user-avatar";
 import { UserType } from "@/models/User";
 import cn from "@/utils/utils";
 import { useParams, useRouter } from "next/navigation";
+import { useSocket } from "@/providers/socket-provider";
 
 type ChatSidebarProps = {
   users: UserType[];
@@ -14,6 +15,7 @@ type ChatSidebarProps = {
 export default function ChatSidebar({ users }: ChatSidebarProps) {
   const { data: session } = useSession();
   const router = useRouter();
+  const { isConnected } = useSocket();
 
   const { userId } = useParams();
 
@@ -24,6 +26,7 @@ export default function ChatSidebar({ users }: ChatSidebarProps) {
   return (
     <>
       <p>Selected user: {userId}</p>
+      <p>Is connected: {isConnected}</p>
       {users.map((user) => (
         <div
           key={user._id.toString()}
