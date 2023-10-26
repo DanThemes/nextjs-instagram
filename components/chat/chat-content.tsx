@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import UserAvatar from "../user-avatar";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
@@ -10,6 +10,8 @@ import { UserType } from "@/models/User";
 import { PopulatedMessageType } from "@/models/Message";
 import cn from "@/utils/utils";
 import { formatDistance } from "date-fns";
+import { useSocket } from "@/providers/socket-provider";
+import { useRouter } from "next/navigation";
 
 type ChatContentProps = {
   selectedUser: UserType | null;
@@ -21,6 +23,24 @@ export default function ChatContent({
   messages,
 }: ChatContentProps) {
   const { data: session } = useSession();
+  const { socket } = useSocket();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!socket || !session) {
+      return;
+    }
+    console.log(`${session.user.id}:messages`);
+    socket.on(`${session.user.id}:messages`, (message: any) => {
+      console.log({ receivedMessage: message });
+      messages.push(message);
+      router.refresh();
+    });
+
+    return () => {
+      socket.off(`${session.user.id}:messages`);
+    };
+  }, []);
 
   if (!session) {
     return null;
@@ -29,7 +49,6 @@ export default function ChatContent({
   if (!selectedUser) {
     return <ChatContentEmpty />;
   }
-
   return (
     <>
       <div className="border-b border-[#dbdbdb] p-3 w-full ">

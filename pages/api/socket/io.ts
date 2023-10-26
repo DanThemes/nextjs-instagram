@@ -3,7 +3,7 @@ import { Server as HTTPServer } from "http";
 import { Server as NetServer, Socket as NetSocket } from "net";
 import { Server as SocketIOServer } from "socket.io";
 
-type NextApiResponseServerIo = NextApiResponse & {
+export type NextApiResponseServerIo = NextApiResponse & {
   socket: NetSocket & {
     server: NetServer & {
       io: SocketIOServer;

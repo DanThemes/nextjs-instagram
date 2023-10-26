@@ -23,15 +23,17 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     const socketInstance = new (io as any)(process.env.NEXTAUTH_URL, {
-      path: "/api/socket",
+      path: "/api/socket/io",
       addTrailingSlash: false,
     });
 
     socketInstance.on("connect", () => {
+      console.log("connected");
       setIsConnected(true);
     });
 
     socketInstance.on("disconnect", () => {
+      console.log("disconnected");
       setIsConnected(false);
     });
 

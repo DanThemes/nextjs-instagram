@@ -16,7 +16,7 @@ export default function ChatForm({ session }: ChatFormProps) {
   const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false);
   const router = useRouter();
 
-  const { userId } = useParams();
+  const params = useParams();
 
   const { register, handleSubmit, setValue, setFocus, getValues, reset } =
     useForm({
@@ -25,14 +25,14 @@ export default function ChatForm({ session }: ChatFormProps) {
       },
     });
 
-  if (!userId) {
+  if (!params?.userId) {
     return null;
   }
 
   const submitMessage = async (data: FieldValues) => {
     await addChatMessage({
       fromUserId: session.user.id,
-      toUserId: userId as string,
+      toUserId: params.userId as string,
       text: data.text,
       seen: false,
     });

@@ -24,7 +24,9 @@ export default async function MessagesLayout({
         <div className="w-[24rem] border-r border-[#DBDBDB] h-[100dvh]overflow-y-scroll no-scrollbar">
           <ChatSidebar users={users} />
         </div>
-        <div className="h-[100dvh] w-full flex flex-col">{children}</div>
+        <div className="h-[100dvh] w-full flex flex-col overflow-y-scroll no-scrollbar">
+          {children}
+        </div>
       </div>
     </SocketProvider>
   );

@@ -34,14 +34,22 @@ export async function GET(
       })
       .sort({ createdAt: 1 });
 
-    // TODO: below code needs to be fixed
     const users = messages.map((message) => {
       if (message.fromUserId._id.toString() === params.userId) {
         return message.toUserId;
       }
       return message.fromUserId;
     });
+
     const uniqueUsers = Array.from(new Set(users));
+
+    // const uniqueUsersIds: string[] = [];
+    // const uniqueUsers = users.map((user) => {
+    //   if (!uniqueUsersIds.includes(user._id.toString())) {
+    //     uniqueUsersIds.push(user._id.toString());
+    //     return user;
+    //   }
+    // });
 
     return NextResponse.json({ users: uniqueUsers, messages }, { status: 200 });
   } catch (error) {

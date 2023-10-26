@@ -17,7 +17,7 @@ export default function ChatSidebar({ users }: ChatSidebarProps) {
   const router = useRouter();
   const { isConnected } = useSocket();
 
-  const { userId } = useParams();
+  const params = useParams();
 
   if (!session) {
     return null;
@@ -25,14 +25,14 @@ export default function ChatSidebar({ users }: ChatSidebarProps) {
 
   return (
     <>
-      <p>Selected user: {userId}</p>
+      <p>Selected user: {params?.userId}</p>
       <p>Is connected: {isConnected}</p>
       {users.map((user) => (
         <div
           key={user._id.toString()}
           className={cn(
             "flex gap-3 p-3 items-center cursor-pointer hover:bg-[#eee]",
-            userId === user._id.toString() && "bg-slate-200"
+            params?.userId === user._id.toString() && "bg-slate-200"
           )}
           onClick={() => router.push(`/messages/${user._id.toString()}`)}
         >

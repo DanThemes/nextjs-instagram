@@ -554,7 +554,7 @@ export async function addChatMessage({
 
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/messages`,
+      `${process.env.NEXT_PUBLIC_API_URL}/socket/messages`,
       {
         method: "POST",
         headers: {
@@ -564,7 +564,6 @@ export async function addChatMessage({
       }
     );
     const data = await response.json();
-    console.log(data);
     return data;
   } catch (error) {
     console.log("addChatMessage() api.ts", error);
@@ -591,7 +590,6 @@ export async function getChatInfo(userId: string) {
       }
     );
     const data = await response.json();
-    console.log({ data2: data });
     return data;
   } catch (error) {
     console.log("getChatInfo() api.ts", error);
