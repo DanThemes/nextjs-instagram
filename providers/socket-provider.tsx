@@ -25,7 +25,7 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
     const socketInstance = new (io as any)(process.env.NEXTAUTH_URL, {
       path: "/api/socket/io",
       addTrailingSlash: false,
-      forceNew: true,
+      "force new connection": true,
     });
 
     socketInstance.on("connect", () => {

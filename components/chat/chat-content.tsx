@@ -34,7 +34,8 @@ export default function ChatContent({
     const receiveMessage = (message: any) => {
       console.log({ receivedMessage: message });
       // messages.push(message);
-      // router.refresh();
+      // TODO: trigger here a scroll to the chat content's bottom edge
+      router.refresh();
     };
 
     socket.on(`${session.user.id}:messages`, receiveMessage);

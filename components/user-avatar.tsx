@@ -30,7 +30,7 @@ export default function UserAvatar({
         className
       )}
       onClick={() => onClick && onClick()}
-      priority
+      // priority
     />
   );
 }
