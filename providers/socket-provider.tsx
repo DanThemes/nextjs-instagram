@@ -39,8 +39,7 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
     });
 
     socketInstance.on("connect_error", () => {
-      // revert to classic upgrade
-      socketInstance.io.opts.transports = ["polling", "websocket"];
+      console.log("connect error");
     });
 
     setSocket(socketInstance);
