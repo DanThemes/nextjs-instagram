@@ -29,7 +29,7 @@ export default async function handler(
     await message.save();
 
     // Emit to all connected sockets
-    res?.socket?.server?.io?.emit(`${toUserId}:messages`, message);
+    res.socket.server.io.emit(`${toUserId}:messages`, message);
     console.log(`${toUserId}:messages`, message);
 
     return res.status(200).json(message);

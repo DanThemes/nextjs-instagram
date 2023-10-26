@@ -41,15 +41,16 @@ export async function GET(
       return message.fromUserId;
     });
 
-    const uniqueUsers = Array.from(new Set(users));
-
-    // const uniqueUsersIds: string[] = [];
-    // const uniqueUsers = users.map((user) => {
-    //   if (!uniqueUsersIds.includes(user._id.toString())) {
-    //     uniqueUsersIds.push(user._id.toString());
-    //     return user;
-    //   }
-    // });
+    // Remove duplicates
+    const uniqueUsersIds: string[] = [];
+    const uniqueUsers = users.filter((user) => {
+      if (!uniqueUsersIds.includes(user._id.toString())) {
+        uniqueUsersIds.push(user._id.toString());
+        return true;
+      }
+      return false;
+    });
+    // console.log({ uniqueUsersIds, uniqueUsers });
 
     return NextResponse.json({ users: uniqueUsers, messages }, { status: 200 });
   } catch (error) {

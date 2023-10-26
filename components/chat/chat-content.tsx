@@ -30,17 +30,20 @@ export default function ChatContent({
     if (!socket || !session) {
       return;
     }
-    console.log(`${session.user.id}:messages`);
-    socket.on(`${session.user.id}:messages`, (message: any) => {
+
+    const receiveMessage = (message: any) => {
       console.log({ receivedMessage: message });
-      messages.push(message);
-      router.refresh();
-    });
+      // messages.push(message);
+      // router.refresh();
+    };
+
+    socket.on(`${session.user.id}:messages`, receiveMessage);
 
     return () => {
-      socket.off(`${session.user.id}:messages`);
+      socket.off(`${session.user.id}:messages`, receiveMessage);
     };
-  }, []);
+    // eslint-disable-next-line
+  }, [socket, session, router]);
 
   if (!session) {
     return null;
