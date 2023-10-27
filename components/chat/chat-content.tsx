@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import UserAvatar from "../user-avatar";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
@@ -26,6 +26,8 @@ export default function ChatContent({
   const { socket } = useSocket();
   const router = useRouter();
 
+  const chatBottomRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     if (!socket || !session) {
       return;
@@ -33,18 +35,30 @@ export default function ChatContent({
 
     const receiveMessage = (message: any) => {
       console.log({ receivedMessage: message });
-      // messages.push(message);
-      // TODO: trigger here a scroll to the chat content's bottom edge
       router.refresh();
     };
+    socket.on("connect", () => {
+      console.log({ socket: socket, socketId: socket.id });
+      socket.on(`${session.user.id}:messages`, receiveMessage);
+    });
 
-    socket.on(`${session.user.id}:messages`, receiveMessage);
+    socket.on("connect_error", (err: any) => {
+      console.log(`connect_error due to ${err.message}`);
+    });
 
     return () => {
       socket.off(`${session.user.id}:messages`, receiveMessage);
     };
     // eslint-disable-next-line
   }, [socket, session, router]);
+
+  useEffect(() => {
+    if (chatBottomRef.current) {
+      // window.scrollTo(0, chatBottomRef.current.offsetTop);
+      chatBottomRef.current.scrollIntoView({ behavior: "smooth" });
+      // console.log("offset", chatBottomRef.current.offsetTop);
+    }
+  }, [messages]);
 
   if (!session) {
     return null;
@@ -124,6 +138,7 @@ export default function ChatContent({
           <div className="mt-6">
             <ChatForm session={session} />
           </div>
+          <div ref={chatBottomRef} />
         </div>
       </div>
     </>

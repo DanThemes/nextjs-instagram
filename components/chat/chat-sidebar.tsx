@@ -26,7 +26,7 @@ export default function ChatSidebar({ users }: ChatSidebarProps) {
   return (
     <>
       <p>Selected user: {params?.userId}</p>
-      <p>Is connected: {isConnected}</p>
+      <p>Is connected: {isConnected ? "connected" : "disconnected"}</p>
       {users.map((user) => (
         <div
           key={user._id.toString()}
