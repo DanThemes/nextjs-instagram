@@ -1,6 +1,6 @@
 import { NextApiRequest } from "next";
 import { NextApiResponseServerIo } from "./io";
-import Message, { MessageType } from "@/models/Message";
+import Message from "@/models/Message";
 
 export default async function handler(
   req: NextApiRequest,
@@ -26,7 +26,12 @@ export default async function handler(
       seen,
     });
 
-    await message.save();
+    await message.save().then((m: any) =>
+      m.populate([
+        { path: "fromUserId", select: "-password" },
+        { path: "toUserId", select: "-password" },
+      ])
+    );
 
     res?.socket?.server?.io?.emit(`${toUserId}:messages`, message);
     console.log(`${toUserId}:messages`, message);

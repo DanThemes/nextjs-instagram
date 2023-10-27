@@ -1,12 +1,12 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { Server as HTTPServer } from "http";
 import { Server as NetServer, Socket as NetSocket } from "net";
-import { Server as SocketIOServer } from "socket.io";
+import { Server as ServerIO } from "socket.io";
 
 export type NextApiResponseServerIo = NextApiResponse & {
   socket: NetSocket & {
     server: NetServer & {
-      io: SocketIOServer;
+      io: ServerIO;
     };
   };
 };
@@ -21,15 +21,11 @@ const ioHandler = (req: NextApiRequest, res: NextApiResponseServerIo) => {
   if (!res.socket.server.io) {
     const path = "/api/socket/io";
     const httpServer: HTTPServer = res.socket.server as any;
-    const io = new SocketIOServer(httpServer, {
+    const io = new ServerIO(httpServer, {
       path,
       addTrailingSlash: false,
     });
     res.socket.server.io = io;
-
-    io.on("connection", (socket) => {
-      console.log({ socketId: socket.id });
-    });
   }
 
   res.end();

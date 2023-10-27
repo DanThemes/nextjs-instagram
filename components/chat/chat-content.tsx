@@ -22,7 +22,7 @@ export default function ChatContent({
   selectedUser,
   messages,
 }: ChatContentProps) {
-  // const [updatedMessage, setUpdatedMessages] = useState(messages);
+  // const [updatedMessages, setUpdatedMessages] = useState(messages);
   const { data: session } = useSession();
   const { socket } = useSocket();
   const router = useRouter();
@@ -37,11 +37,14 @@ export default function ChatContent({
     const receiveMessage = (message: any) => {
       console.log({ receivedMessage: message });
       console.log({ socket: socket, socketId: socket.id });
-      // router.refresh();
+      router.refresh();
       // setUpdatedMessages((prev) => [...prev, message]);
     };
 
-    console.log({ socket: socket, socketId: socket.id });
+    socket.on("connect", () => {
+      console.log({ socket: socket, socketId: socket.id });
+    });
+
     socket.on(`${session.user.id}:messages`, receiveMessage);
 
     socket.on("connect_error", (err: any) => {
@@ -57,10 +60,11 @@ export default function ChatContent({
   useEffect(() => {
     if (chatBottomRef.current) {
       // window.scrollTo(0, chatBottomRef.current.offsetTop);
+      // router.refresh();
       chatBottomRef.current.scrollIntoView({ behavior: "smooth" });
       // console.log("offset", chatBottomRef.current.offsetTop);
     }
-  }, [messages]);
+  }, [messages, router]);
 
   if (!session) {
     return null;
