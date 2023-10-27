@@ -1,6 +1,6 @@
 import { NextApiRequest } from "next";
 import { NextApiResponseServerIo } from "./io";
-import Message from "@/models/Message";
+import Message, { MessageType } from "@/models/Message";
 
 export default async function handler(
   req: NextApiRequest,
@@ -28,7 +28,6 @@ export default async function handler(
 
     await message.save();
 
-    // Emit to all connected sockets
     res?.socket?.server?.io?.emit(`${toUserId}:messages`, message);
     console.log(`${toUserId}:messages`, message);
 

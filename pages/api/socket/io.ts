@@ -26,6 +26,10 @@ const ioHandler = (req: NextApiRequest, res: NextApiResponseServerIo) => {
       addTrailingSlash: false,
     });
     res.socket.server.io = io;
+
+    io.on("connection", (socket) => {
+      console.log({ socketId: socket.id });
+    });
   }
 
   res.end();

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import UserAvatar from "../user-avatar";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
@@ -22,6 +22,7 @@ export default function ChatContent({
   selectedUser,
   messages,
 }: ChatContentProps) {
+  // const [updatedMessage, setUpdatedMessages] = useState(messages);
   const { data: session } = useSession();
   const { socket } = useSocket();
   const router = useRouter();
@@ -36,15 +37,11 @@ export default function ChatContent({
     const receiveMessage = (message: any) => {
       console.log({ receivedMessage: message });
       console.log({ socket: socket, socketId: socket.id });
-      router.refresh();
+      // router.refresh();
+      // setUpdatedMessages((prev) => [...prev, message]);
     };
 
-    // Apparently, this is bad:
-    // socket.on("connect", () => {
-    //   console.log({ socket: socket, socketId: socket.id });
-    //   socket.on(`${session.user.id}:messages`, receiveMessage);
-    // });
-
+    console.log({ socket: socket, socketId: socket.id });
     socket.on(`${session.user.id}:messages`, receiveMessage);
 
     socket.on("connect_error", (err: any) => {
