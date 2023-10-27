@@ -30,6 +30,8 @@ export default function ChatForm({ session }: ChatFormProps) {
   }
 
   const submitMessage = async (data: FieldValues) => {
+    if (!data.text) return;
+
     await addChatMessage({
       fromUserId: session.user.id,
       toUserId: params.userId as string,

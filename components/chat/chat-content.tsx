@@ -35,12 +35,17 @@ export default function ChatContent({
 
     const receiveMessage = (message: any) => {
       console.log({ receivedMessage: message });
+      console.log({ socket: socket, socketId: socket.id });
       router.refresh();
     };
-    socket.on("connect", () => {
-      console.log({ socket: socket, socketId: socket.id });
-      socket.on(`${session.user.id}:messages`, receiveMessage);
-    });
+
+    // Apparently, this is bad:
+    // socket.on("connect", () => {
+    //   console.log({ socket: socket, socketId: socket.id });
+    //   socket.on(`${session.user.id}:messages`, receiveMessage);
+    // });
+
+    socket.on(`${session.user.id}:messages`, receiveMessage);
 
     socket.on("connect_error", (err: any) => {
       console.log(`connect_error due to ${err.message}`);
