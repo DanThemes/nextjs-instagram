@@ -33,7 +33,7 @@ export default async function handler(
       ])
     );
 
-    res?.socket?.server?.io?.emit(`${toUserId}:messages`, message);
+    res.socket.server.io.emit(`${toUserId}:messages`, message);
     console.log(`${toUserId}:messages`, message);
 
     return res.status(200).json(message);

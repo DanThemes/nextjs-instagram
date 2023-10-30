@@ -22,7 +22,7 @@ export default function ChatContent({
   selectedUser,
   messages,
 }: ChatContentProps) {
-  // const [updatedMessages, setUpdatedMessages] = useState(messages);
+  const [updatedMessages, setUpdatedMessages] = useState(messages);
   const { data: session } = useSession();
   const { socket } = useSocket();
   const router = useRouter();
@@ -37,8 +37,8 @@ export default function ChatContent({
     const receiveMessage = (message: any) => {
       console.log({ receivedMessage: message });
       console.log({ socket: socket, socketId: socket.id });
+      setUpdatedMessages((prev) => [...prev, message]);
       router.refresh();
-      // setUpdatedMessages((prev) => [...prev, message]);
     };
 
     socket.on("connect", () => {
@@ -52,9 +52,10 @@ export default function ChatContent({
     });
 
     return () => {
-      socket.off(`${session.user.id}:messages`, receiveMessage);
+      if (socket.connected) {
+        socket.off(`${session.user.id}:messages`, receiveMessage);
+      }
     };
-    // eslint-disable-next-line
   }, [socket, session, router]);
 
   useEffect(() => {
@@ -64,7 +65,7 @@ export default function ChatContent({
       chatBottomRef.current.scrollIntoView({ behavior: "smooth" });
       // console.log("offset", chatBottomRef.current.offsetTop);
     }
-  }, [messages, router]);
+  }, [updatedMessages, router]);
 
   if (!session) {
     return null;
@@ -106,8 +107,8 @@ export default function ChatContent({
         </div>
 
         {/* Messages */}
-        <div className="mt-12 flex flex-col gap-3 overflow-x-scroll no-scrollbar p-6">
-          {messages.map((message) => (
+        <div className="mt-12 flex flex-col gap-3 p-6">
+          {updatedMessages.map((message) => (
             <div key={message._id.toString()} className="flex flex-col gap-3">
               <span className="text-sm text-center text-slate-400">
                 {formatDistance(new Date(message.createdAt), new Date())}

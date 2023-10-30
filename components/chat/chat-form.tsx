@@ -84,7 +84,7 @@ export default function ChatForm({ session }: ChatFormProps) {
         )}
       </div>
 
-      <form onSubmit={handleSubmit(submitMessage)}>
+      <form onSubmit={handleSubmit(submitMessage)} className="flex-grow">
         <input
           type="text"
           {...register("text")}

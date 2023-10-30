@@ -36,7 +36,7 @@ export default async function RootLayout({
           <div className="flex min-h-full">
             {session && (
               <aside className="bg-white basis-[50px] min-w-[50px] w-[50px] lg:basis:[175px] lg:min-w-[175px] lg:w-[175px] flex-grow-0 border-r border-solid border-r-1 border-[#DBDBDB] relative z-[9]">
-                <div className="fixed h-full flex-[50px] min-w-[50px] w-[50px] lg:flex-[175px] lg:min-w-[175px] lg:w-[175px] no-scrollbar overflow-x-visible max-h-full">
+                <div className="fixed h-full flex-[50px] min-w-[50px] w-[50px] lg:flex-[175px] lg:min-w-[175px] lg:w-[175px] scrollbar overflow-x-visible max-h-full">
                   <Sidebar />
                 </div>
               </aside>

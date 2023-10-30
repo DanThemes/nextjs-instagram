@@ -34,7 +34,7 @@ export default function UsersModal() {
       toggle={usersModal.toggle}
       title={usersModal.title}
     >
-      <ul className="flex flex-col gap-3 max-h-[35dvh] overflow-y-scroll no-scrollbar">
+      <ul className="flex flex-col gap-3 max-h-[35dvh] overflow-y-scroll scrollbar">
         {(usersModal.users as (UserType & { _id: string })[]).map((user) => (
           <li
             key={user._id}
