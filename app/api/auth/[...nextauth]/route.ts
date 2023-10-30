@@ -48,7 +48,7 @@ export const authOptions: AuthOptions = {
   callbacks: {
     async jwt({ token, user, session, trigger }) {
       if (user) {
-        token.id = user.id;
+        token.id = user.id.toString();
         token.username = user.username;
         token.profileImage = user.profileImage;
       }
@@ -60,7 +60,7 @@ export const authOptions: AuthOptions = {
     },
     async session({ session, token, user }) {
       // console.log("callback session", { session, token, user });
-      session.user.id = token.id as Types.ObjectId;
+      session.user.id = token.id as string;
       session.user.username = token.username as string;
       session.user.profileImage = token.profileImage as string;
       return session;

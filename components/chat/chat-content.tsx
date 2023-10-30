@@ -29,33 +29,21 @@ export default function ChatContent({
 
   const chatBottomRef = useRef<HTMLDivElement>(null);
 
-  // console.log({ lastMessage: messages[messages.length - 1].text });
+  console.log({ lastMessage: messages[messages.length - 1].text });
 
   useEffect(() => {
     if (!socket || !session) {
+      console.log({ socket, session });
       return;
     }
-    // if (!socket.connected) {
-    // }
-    // no-op if the socket is already connected
-    // socket.connect();
 
     const receiveMessage = (message: any) => {
       console.log({ receivedMessage: message });
-      console.log({ socket: socket, socketId: socket.id });
+      router.refresh();
       setUpdatedMessages((prev) => [...prev, message]);
-      // router.refresh();
     };
 
-    socket.on("connect", () => {
-      console.log({ socket: socket, socketId: socket.id });
-    });
-
     socket.on(`${session.user.id}:messages`, receiveMessage);
-
-    socket.on("connect_error", (err: any) => {
-      console.log(`connect_error due to ${err.message}`);
-    });
 
     return () => {
       if (socket.connected) {
@@ -69,7 +57,7 @@ export default function ChatContent({
       // router.refresh();
       chatBottomRef.current.scrollIntoView({ behavior: "smooth" });
     }
-  }, [updatedMessages, router]);
+  }, [updatedMessages]);
 
   if (!session) {
     return null;

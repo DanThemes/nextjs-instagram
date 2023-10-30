@@ -1,7 +1,7 @@
 "use client";
 
 import { useSession } from "next-auth/react";
-import React from "react";
+import React, { useEffect } from "react";
 import UserAvatar from "../user-avatar";
 import { UserType } from "@/models/User";
 import cn from "@/utils/utils";
@@ -15,9 +15,22 @@ type ChatSidebarProps = {
 export default function ChatSidebar({ users }: ChatSidebarProps) {
   const { data: session } = useSession();
   const router = useRouter();
-  const { isConnected } = useSocket();
+  const { socket, isConnected } = useSocket();
 
   const params = useParams();
+
+  useEffect(() => {
+    if (!socket || !session) {
+      return;
+    }
+
+    const receiveMessage = (message: any) => {
+      console.log(message);
+      router.refresh();
+    };
+
+    socket.on(`${session.user.id}:messages`, receiveMessage);
+  }, [socket, session, router]);
 
   if (!session) {
     return null;

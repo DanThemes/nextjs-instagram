@@ -22,7 +22,7 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
   const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
-    const socketInstance = new (io as any)(process.env.NEXTAUTH_URL, {
+    const socketInstance = (io as any)(process.env.NEXTAUTH_URL, {
       path: "/api/socket/io",
       addTrailingSlash: false,
       forceNew: true,
@@ -30,6 +30,7 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
 
     socketInstance.on("connect", () => {
       console.log("connected");
+      console.log({ socketId: socketInstance.id });
       setIsConnected(true);
     });
 
