@@ -19,18 +19,23 @@ export default function ChatSidebar({ users }: ChatSidebarProps) {
 
   const params = useParams();
 
-  useEffect(() => {
-    if (!socket || !session) {
-      return;
-    }
+  // useEffect(() => {
+  //   if (!socket || !session) {
+  //     return;
+  //   }
 
-    const receiveMessage = (message: any) => {
-      console.log(message);
-      router.refresh();
-    };
+  //   const receiveMessage = (message: any) => {
+  //     console.log(message);
 
-    socket.on(`${session.user.id}:messages`, receiveMessage);
-  }, [socket, session, router]);
+  //     // if the new message is from user whose conversation is
+  //     // currently displayed on the screen
+  //     if (params && message.fromUserId._id.toString() === params.userId) {
+  //       router.refresh();
+  //     }
+  //   };
+
+  //   socket.on(`${session.user.id}:messages`, receiveMessage);
+  // }, [socket, session, router, params]);
 
   if (!session) {
     return null;

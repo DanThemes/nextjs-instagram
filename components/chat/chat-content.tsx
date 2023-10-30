@@ -11,7 +11,7 @@ import { PopulatedMessageType } from "@/models/Message";
 import cn from "@/utils/utils";
 import { formatDistance } from "date-fns";
 import { useSocket } from "@/providers/socket-provider";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
 type ChatContentProps = {
   selectedUser: UserType | null;
@@ -22,10 +22,11 @@ export default function ChatContent({
   selectedUser,
   messages,
 }: ChatContentProps) {
-  const [updatedMessages, setUpdatedMessages] = useState(messages);
+  // const [updatedMessages, setUpdatedMessages] = useState(messages);
   const { data: session } = useSession();
   const { socket } = useSocket();
   const router = useRouter();
+  const params = useParams();
 
   const chatBottomRef = useRef<HTMLDivElement>(null);
 
@@ -37,27 +38,37 @@ export default function ChatContent({
       return;
     }
 
-    const receiveMessage = (message: any) => {
+    function receiveMessage(message: any) {
       console.log({ receivedMessage: message });
-      router.refresh();
-      setUpdatedMessages((prev) => [...prev, message]);
-    };
 
+      // if the new message is from user whose conversation is
+      // currently displayed on the screen
+      if (params && message.fromUserId._id.toString() === params.userId) {
+        // setUpdatedMessages((prev) => [...prev, message]);
+        router.refresh();
+      } else {
+        console.log("new message conversation not opened yet");
+      }
+    }
+    console.log("socket ON");
     socket.on(`${session.user.id}:messages`, receiveMessage);
 
+    // The clean-up function closes the connection even though
+    // the component is still visible
     return () => {
-      if (socket.connected) {
-        socket.off(`${session.user.id}:messages`, receiveMessage);
-      }
+      // if (socket.connected) {
+      console.log("socket OFF");
+      // socket.off(`${session.user.id}:messages`, receiveMessage);
+      // }
     };
-  }, [socket, session, router]);
+  }, [socket, session, params, router]);
 
   useEffect(() => {
     if (chatBottomRef.current) {
       // router.refresh();
       chatBottomRef.current.scrollIntoView({ behavior: "smooth" });
     }
-  }, [updatedMessages]);
+  }, [messages]);
 
   if (!session) {
     return null;
@@ -100,7 +111,7 @@ export default function ChatContent({
 
         {/* Messages */}
         <div className="mt-12 flex flex-col gap-3 p-6">
-          {updatedMessages.map((message) => (
+          {messages.map((message) => (
             <div key={message._id.toString()} className="flex flex-col gap-3">
               <span className="text-sm text-center text-slate-400">
                 {formatDistance(new Date(message.createdAt), new Date())}

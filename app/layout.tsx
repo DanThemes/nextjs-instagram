@@ -14,6 +14,7 @@ import Login from "@/components/not-logged-in";
 import PostModal from "@/components/modals/post-modal";
 import EditPostModal from "@/components/modals/edit-post-modal";
 import EditProfileModal from "@/components/modals/edit-profile-modal";
+import { SocketProvider } from "@/providers/socket-provider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -32,25 +33,27 @@ export default async function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <AuthSessionProvider>
-          {!session && <TopBar />}
-          <div className="flex min-h-full">
-            {session && (
-              <aside className="bg-white basis-[50px] min-w-[50px] w-[50px] lg:basis:[175px] lg:min-w-[175px] lg:w-[175px] flex-grow-0 border-r border-solid border-r-1 border-[#DBDBDB] relative z-[9]">
-                <div className="fixed h-full flex-[50px] min-w-[50px] w-[50px] lg:flex-[175px] lg:min-w-[175px] lg:w-[175px] scrollbar overflow-x-visible max-h-full">
-                  <Sidebar />
-                </div>
-              </aside>
-            )}
-            <main className="px-10 py-10 w-[70rem] mx-auto">{children}</main>
-            <div className="z-[999] relative">
-              <AuthModal />
-              <UsersModal />
-              <UploadAvatarModal />
-              <PostModal />
-              <EditPostModal />
-              <EditProfileModal />
+          <SocketProvider>
+            {!session && <TopBar />}
+            <div className="flex min-h-full">
+              {session && (
+                <aside className="bg-white basis-[50px] min-w-[50px] w-[50px] lg:basis:[175px] lg:min-w-[175px] lg:w-[175px] flex-grow-0 border-r border-solid border-r-1 border-[#DBDBDB] relative z-[9]">
+                  <div className="fixed h-full flex-[50px] min-w-[50px] w-[50px] lg:flex-[175px] lg:min-w-[175px] lg:w-[175px] scrollbar overflow-x-visible max-h-full">
+                    <Sidebar />
+                  </div>
+                </aside>
+              )}
+              <main className="px-10 py-10 w-[70rem] mx-auto">{children}</main>
+              <div className="z-[999] relative">
+                <AuthModal />
+                <UsersModal />
+                <UploadAvatarModal />
+                <PostModal />
+                <EditPostModal />
+                <EditProfileModal />
+              </div>
             </div>
-          </div>
+          </SocketProvider>
         </AuthSessionProvider>
       </body>
     </html>
