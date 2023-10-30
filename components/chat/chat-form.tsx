@@ -40,9 +40,7 @@ export default function ChatForm({ session }: ChatFormProps) {
       seen: false,
     });
     reset();
-    console.log("1");
     router.refresh();
-    console.log("2");
   };
 
   const handleOpenEmojiPicker = () => {
