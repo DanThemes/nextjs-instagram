@@ -58,10 +58,11 @@ export default function ChatContent({
     return () => {
       // if (socket.connected) {
       console.log("socket OFF");
-      // socket.off(`${session.user.id}:messages`, receiveMessage);
+      socket.off(`${session.user.id}:messages`, receiveMessage);
       // }
     };
-  }, [socket, session, params, router]);
+    // @ts-ignore
+  }, []);
 
   useEffect(() => {
     if (chatBottomRef.current) {
