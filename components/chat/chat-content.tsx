@@ -22,7 +22,7 @@ export default function ChatContent({
   selectedUser,
   messages,
 }: ChatContentProps) {
-  const [updatedMessages, setUpdatedMessages] = useState(messages);
+  // const [updatedMessages, setUpdatedMessages] = useState(messages);
   const { data: session } = useSession();
   const { socket } = useSocket();
   const router = useRouter();
@@ -38,21 +38,14 @@ export default function ChatContent({
       return;
     }
 
-    if (!socket.connected) {
-      socket.connect();
-    }
-
     function receiveMessage(message: any) {
       console.log({ receivedMessage: message });
 
       // if the new message is from user whose conversation is
       // currently displayed on the screen
-      if (
-        (params && message.fromUserId._id.toString() === params.userId) ||
-        message.fromUserId._id.toString() === session?.user.id
-      ) {
-        setUpdatedMessages((prev) => [...prev, message]);
-        // router.refresh();
+      if (params && message.fromUserId._id.toString() === params.userId) {
+        // setUpdatedMessages((prev) => [...prev, message]);
+        router.refresh();
       } else {
         console.log("new message conversation not opened yet");
       }
@@ -63,20 +56,20 @@ export default function ChatContent({
     // The clean-up function closes the connection even though
     // the component is still visible
     return () => {
-      if (socket.connected) {
-        console.log("socket OFF");
-        socket.off(`${session.user.id}:messages`, receiveMessage);
-      }
+      // if (socket.connected) {
+      console.log("socket OFF");
+      // socket.off(`${session.user.id}:messages`, receiveMessage);
+      // }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [socket, session, params, router]);
 
   useEffect(() => {
     if (chatBottomRef.current) {
       // router.refresh();
       chatBottomRef.current.scrollIntoView({ behavior: "smooth" });
     }
-  }, [updatedMessages]);
+  }, [messages]);
 
   if (!session) {
     return null;
@@ -119,7 +112,7 @@ export default function ChatContent({
 
         {/* Messages */}
         <div className="mt-12 flex flex-col gap-3 p-6">
-          {updatedMessages.map((message) => (
+          {messages.map((message) => (
             <div key={message._id.toString()} className="flex flex-col gap-3">
               <span className="text-sm text-center text-slate-400">
                 {formatDistance(new Date(message.createdAt), new Date())}

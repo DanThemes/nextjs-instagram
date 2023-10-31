@@ -33,17 +33,21 @@ export default async function handler(
       ])
     );
 
-    // if (!res?.socket?.server) {
-    //   return res.status(500).json({ messsage: "Something went wrong" });
-    // }
+    if (!res?.socket?.server?.io) {
+      return res.status(500).json({ messsage: "SSSomething went wrong" });
+    }
 
-    // res?.socket?.server?.io?.on("connection", (socket) => {
-    res?.socket?.server?.io?.emit(`${toUserId}:messages`, message);
-    res?.socket?.server?.io?.emit(`${fromUserId}:messages`, message);
+    // res.socket.server.io.on("connection", (socket) => {
+    //   socket.emit(`${toUserId}:messages`, message);
+    //   socket.emit(`${fromUserId}:messages`, message);
+    //   console.log(`${toUserId}:messages`);
+    //   console.log(`${fromUserId}:messages`);
     // });
 
+    res.socket.server.io.emit(`${toUserId}:messages`, message);
+    // res?.socket?.server?.io?.emit(`${fromUserId}:messages`, message);
     console.log(`${toUserId}:messages`);
-    console.log(`${fromUserId}:messages`);
+    // console.log(`${fromUserId}:messages`);
 
     return res.status(200).json(message);
   } catch (error) {

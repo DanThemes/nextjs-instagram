@@ -20,14 +20,14 @@ export default async function MessagesLayout({
 
   return (
     // <SocketProvider>
-      <div className="-m-10 flex">
-        <div className="w-[24rem] border-r border-[#DBDBDB] h-[100dvh] overflow-y-scroll scrollbar">
-          <ChatSidebar users={users} />
-        </div>
-        <div className="h-[100dvh] w-full flex flex-col overflow-y-scroll scrollbar">
-          {children}
-        </div>
+    <div className="-m-10 flex">
+      <div className="w-[24rem] border-r border-[#DBDBDB] h-[100dvh] overflow-y-scroll scrollbar">
+        <ChatSidebar users={users} />
       </div>
+      <div className="h-[100dvh] w-full flex flex-col overflow-y-scroll scrollbar">
+        {children}
+      </div>
+    </div>
     // </SocketProvider>
   );
 }
