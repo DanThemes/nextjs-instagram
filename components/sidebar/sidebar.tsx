@@ -19,8 +19,20 @@ import { usePathname, useRouter } from "next/navigation";
 import { BiLogoInstagram } from "react-icons/bi";
 import cn from "@/utils/utils";
 import SidebarSearch from "./sidebar-search";
+import { useSocket } from "@/providers/socket-provider";
+import { IconType } from "react-icons/lib/esm/iconBase";
 
-const items = [
+export type SidebarItemsType = {
+  icon?: IconType;
+  name: string;
+  link: string;
+  requiresAuth: boolean;
+  modal?: () => React.JSX.Element | null;
+  user?: any;
+  notification?: boolean;
+};
+
+const items: SidebarItemsType[] = [
   {
     icon: GoHome,
     name: "Home",
@@ -74,6 +86,7 @@ const items = [
 const Sidebar = () => {
   const { data: session, status } = useSession();
   const [searchOpen, setSearchOpen] = useState(false);
+  const { socket, notifications, setNotifications } = useSocket();
   const router = useRouter();
   const pathname = usePathname();
 
@@ -94,6 +107,35 @@ const Sidebar = () => {
   useEffect(() => {
     setSearchOpen(false);
   }, [pathname]);
+
+  useEffect(() => {
+    if (!socket || !session) {
+      console.log({ socket, session });
+      return;
+    }
+
+    const receiveMessage = (message: any) => {
+      console.log("ping");
+      if (!notifications.length) {
+        setNotifications((prev) => {
+          console.log({ notifications: prev });
+          return !prev.includes(message.fromUserId._id.toString())
+            ? [...prev, message.fromUserId._id.toString()]
+            : prev;
+        });
+      }
+    };
+
+    console.log("socket ON");
+    socket.on(`${session.user.id}:messages`, receiveMessage);
+
+    return () => {
+      if (socket) {
+        console.log("socket OFF");
+        socket.off(`${session.user.id}:messages`, receiveMessage);
+      }
+    };
+  }, [socket, session, notifications, setNotifications]);
 
   if (status !== "authenticated") {
     return null;
@@ -123,6 +165,9 @@ const Sidebar = () => {
           .map((item) => {
             if (session && item.name === "Profile") {
               item.link = "/" + session?.user.username;
+            }
+            if (session && item.name === "Notifications") {
+              item.notification = !!notifications.length;
             }
             if (item.name === "Search") {
               return (

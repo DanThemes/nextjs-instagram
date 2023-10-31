@@ -7,14 +7,7 @@ import { IconType } from "react-icons/lib/esm/iconBase";
 import cn from "@/utils/utils";
 import useNewPostModal from "@/hooks/useNewPostModal";
 import UserAvatar from "../user-avatar";
-
-type SidebarItemProps = {
-  icon?: IconType;
-  name: string;
-  link: string;
-  modal?: () => JSX.Element | null;
-  user?: any;
-};
+import { SidebarItemsType } from "./sidebar";
 
 const SidebarItem = ({
   icon: Icon,
@@ -22,7 +15,8 @@ const SidebarItem = ({
   link,
   modal: Modal,
   user,
-}: SidebarItemProps) => {
+  notification,
+}: SidebarItemsType) => {
   const pathname = usePathname();
   const newPostModal = useNewPostModal();
 
@@ -35,7 +29,7 @@ const SidebarItem = ({
           )}
           onClick={() => Modal && newPostModal.toggle()}
         >
-          <span className="mr-0 lg:mr-3">
+          <span className="mr-0 lg:mr-3 relative">
             {name === "Profile" && user && user.profileImage ? (
               <div className="w-[1.5rem] h-[1.5rem] rounded-full bg-cover relative group-hover:scale-105 group-active:scale-95 transition">
                 <UserAvatar
@@ -47,6 +41,22 @@ const SidebarItem = ({
                   }
                 />
               </div>
+            ) : name === "Notifications" ? (
+              Icon && (
+                <>
+                  <Icon
+                    size="1.5rem"
+                    className={cn(
+                      "group-hover:scale-105 group-active:scale-95 transition"
+                    )}
+                  />
+                  {notification ? (
+                    <span className="w-3 h-3 rounded-full bg-red-600 border-solid border-2 border-white block absolute top-0 right-0" />
+                  ) : (
+                    ""
+                  )}
+                </>
+              )
             ) : (
               Icon && (
                 <Icon

@@ -34,7 +34,9 @@ export default async function handler(
     );
 
     if (!res?.socket?.server?.io) {
-      return res.status(500).json({ messsage: "SSSomething went wrong" });
+      return res
+        .status(500)
+        .json({ messsage: "res.socket.server.io is falsy" });
     }
 
     // res.socket.server.io.on("connection", (socket) => {

@@ -24,6 +24,7 @@ const ioHandler = (req: NextApiRequest, res: NextApiResponseServerIo) => {
     const io = new ServerIO(httpServer, {
       path,
       addTrailingSlash: false,
+      pingInterval: 5000,
     });
     res.socket.server.io = io;
   }

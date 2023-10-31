@@ -56,12 +56,11 @@ export default function ChatContent({
     // The clean-up function closes the connection even though
     // the component is still visible
     return () => {
-      // if (socket.connected) {
-      console.log("socket OFF");
-      // socket.off(`${session.user.id}:messages`, receiveMessage);
-      // }
+      if (socket) {
+        console.log("socket OFF");
+        socket.off(`${session.user.id}:messages`, receiveMessage);
+      }
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [socket, session, params, router]);
 
   useEffect(() => {

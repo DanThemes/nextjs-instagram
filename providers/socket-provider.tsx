@@ -1,16 +1,20 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState } from "react";
-import { io } from "socket.io-client";
+import { io, Socket } from "socket.io-client";
 
 type SocketContextType = {
-  socket: any | null;
+  socket: Socket | null;
   isConnected: boolean;
+  notifications: string[];
+  setNotifications: React.Dispatch<React.SetStateAction<string[]>>;
 };
 
 const SocketContext = createContext<SocketContextType>({
   socket: null,
   isConnected: false,
+  notifications: [],
+  setNotifications: () => {},
 });
 
 export const useSocket = () => {
@@ -18,14 +22,17 @@ export const useSocket = () => {
 };
 
 export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
-  const [socket, setSocket] = useState(null);
+  const [socket, setSocket] = useState<Socket | null>(null);
   const [isConnected, setIsConnected] = useState(false);
+  const [notifications, setNotifications] = useState<string[]>([]);
 
   useEffect(() => {
-    const socketInstance = new (io as any)(process.env.NEXTAUTH_URL, {
+    const socketInstance = io(process.env.NEXTAUTH_URL!, {
       path: "/api/socket/io",
       addTrailingSlash: false,
-      forceNew: true,
+      transports: ["polling", "websocket"],
+
+      // forceNew: true,
     });
 
     socketInstance.on("connect", () => {
@@ -46,12 +53,16 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
     setSocket(socketInstance);
 
     return () => {
-      socketInstance.disconnect();
+      if (socketInstance) {
+        socketInstance.disconnect();
+      }
     };
   }, []);
 
   return (
-    <SocketContext.Provider value={{ socket, isConnected }}>
+    <SocketContext.Provider
+      value={{ socket, isConnected, notifications, setNotifications }}
+    >
       {children}
     </SocketContext.Provider>
   );

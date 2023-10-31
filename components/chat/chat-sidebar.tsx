@@ -15,9 +15,8 @@ type ChatSidebarProps = {
 export default function ChatSidebar({ users }: ChatSidebarProps) {
   const { data: session } = useSession();
   const router = useRouter();
-  const { socket, isConnected } = useSocket();
-
   const params = useParams();
+  const { socket, isConnected, notifications, setNotifications } = useSocket();
 
   // useEffect(() => {
   //   if (!socket || !session) {
@@ -36,6 +35,9 @@ export default function ChatSidebar({ users }: ChatSidebarProps) {
 
   //   socket.on(`${session.user.id}:messages`, receiveMessage);
   // }, [socket, session, router, params]);
+  useEffect(() => {
+    console.log({ Sidebarnotifications: notifications });
+  }, [notifications]);
 
   if (!session) {
     return null;
@@ -56,7 +58,13 @@ export default function ChatSidebar({ users }: ChatSidebarProps) {
         >
           <UserAvatar width={40} height={40} src={user.profileImage} />
           <div>
-            <span>{user.username}</span>
+            <span
+              className={cn(
+                notifications.includes(user._id.toString()) && "font-bold"
+              )}
+            >
+              {user.username}
+            </span>
           </div>
         </div>
       ))}

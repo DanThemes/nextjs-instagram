@@ -26,7 +26,7 @@ export default async function MessagePage({
       message.toUserId._id.toString() === params.userId
   );
 
-  console.log({ pageMessageObject: messages[messages.length - 1].text });
+  // console.log({ pageMessageObject: messages[messages.length - 1].text });
 
   return <ChatContent selectedUser={selectedUser} messages={messages} />;
 }
