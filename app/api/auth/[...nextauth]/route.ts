@@ -5,7 +5,6 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcrypt";
 import { MongoDBAdapter } from "@next-auth/mongodb-adapter";
 import clientPromise from "@/utils/clientPromise";
-import { Types } from "mongoose";
 
 export const authOptions: AuthOptions = {
   adapter: MongoDBAdapter(clientPromise),
@@ -17,7 +16,6 @@ export const authOptions: AuthOptions = {
         username: { type: "text" },
         password: { type: "password" },
       },
-      // @ts-ignore
       async authorize(credentials) {
         if (!credentials || !credentials.username || !credentials.password) {
           return null;
