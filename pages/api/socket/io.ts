@@ -25,7 +25,16 @@ const ioHandler = (req: NextApiRequest, res: NextApiResponseServerIo) => {
       path,
       addTrailingSlash: false,
       pingInterval: 5000,
+      transports: ["polling", "websocket"],
     });
+
+    io.on("connection", (socket) => {
+      io.emit(`65008b696a3bf3b657a85cca:messages`, {
+        newMessage: 123,
+        fromUserId: { _id: "2222" },
+      });
+    });
+
     res.socket.server.io = io;
   }
 

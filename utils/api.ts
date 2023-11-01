@@ -554,7 +554,7 @@ export async function addChatMessage({
 
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/socket/messages`,
+      `${process.env.NEXT_PUBLIC_API_URL}/socket/io`,
       {
         method: "POST",
         headers: {
